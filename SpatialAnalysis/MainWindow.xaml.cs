@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using SpatialAnalysis.page;
+
 namespace SpatialAnalysis
 {
     /// <summary>
@@ -23,6 +25,21 @@ namespace SpatialAnalysis
         public MainWindow()
         {
             InitializeComponent();
+            //设置初始值
+            pageFrame.Content = mainPage;
+            lastButton = toMainPage;
+            toMainPage.IsEnabled = false;
+        }
+        MainPage mainPage = new MainPage();
+        //上一个跳转按键
+        Button lastButton;
+        //跳转按键事件
+        private void ToMainPage_Click(object sender, RoutedEventArgs e)
+        {
+            pageFrame.Content = mainPage;
+            toMainPage.IsEnabled = false;
+            lastButton.IsEnabled = true;
+            lastButton = toMainPage;
         }
     }
 }
