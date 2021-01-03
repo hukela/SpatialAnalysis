@@ -1,0 +1,62 @@
+﻿<ResourceDictionary
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:local="clr-namespace:SpatialAnalysis.Dictionary">
+    <Style x:Key="left" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Grid.Column" Value="0"/>
+        <Setter Property="Margin" Value="0,0,15,0"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style x:Key="right" TargetType="TextBox">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Grid.Column" Value="1"/>
+        <Setter Property="Width" Value="400"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style x:Key="left-row1" TargetType="TextBlock" BasedOn="{StaticResource left}">
+        <Setter Property="Grid.Row" Value="1"/>
+    </Style>
+    <Style x:Key="left-row2" TargetType="TextBlock" BasedOn="{StaticResource left}">
+        <Setter Property="Grid.Row" Value="2"/>
+    </Style>
+    <Style x:Key="left-row3" TargetType="TextBlock" BasedOn="{StaticResource left}">
+        <Setter Property="Grid.Row" Value="3"/>
+    </Style>
+    <Style x:Key="right-row1" TargetType="TextBox" BasedOn="{StaticResource right}">
+        <Setter Property="Grid.Row" Value="1"/>
+    </Style>
+    <Style x:Key="right-row2" TargetType="TextBox" BasedOn="{StaticResource right}">
+        <Setter Property="Grid.Row" Value="2"/>
+        <Setter Property="Height" Value="150"/>
+    </Style>
+    <Style x:Key="radio" TargetType="WrapPanel">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Grid.Row" Value="3"/>
+        <Setter Property="Grid.Column" Value="1"/>
+    </Style>
+    <Style TargetType="RadioButton">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,15,0"/>
+    </Style>
+    <Style TargetType="Canvas">
+        <Setter Property="Grid.Row" Value="4"/>
+        <Setter Property="Grid.Column" Value="0"/>
+        <Setter Property="Grid.ColumnSpan" Value="2"/>
+    </Style>
+    <Style x:Key="lastTime" TargetType="TextBlock">
+        <Setter Property="Canvas.Top" Value="20"/>
+        <Setter Property="Canvas.Left" Value="20"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style x:Key="submit" TargetType="Button">
+        <Setter Property="Canvas.Top" Value="20"/>
+        <Setter Property="Canvas.Left" Value="500"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+</ResourceDictionary>

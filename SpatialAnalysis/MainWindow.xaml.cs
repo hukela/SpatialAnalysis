@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-using SpatialAnalysis.page;
+using SpatialAnalysis.MyPage;
 
 namespace SpatialAnalysis
 {
@@ -31,15 +18,26 @@ namespace SpatialAnalysis
             toMainPage.IsEnabled = false;
         }
         MainPage mainPage = new MainPage();
+        AddRecord addRecord = new AddRecord();
         //上一个跳转按键
         Button lastButton;
         //跳转按键事件
         private void ToMainPage_Click(object sender, RoutedEventArgs e)
         {
             pageFrame.Content = mainPage;
-            toMainPage.IsEnabled = false;
+            CloseButton(toMainPage);
+        }
+        private void ToAddRecord_Click(object sender, RoutedEventArgs e)
+        {
+            pageFrame.Content = addRecord;
+            CloseButton(toAddRecord);
+        }
+        //关闭当前按键，并打开上一个按键
+        private void CloseButton<B>(B b) where B: Button
+        {
+            b.IsEnabled = false;
             lastButton.IsEnabled = true;
-            lastButton = toMainPage;
+            lastButton = b;
         }
     }
 }
