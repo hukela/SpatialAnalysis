@@ -259,3 +259,9 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+#custom
+SpatialAnalysis/IO/InstallMySQL.cmd
+SpatialAnalysis/MySQL/mysql-8.0.22-winx64
+SpatialAnalysis/Log
+/文件
