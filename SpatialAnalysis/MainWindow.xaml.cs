@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using SpatialAnalysis.MyPage;
+using System.Windows;
 using System.Windows.Controls;
-using SpatialAnalysis.MyPage;
 
 namespace SpatialAnalysis
 {
