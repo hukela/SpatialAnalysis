@@ -4,6 +4,15 @@ namespace SpatialAnalysis.IO
 {
     class Base
     {
-        static string locolPath = ConfigurationManager.AppSettings["ServerIP"];
+        public static readonly string locolPath;
+        //静态的构造函数
+        static Base()
+        {
+            string path = System.Environment.CurrentDirectory;
+            bool isDebug = bool.Parse(ConfigurationManager.AppSettings["debug"]);
+            if(isDebug)
+                path = path.Remove(path.Length - 10);
+            locolPath = path;
+        }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Xml.Linq;
 
-namespace SpatialAnalysis.IO
+namespace SpatialAnalysis.IO.Xml
 {
-    class XML
+    class XML: Base
     {
         //存储文件位置
         private const string filePath = "/Data/Core.xml";
