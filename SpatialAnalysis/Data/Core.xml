@@ -1,5 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Main>
   <Map>
+    <put key="test" value="111" />
   </Map>
 </Main>
