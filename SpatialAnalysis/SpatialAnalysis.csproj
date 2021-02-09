@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="Entity\Incident.cs" />
     <Compile Include="IO\Base.cs" />
+    <Compile Include="IO\Log.cs" />
     <Compile Include="IO\XML.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

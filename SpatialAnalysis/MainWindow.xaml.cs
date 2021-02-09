@@ -1,5 +1,4 @@
-﻿using SpatialAnalysis.IO.Xml;
-using SpatialAnalysis.MyPage;
+﻿using SpatialAnalysis.MyPage;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -17,13 +16,6 @@ namespace SpatialAnalysis
             pageFrame.Content = mainPage;
             lastButton = toMainPage;
             toMainPage.IsEnabled = false;
-            //----
-            XML.Map(XML.Params.test, 15);
-            System.Console.WriteLine("test = " + XML.Map(XML.Params.test));
-            XML.Map(XML.Params.test, false);
-            System.Console.WriteLine("test = " + XML.Map(XML.Params.test));
-            XML.Map(XML.Params.test, "111");
-            System.Console.WriteLine("test = " + XML.Map(XML.Params.test));
         }
         MainPage mainPage = new MainPage();
         AddRecord addRecord = new AddRecord();

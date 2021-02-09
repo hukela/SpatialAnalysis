@@ -9,24 +9,31 @@ namespace SpatialAnalysis.IO.Xml
     {
         //存储文件位置
         private static readonly string filePath = locolPath + @"\Data\Core.xml";
-        //Map相关参数
+        /// <summary>
+        /// xml中可选的key
+        /// </summary>
         public enum Params
         {
             test
         }
-        public static dynamic Map(Params param)
+        /// <summary>
+        /// 通过key读取value
+        /// </summary>
+        /// <param name="param">key</param>
+        /// <returns>value</returns>
+        public static dynamic Dict(Params param)
         {
             string key = param.ToString();
-            //跳转到map节点
-            XElement map = XElement.Load(filePath).Element("Map");
+            //跳转到Dictionary节点
+            XElement dict = XElement.Load(filePath).Element("Dictionary");
             //遍历筛选key所指的节点
-            IEnumerable<XElement> puts = from xml in map.Elements("put")
-                                         where xml.Attribute("key").Value == key
-                                         select xml;
-            XElement put = puts.SingleOrDefault();
-            if (put == null)
-                throw new ApplicationException("xml: 读取了不存在的key");
-            string value = put.Attribute("value").Value;
+            IEnumerable<XElement> a = from xml in dict.Elements("add")
+                                      where xml.Attribute("key").Value == key
+                                      select xml;
+            XElement add = a.SingleOrDefault();
+            if (add == null)
+                return null;
+            string value = add.Attribute("value").Value;
             //自动返回对应的数据类型
             try { return bool.Parse(value); }
             catch { }
@@ -39,26 +46,26 @@ namespace SpatialAnalysis.IO.Xml
         /// </summary>
         /// <param name="param">key</param>
         /// <param name="value">value</param>
-        public static void Map(Params param, object value)
+        public static void Dict(Params param, object value)
         {
             string key = param.ToString();
             //根节点:Main
             XElement Main = XElement.Load(filePath);
-            XElement map = Main.Element("Map");
-            IEnumerable<XElement> puts = from xml in map.Elements("put")
-                                         where xml.Attribute("key").Value == key
-                                         select xml;
-            XElement put = puts.SingleOrDefault();
+            XElement dict = Main.Element("Dictionary");
+            IEnumerable<XElement> a = from xml in dict.Elements("add")
+                                      where xml.Attribute("key").Value == key
+                                      select xml;
+            XElement add = a.SingleOrDefault();
             //如果不存在则新建一个
-            if(put == null)
+            if(add == null)
             {
                 XAttribute keyAttribute = new XAttribute("key", key);
                 XAttribute valueAttribute = new XAttribute("value", value.ToString());
-                put = new XElement("put", keyAttribute, valueAttribute);
-                map.Add(put);
+                add = new XElement("put", keyAttribute, valueAttribute);
+                dict.Add(add);
             }
             else
-                put.SetAttributeValue("value", value.ToString());
+                add.SetAttributeValue("value", value.ToString());
             //保存修改(必须是针对根节点的保存)
             Main.Save(filePath);
         }
