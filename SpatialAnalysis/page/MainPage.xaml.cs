@@ -24,5 +24,9 @@ namespace SpatialAnalysis.MyPage
         {
             InitializeComponent();
         }
+        private void Test_Click(object sender, RoutedEventArgs e)
+        {
+            Test.beginTest();
+        }
     }
 }
