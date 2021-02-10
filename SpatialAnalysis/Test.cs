@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SpatialAnalysis.IO;
+using SpatialAnalysis.MyWindow;
 
 namespace SpatialAnalysis
 {
@@ -25,8 +26,20 @@ namespace SpatialAnalysis
             DataTable dt = new DataTable();
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
             sda.Fill(dt);
-            Console.WriteLine("----------");
-            Console.WriteLine(dt);
+            TextWindow textWindow = new TextWindow();
+            //遍历表头
+            foreach (DataColumn column in dt.Columns)
+            {
+                textWindow.Write(column.ColumnName + "\t");
+            }
+            textWindow.Write("\n");
+            foreach (DataRow row in dt.Rows)
+            {
+                foreach(dynamic value in row.ItemArray)
+                    textWindow.Write(value + "\t");
+                textWindow.Write("\n");
+            }
+            textWindow.ShowDialog();
             //直接中止程序运行
             Environment.Exit(0);
         }
