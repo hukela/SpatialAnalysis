@@ -7,5 +7,9 @@ namespace SpatialAnalysis
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Test.beginTest();
+        }
     }
 }

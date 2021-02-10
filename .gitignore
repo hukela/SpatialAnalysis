@@ -261,5 +261,7 @@ __pycache__/
 *.pyc
 
 #custom
-SpatialAnalysis/Log
 /文件
+SpatialAnalysis/Log
+SpatialAnalysis/Data/Database.mdf
+SpatialAnalysis/Data/Database_log.ldf
