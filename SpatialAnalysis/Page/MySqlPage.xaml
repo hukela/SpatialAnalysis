@@ -1,0 +1,97 @@
+﻿<Page x:Class="SpatialAnalysis.MyPage.MySqlPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SpatialAnalysis.MyPage"
+      mc:Ignorable="d" 
+      Title="MySql" d:DesignHeight="550" d:DesignWidth="720">
+
+    <Page.Resources>
+        <ResourceDictionary Source="/Dictionary/MySql.xaml"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="190"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <!-- 状态栏 -->
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="280"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="状态：" Style="{StaticResource title}"/>
+            <Border Grid.ColumnSpan="3" Style="{StaticResource border}"/>
+            <TextBlock Text="本地数据库：" Grid.Row="2" Grid.Column="1" Style="{StaticResource message}"/>
+            <TextBlock Text="未检测到" Grid.Row="2" Grid.Column="1" Style="{StaticResource state}"/>
+            <TextBlock Text="连接状态：" Grid.Row="2" Grid.Column="2" Style="{StaticResource message}"/>
+            <TextBlock Text="未连接" Grid.Row="2" Grid.Column="2" Style="{StaticResource state}"/>
+        </Grid>
+        <!-- 配置栏 -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="280"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="配置：" Style="{StaticResource title}"/>
+            <Border Grid.ColumnSpan="3" Style="{StaticResource border}"/>
+            <TextBlock Text="用户：" Grid.Row="2" Grid.Column="1" Style="{StaticResource message}"/>
+            <TextBox Grid.Row="2" Grid.Column="1"/>
+            <TextBlock Text="密码：" Grid.Row="2" Grid.Column="2" Style="{StaticResource message}"/>
+            <TextBox Grid.Row="2" Grid.Column="2"/>
+            <TextBlock Text="地址：" Grid.Row="3" Grid.Column="1" Style="{StaticResource message}"/>
+            <TextBox Grid.Row="3" Grid.Column="1"/>
+            <TextBlock Text="端口：" Grid.Row="3" Grid.Column="2" Style="{StaticResource message}"/>
+            <TextBox Grid.Row="3" Grid.Column="2"/>
+            <TextBlock Text="数据库名：" Grid.Row="4" Grid.Column="1" Style="{StaticResource message}"/>
+            <TextBox Grid.Row="4" Grid.Column="1"/>
+            <WrapPanel Grid.Row="5" Grid.Column="1">
+                <TextBlock Text="是否自动开关数据库：" Margin="19,8,0,0"/>
+                <CheckBox/>
+            </WrapPanel>
+            <WrapPanel Grid.Row="5" Grid.Column="2">
+                <TextBlock Text="是否自动连接数据库：" Margin="40,8,0,0"/>
+                <CheckBox/>
+            </WrapPanel>
+            <Button Content="还原配置" Grid.Row="5" Grid.Column="2" Margin="0,42,0,0"/>
+            <Button Content="应用配置" Grid.Row="5" Grid.Column="2" Margin="196,42,0,0"/>
+        </Grid>
+        <!-- 操作栏 -->
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="操作：" Style="{StaticResource title}"/>
+            <Border Grid.ColumnSpan="2" Style="{StaticResource border}"/>
+            <Button Content="打开数据库" Style="{StaticResource action}" Margin="9.6,9.8,0,0"/>
+            <Button Content="关闭数据库" Style="{StaticResource action}" Margin="109.6,9.8,0,0"/>
+            <Button Content="打开连接" Style="{StaticResource action}" Margin="211.6,9.8,0,0"/>
+            <Button Content="关闭连接" Style="{StaticResource action}" Margin="301.6,8.8,0,0"/>
+            <Button Content="安装数据库" Style="{StaticResource action}" Margin="397.6,9.8,0,0"/>
+            <Button Content="卸载数据库" Style="{StaticResource action}" Margin="397.6,75.8,0,0"/>
+        </Grid>
+    </Grid>
+</Page>

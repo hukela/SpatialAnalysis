@@ -19,8 +19,16 @@ namespace SpatialAnalysis
         }
         MainPage mainPage = new MainPage();
         AddRecord addRecord = new AddRecord();
+        MySqlPage mySqlPage = new MySqlPage();
         //上一个跳转按键
         Button lastButton;
+        //关闭当前按键，并打开上一个按键
+        private void CloseButton(Button b)
+        {
+            b.IsEnabled = false;
+            lastButton.IsEnabled = true;
+            lastButton = b;
+        }
         //跳转按键事件
         private void ToMainPage_Click(object sender, RoutedEventArgs e)
         {
@@ -32,12 +40,10 @@ namespace SpatialAnalysis
             pageFrame.Content = addRecord;
             CloseButton(toAddRecord);
         }
-        //关闭当前按键，并打开上一个按键
-        private void CloseButton<B>(B b) where B: Button
+        private void ToMySql_Click(object sender, RoutedEventArgs e)
         {
-            b.IsEnabled = false;
-            lastButton.IsEnabled = true;
-            lastButton = b;
+            pageFrame.Content = mySqlPage;
+            CloseButton(toMySqlPage);
         }
     }
 }

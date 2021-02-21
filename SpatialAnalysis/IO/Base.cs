@@ -9,9 +9,17 @@ namespace SpatialAnalysis.IO
         static Base()
         {
             string path = System.Environment.CurrentDirectory;
-            bool isDebug = bool.Parse(ConfigurationManager.AppSettings["debug"]);
-            if(isDebug)
-                path = path.Remove(path.Length - 10);
+            string runMode = ConfigurationManager.AppSettings["RunMode"];
+            switch (runMode)
+            {
+                case "Debug":
+                    path = path.Remove(path.Length - 10);
+                    break;
+                case "Release":
+                    path = path.Remove(path.Length - 12);
+                    break;
+                default: break;
+            }
             locolPath = path;
         }
     }

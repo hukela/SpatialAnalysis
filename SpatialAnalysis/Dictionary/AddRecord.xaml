@@ -1,7 +1,7 @@
-﻿<ResourceDictionary
-xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-xmlns:local="clr-namespace:SpatialAnalysis.Dictionary">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SpatialAnalysis.Dictionary">
+
     <Style x:Key="left" TargetType="TextBlock">
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>
