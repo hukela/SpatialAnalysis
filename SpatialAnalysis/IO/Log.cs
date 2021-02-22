@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SpatialAnalysis.IO.Log
 {
-    class Log: Base
+    class Log : Base
     {
         private static readonly string logPath = locolPath + @"\log";
         /// <summary>
