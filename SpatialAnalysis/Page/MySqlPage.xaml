@@ -87,11 +87,11 @@
             <TextBlock Text="操作：" Style="{StaticResource title}"/>
             <Border Grid.ColumnSpan="2" Style="{StaticResource border}"/>
             <Button Content="打开数据库" Margin="10,10,0,0" Style="{StaticResource action}"/>
-            <Button Content="关闭数据库" Margin="164.6,9.8,0,0" Style="{StaticResource action}"/>
-            <Button Content="打开连接" Margin="312.6,9.8,0,0" Style="{StaticResource action}"/>
-            <Button Content="关闭连接" Margin="453.6,9.8,0,0" Style="{StaticResource action}"/>
-            <Button Content="安装数据库" Margin="10,58,0,0" Style="{StaticResource action}"/>
-            <Button Content="卸载数据库" Margin="164.6,58,0,0" Style="{StaticResource action}"/>
+            <Button Content="关闭数据库" Margin="10,58,0,0" Style="{StaticResource action}"/>
+            <Button Content="打开连接" Margin="142.6,10,0,0" Style="{StaticResource action}"/>
+            <Button Content="关闭连接" Margin="142.6,58,0,0" Style="{StaticResource action}"/>
+            <Button x:Name="installButton" Content="安装数据库" Click="InstallButton_Click" Margin="324.6,10,0,0" Style="{StaticResource action}"/>
+            <Button x:Name="uninstallButton" Content="卸载数据库" Click="UninstallButton_Click" Margin="324.6,58,0,0" Style="{StaticResource action}"/>
         </Grid>
     </Grid>
 </Page>

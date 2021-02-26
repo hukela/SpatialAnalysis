@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SpatialAnalysis.Service;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SpatialAnalysis.MyPage
 {
@@ -23,6 +12,18 @@ namespace SpatialAnalysis.MyPage
         public MySqlPage()
         {
             InitializeComponent();
+        }
+        //安装MySql
+        private void InstallButton_Click(object sender, RoutedEventArgs e)
+        {
+            InstallAndUninstall install = new InstallAndUninstall();
+            install.BeginInstall();
+        }
+        //卸载MySql
+        private void UninstallButton_Click(object sender, RoutedEventArgs e)
+        {
+            InstallAndUninstall remove = new InstallAndUninstall();
+            remove.BeginUnInstall();
         }
     }
 }
