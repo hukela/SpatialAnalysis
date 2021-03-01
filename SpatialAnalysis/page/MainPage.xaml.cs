@@ -1,4 +1,5 @@
-﻿using SpatialAnalysis.MyWindow;
+﻿using SpatialAnalysis.IO;
+using SpatialAnalysis.MyWindow;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,6 +17,7 @@ namespace SpatialAnalysis.MyPage
         }
         private void Test_Click(object sender, RoutedEventArgs e)
         {
+            InstallAndUninstallMySql.deleteService();
         }
     }
 }

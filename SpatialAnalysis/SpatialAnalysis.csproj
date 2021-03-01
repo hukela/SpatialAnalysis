@@ -80,6 +80,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -90,8 +91,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IO\Cmd.cs" />
     <Compile Include="IO\InstallAndUninstallMySql.cs" />
     <Compile Include="IO\MySqlAction.cs" />
+    <Compile Include="IO\TextFile.cs" />
     <Compile Include="Page\MySqlPage.xaml.cs">
       <DependentUpon>MySqlPage.xaml</DependentUpon>
     </Compile>
@@ -176,6 +179,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Data\InstallMySQL.template.cmd" />
     <None Include="Data\mysql-8.0.22-winx64.zip" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />

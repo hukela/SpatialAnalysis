@@ -47,7 +47,7 @@ namespace SpatialAnalysis.MyWindow
                 closeWindow.IsEnabled = true;
             }
             else
-                content.Dispatcher.Invoke(Clean);
+                content.Dispatcher.Invoke(RunOver);
         }
         public void WriteLine(string message)
         {

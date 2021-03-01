@@ -1,5 +1,9 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
+using System;
 using System.IO;
+using System.ServiceProcess;
+using System.Text;
+using System.Threading;
 
 namespace SpatialAnalysis.IO
 {
@@ -25,15 +29,72 @@ namespace SpatialAnalysis.IO
         public static bool Remove()
         {
             string path = locolPath + @"\MySql";
-            if(File.Exists(path))
+            if(Directory.Exists(path))
             {
-                File.Delete(path);
+                Directory.Delete(path, true);
                 return true;
             }
             else
-            {
                 return false;
+        }
+        /// <summary>
+        /// 修改配置文件
+        /// </summary>
+        public static void Configurate()
+        {
+            string path = locolPath + @"\MySql\my.ini";
+            string mysqlPath = locolPath + @"\MySql";
+            string config = TextFile.ReadAll(path, Encoding.UTF8);
+            config = config.Replace("[InstallPath]", mysqlPath);
+            TextFile.WriteAll(path, Encoding.UTF8, config);
+        }
+        /// <summary>
+        /// 建立安装脚本
+        /// </summary>
+        public static void BuildCmd()
+        {
+            string path = locolPath + @"\Data\InstallMySQL.template.cmd";
+            string outputPath = locolPath + @"\Data\InstallMySQL.cmd";
+            string rooPath = locolPath.Substring(0, 2);
+            string binPath = locolPath + @"\MySql\bin";
+            string cmd = TextFile.ReadAll(path, Encoding.UTF8);
+            cmd = cmd.Replace("[rootPath]", rooPath);
+            cmd = cmd.Replace("[binPath]", binPath);
+            //cmd要求使用的是GBK-936编码
+            TextFile.WriteAll(outputPath, Encoding.GetEncoding(936), cmd);
+        }
+        public static string[] Install()
+        {
+            string path = locolPath + @"\Data\InstallMySQL.cmd";
+            return Cmd.RunCmdFile(path);
+        }
+        /// <summary>
+        /// 删除MySql服务
+        /// </summary>
+        /// <returns>false代表未找到服务</returns>
+        public static bool deleteService()
+        {
+            ServiceController[] services = ServiceController.GetServices();
+            foreach(ServiceController service in services)
+            {
+                if(service.ServiceName == "MySQL")
+                {
+                    //先关闭服务
+                    if(service.Status == ServiceControllerStatus.Running)
+                    {
+                        service.Close();
+                        Thread.Sleep(3000);
+                    }
+                    //删除服务
+                    Cmd cmd = new Cmd();
+                    cmd.RunCmd("sc delete MySQL");
+                    string[] message = cmd.Close();
+                    if (message[0] != "" && message[1] != "")
+                        throw new ApplicationException("服务删除失败:\n" + message[0] + message[1]);
+                    return true;
+                }
             }
+            return false;
         }
     }
 }

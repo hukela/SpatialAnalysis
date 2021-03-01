@@ -17,7 +17,6 @@ namespace SpatialAnalysis.Service
         public void BeginInstall()
         {
             Log.Info("开始安装MySql");
-            //只有主线程可以新建窗口
             ProgramWindow program = new ProgramWindow();
             //需要较长的时间来安装，防止主线程因长时间未响应而被误认为软件卡死
             //所以这里设置一个线程专门异步安装数据库
@@ -36,8 +35,26 @@ namespace SpatialAnalysis.Service
             program.WriteLine("开始安装：");
             try
             {
-                program.WriteLine("解压中...");
-                InstallAndUninstallMySql.Compress();
+                //program.WriteLine("解压压缩包");
+                //InstallAndUninstallMySql.Compress();
+                //program.WriteLine("修改配置文件");
+                //InstallAndUninstallMySql.Configurate();
+                program.WriteLine("生成安装脚本");
+                InstallAndUninstallMySql.BuildCmd();
+                program.WriteLine("运行安装脚本");
+                string[] message = InstallAndUninstallMySql.Install();
+                //只有主线程可以新建窗口
+                TextWindow textWindow;
+                textWindow = App.Current.Dispatcher.Invoke(delegate()
+                {
+                    textWindow = new TextWindow();
+                    textWindow.Show();
+                    return textWindow;
+                });
+                textWindow.WriteLine("运行命令：");
+                textWindow.WriteLine(message[0]);
+                textWindow.WriteLine("运行结果：");
+                textWindow.WriteLine(message[1]);
             }
             catch (Exception e)
             {
@@ -64,14 +81,18 @@ namespace SpatialAnalysis.Service
             program.WriteLine("开始卸载");
             try
             {
-                program.WriteLine("删除文件...");
-                InstallAndUninstallMySql.Remove();
+                program.WriteLine("卸载服务...");
+                if (!InstallAndUninstallMySql.deleteService())
+                    program.WriteLine("未检测到服务");
+                //program.WriteLine("删除文件...");
+                //if (!InstallAndUninstallMySql.Remove())
+                //    program.WriteLine("未检测到文件");
             }
             catch (Exception e)
             {
                 program.WriteLine("错误:");
                 program.WriteLine(e.Message);
-                Log.erroe("MySql安装失败");
+                Log.erroe("MySql卸载失败");
                 Log.add(e);
             }
             program.RunOver();

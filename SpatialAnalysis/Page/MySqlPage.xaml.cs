@@ -22,8 +22,8 @@ namespace SpatialAnalysis.MyPage
         //卸载MySql
         private void UninstallButton_Click(object sender, RoutedEventArgs e)
         {
-            InstallAndUninstall remove = new InstallAndUninstall();
-            remove.BeginUnInstall();
+            InstallAndUninstall uninstall = new InstallAndUninstall();
+            uninstall.BeginUnInstall();
         }
     }
 }
