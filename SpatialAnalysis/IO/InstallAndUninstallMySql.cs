@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
+using Microsoft.Win32;
 using System;
 using System.IO;
 using System.ServiceProcess;
@@ -72,7 +73,7 @@ namespace SpatialAnalysis.IO
         /// 删除MySql服务
         /// </summary>
         /// <returns>false代表未找到服务</returns>
-        public static bool deleteService()
+        public static bool DeleteService()
         {
             ServiceController[] services = ServiceController.GetServices();
             foreach(ServiceController service in services)
@@ -95,6 +96,21 @@ namespace SpatialAnalysis.IO
                 }
             }
             return false;
+        }
+        /// <summary>
+        /// 清理MySql注册表
+        /// </summary>
+        public static void DeleteRegedit()
+        {
+            string[] keyPath = new string[]
+            {
+                @"SYSTEM\ControlSet001\Services\EventLog\Application\MySQLD Service",
+                @"SYSTEM\CurrentControlSet\Services\EventLog\Application\MySQLD Service",
+                @"SYSTEM\Setup\FirstBoot\Services\MySQL"
+            };
+            RegistryKey key = Registry.LocalMachine;
+            key.DeleteSubKey(keyPath[2], true);
+            key.Close();
         }
     }
 }

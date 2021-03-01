@@ -82,11 +82,21 @@ namespace SpatialAnalysis.Service
             try
             {
                 program.WriteLine("卸载服务...");
-                if (!InstallAndUninstallMySql.deleteService())
+                if (!InstallAndUninstallMySql.DeleteService())
                     program.WriteLine("未检测到服务");
-                //program.WriteLine("删除文件...");
-                //if (!InstallAndUninstallMySql.Remove())
-                //    program.WriteLine("未检测到文件");
+                try
+                {
+                    program.WriteLine("清理注册表...");
+                    InstallAndUninstallMySql.DeleteRegedit();
+                }
+                catch (Exception e)
+                {
+                    //跳过该错误
+                    program.WriteLine(e.Message);
+                }
+                program.WriteLine("删除文件...");
+                if (!InstallAndUninstallMySql.Remove())
+                    program.WriteLine("未检测到文件");
             }
             catch (Exception e)
             {
@@ -95,6 +105,7 @@ namespace SpatialAnalysis.Service
                 Log.erroe("MySql卸载失败");
                 Log.add(e);
             }
+            program.WriteLine("卸载完成");
             program.RunOver();
         }
     }

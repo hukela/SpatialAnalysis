@@ -17,7 +17,7 @@ namespace SpatialAnalysis.MyPage
         }
         private void Test_Click(object sender, RoutedEventArgs e)
         {
-            InstallAndUninstallMySql.deleteService();
+            InstallAndUninstallMySql.DeleteService();
         }
     }
 }
