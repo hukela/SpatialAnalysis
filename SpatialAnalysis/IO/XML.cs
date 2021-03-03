@@ -14,14 +14,14 @@ namespace SpatialAnalysis.IO.Xml
         /// </summary>
         public enum Params
         {
-            test
+            url,port,user,passwd
         }
         /// <summary>
         /// 通过key读取value
         /// </summary>
         /// <param name="param">key</param>
         /// <returns>value</returns>
-        public static dynamic Dict(Params param)
+        public static dynamic Map(Params param)
         {
             string key = param.ToString();
             //跳转到Dictionary节点
@@ -46,7 +46,7 @@ namespace SpatialAnalysis.IO.Xml
         /// </summary>
         /// <param name="param">key</param>
         /// <param name="value">value</param>
-        public static void Dict(Params param, object value)
+        public static void Map(Params param, object value)
         {
             string key = param.ToString();
             //根节点:Main
@@ -61,7 +61,7 @@ namespace SpatialAnalysis.IO.Xml
             {
                 XAttribute keyAttribute = new XAttribute("key", key);
                 XAttribute valueAttribute = new XAttribute("value", value.ToString());
-                add = new XElement("put", keyAttribute, valueAttribute);
+                add = new XElement("add", keyAttribute, valueAttribute);
                 dict.Add(add);
             }
             else

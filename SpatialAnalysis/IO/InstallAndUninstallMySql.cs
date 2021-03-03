@@ -46,24 +46,46 @@ namespace SpatialAnalysis.IO
             string path = locolPath + @"\MySql\my.ini";
             string mysqlPath = locolPath + @"\MySql";
             string config = TextFile.ReadAll(path, Encoding.UTF8);
+            mysqlPath = mysqlPath.Replace(@"\", @"\\");
             config = config.Replace("[InstallPath]", mysqlPath);
-            TextFile.WriteAll(path, Encoding.UTF8, config);
+            //MySql要求使用ANSI编码，这里使用ANSI的GB2312
+            TextFile.WriteAll(path, Encoding.GetEncoding("GB2312"), config);
         }
         /// <summary>
         /// 建立安装脚本
         /// </summary>
         public static void BuildCmd()
         {
-            string path = locolPath + @"\Data\InstallMySQL.template.cmd";
-            string outputPath = locolPath + @"\Data\InstallMySQL.cmd";
+            string[] filePath = new string[]
+            {
+                locolPath + @"\Data\InstallMySQL.template.cmd",
+                locolPath + @"\Data\InitializeMySQL.template.cmd"
+            };
             string rooPath = locolPath.Substring(0, 2);
             string binPath = locolPath + @"\MySql\bin";
-            string cmd = TextFile.ReadAll(path, Encoding.UTF8);
-            cmd = cmd.Replace("[rootPath]", rooPath);
-            cmd = cmd.Replace("[binPath]", binPath);
-            //cmd要求使用的是GBK-936编码
-            TextFile.WriteAll(outputPath, Encoding.GetEncoding(936), cmd);
+            foreach (string path in filePath)
+            {
+                string cmd = TextFile.ReadAll(path, Encoding.UTF8);
+                cmd = cmd.Replace("[rootPath]", rooPath);
+                cmd = cmd.Replace("[binPath]", binPath);
+                //cmd要求使用的是GBK-936编码
+                string outputPath = path.Replace(".template.cmd", ".cmd");
+                TextFile.WriteAll(outputPath, Encoding.GetEncoding(936), cmd);
+            }
         }
+        /// <summary>
+        /// 初始化数据库
+        /// </summary>
+        /// <returns>执行结果</returns>
+        public static string[] Initialize()
+        {
+            string path = locolPath + @"\Data\InitializeMySQL.cmd";
+            return Cmd.RunCmdFile(path);
+        }
+        /// <summary>
+        /// 安装数据库
+        /// </summary>
+        /// <returns>执行结果</returns>
         public static string[] Install()
         {
             string path = locolPath + @"\Data\InstallMySQL.cmd";
@@ -109,7 +131,9 @@ namespace SpatialAnalysis.IO
                 @"SYSTEM\Setup\FirstBoot\Services\MySQL"
             };
             RegistryKey key = Registry.LocalMachine;
-            key.DeleteSubKey(keyPath[2], true);
+            foreach(string path in keyPath)
+                try { key.DeleteSubKey(path, true); }
+                catch { /*屏蔽可能的异常*/ }
             key.Close();
         }
     }

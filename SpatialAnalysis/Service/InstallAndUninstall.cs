@@ -1,6 +1,7 @@
 ﻿using SpatialAnalysis.MyWindow;
 using SpatialAnalysis.IO;
 using SpatialAnalysis.IO.Log;
+using SpatialAnalysis.IO.Xml;
 using System.Threading;
 using System;
 
@@ -33,28 +34,24 @@ namespace SpatialAnalysis.Service
             //等待一秒，等待program窗口完全打开
             Thread.Sleep(1000);
             program.WriteLine("开始安装：");
+            string[] initialize = null;
+            string[] install = null;
             try
             {
-                //program.WriteLine("解压压缩包");
-                //InstallAndUninstallMySql.Compress();
-                //program.WriteLine("修改配置文件");
-                //InstallAndUninstallMySql.Configurate();
+                program.WriteLine("解压压缩包");
+                InstallAndUninstallMySql.Compress();
+                program.WriteLine("修改配置文件");
+                InstallAndUninstallMySql.Configurate();
                 program.WriteLine("生成安装脚本");
                 InstallAndUninstallMySql.BuildCmd();
-                program.WriteLine("运行安装脚本");
-                string[] message = InstallAndUninstallMySql.Install();
-                //只有主线程可以新建窗口
-                TextWindow textWindow;
-                textWindow = App.Current.Dispatcher.Invoke(delegate()
-                {
-                    textWindow = new TextWindow();
-                    textWindow.Show();
-                    return textWindow;
-                });
-                textWindow.WriteLine("运行命令：");
-                textWindow.WriteLine(message[0]);
-                textWindow.WriteLine("运行结果：");
-                textWindow.WriteLine(message[1]);
+                program.WriteLine("初始化数据库");
+                initialize = InstallAndUninstallMySql.Initialize();
+                string passwd = GetPasswd(initialize[1]);
+                program.WriteLine("安装数据库");
+                install = InstallAndUninstallMySql.Install();
+                SaveInstall(passwd);
+                //program.WriteLine("安装完成");
+                //Log.Info("安装数据库完成");
             }
             catch (Exception e)
             {
@@ -62,6 +59,29 @@ namespace SpatialAnalysis.Service
                 program.WriteLine(e.Message);
                 Log.erroe("MySql安装失败");
                 Log.add(e);
+            }
+            finally
+            {
+                if (initialize != null)
+                {
+                    //只有主线程可以新建窗口
+                    TextWindow textWindow;
+                    textWindow = App.Current.Dispatcher.Invoke(delegate ()
+                    {
+                        textWindow = new TextWindow();
+                        textWindow.Show();
+                        return textWindow;
+                    });
+                    textWindow.WriteLine("建立数据库:");
+                    textWindow.WriteLine(initialize[0]);
+                    textWindow.WriteLine(initialize[1]);
+                    if (install != null)
+                    {
+                        textWindow.WriteLine("安装数据库:");
+                        textWindow.WriteLine(install[0]);
+                        textWindow.WriteLine(install[1]);
+                    }
+                }
             }
             program.RunOver();
         }
@@ -84,16 +104,8 @@ namespace SpatialAnalysis.Service
                 program.WriteLine("卸载服务...");
                 if (!InstallAndUninstallMySql.DeleteService())
                     program.WriteLine("未检测到服务");
-                try
-                {
-                    program.WriteLine("清理注册表...");
-                    InstallAndUninstallMySql.DeleteRegedit();
-                }
-                catch (Exception e)
-                {
-                    //跳过该错误
-                    program.WriteLine(e.Message);
-                }
+                program.WriteLine("清理注册表...");
+                InstallAndUninstallMySql.DeleteRegedit();
                 program.WriteLine("删除文件...");
                 if (!InstallAndUninstallMySql.Remove())
                     program.WriteLine("未检测到文件");
@@ -106,7 +118,26 @@ namespace SpatialAnalysis.Service
                 Log.add(e);
             }
             program.WriteLine("卸载完成");
+            Log.Info("数据库卸载完成");
             program.RunOver();
+        }
+
+        //获取密码
+        private string GetPasswd(string message)
+        {
+            int i = message.IndexOf("root@localhost:") + 16;
+            if (i == -1)
+                throw new ApplicationException("数据库初始化失败");
+            string passwd = message.Substring(i, message.Length - i);
+            return passwd.Replace(" ", "").Replace("\r", "").Replace("\n", "");
+        }
+        //存储相关安装数据
+        private void SaveInstall(string passwd)
+        {
+            XML.Map(XML.Params.url, "localhost");
+            XML.Map(XML.Params.port, 3306);
+            XML.Map(XML.Params.user, "root");
+            XML.Map(XML.Params.passwd, passwd);
         }
     }
 }
