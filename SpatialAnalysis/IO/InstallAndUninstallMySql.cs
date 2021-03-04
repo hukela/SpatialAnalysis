@@ -1,10 +1,10 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Win32;
+using MySql.Data.MySqlClient;
 using System;
 using System.IO;
 using System.ServiceProcess;
 using System.Text;
-using System.Threading;
 
 namespace SpatialAnalysis.IO
 {
@@ -104,16 +104,11 @@ namespace SpatialAnalysis.IO
                 {
                     //先关闭服务
                     if(service.Status == ServiceControllerStatus.Running)
-                    {
-                        service.Close();
-                        Thread.Sleep(3000);
-                    }
+                        service.Stop();
                     //删除服务
                     Cmd cmd = new Cmd();
                     cmd.RunCmd("sc delete MySQL");
                     string[] message = cmd.Close();
-                    if (message[0] != "" && message[1] != "")
-                        throw new ApplicationException("服务删除失败:\n" + message[0] + message[1]);
                     return true;
                 }
             }
@@ -135,6 +130,23 @@ namespace SpatialAnalysis.IO
                 try { key.DeleteSubKey(path, true); }
                 catch { /*屏蔽可能的异常*/ }
             key.Close();
+        }
+        /// <summary>
+        /// 建立数据表
+        /// </summary>
+        public static void ChangePassword()
+        {
+            ServiceController service = new ServiceController { ServiceName = "MySQL" };
+            service.Start();
+            MySqlAction.OpenConnect();
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                //因为初始密码有很多限制，所以这里要修改一下密码
+                cmd.CommandText = @"ALTER USER root@localhost IDENTIFIED BY '123456', root@localhost PASSWORD EXPIRE NEVER;";
+                MySqlAction.Write(cmd);
+            }
+            MySqlAction.CloseConnect();
+            Xml.XML.Map(Xml.XML.Params.password, "123456");
         }
     }
 }

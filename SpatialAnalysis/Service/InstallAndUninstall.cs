@@ -38,18 +38,20 @@ namespace SpatialAnalysis.Service
             string[] install = null;
             try
             {
-                program.WriteLine("解压压缩包");
+                program.WriteLine("解压压缩包...");
                 InstallAndUninstallMySql.Compress();
-                program.WriteLine("修改配置文件");
+                program.WriteLine("修改配置文件...");
                 InstallAndUninstallMySql.Configurate();
-                program.WriteLine("生成安装脚本");
+                program.WriteLine("生成安装脚本...");
                 InstallAndUninstallMySql.BuildCmd();
-                program.WriteLine("初始化数据库");
+                program.WriteLine("生成数据库...");
                 initialize = InstallAndUninstallMySql.Initialize();
-                string passwd = GetPasswd(initialize[1]);
-                program.WriteLine("安装数据库");
+                string password = GetPasswd(initialize[1]);
+                program.WriteLine("安装数据库服务...");
                 install = InstallAndUninstallMySql.Install();
-                SaveInstall(passwd);
+                SaveInstall(password);
+                program.WriteLine("初始化数据库...");
+                InstallAndUninstallMySql.ChangePassword();
                 //program.WriteLine("安装完成");
                 //Log.Info("安装数据库完成");
             }
@@ -83,8 +85,11 @@ namespace SpatialAnalysis.Service
                     }
                 }
             }
-            program.RunOver();
+                program.RunOver();
         }
+        /// <summary>
+        /// 开始卸载
+        /// </summary>
         public void BeginUnInstall()
         {
             Log.Info("开始卸载MySql");
@@ -109,6 +114,8 @@ namespace SpatialAnalysis.Service
                 program.WriteLine("删除文件...");
                 if (!InstallAndUninstallMySql.Remove())
                     program.WriteLine("未检测到文件");
+                program.WriteLine("卸载完成");
+                Log.Info("数据库卸载完成");
             }
             catch (Exception e)
             {
@@ -117,8 +124,6 @@ namespace SpatialAnalysis.Service
                 Log.erroe("MySql卸载失败");
                 Log.add(e);
             }
-            program.WriteLine("卸载完成");
-            Log.Info("数据库卸载完成");
             program.RunOver();
         }
 
@@ -132,12 +137,12 @@ namespace SpatialAnalysis.Service
             return passwd.Replace(" ", "").Replace("\r", "").Replace("\n", "");
         }
         //存储相关安装数据
-        private void SaveInstall(string passwd)
+        private void SaveInstall(string password)
         {
-            XML.Map(XML.Params.url, "localhost");
+            XML.Map(XML.Params.server, "localhost");
             XML.Map(XML.Params.port, 3306);
             XML.Map(XML.Params.user, "root");
-            XML.Map(XML.Params.passwd, passwd);
+            XML.Map(XML.Params.password, password);
         }
     }
 }

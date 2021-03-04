@@ -14,7 +14,7 @@ namespace SpatialAnalysis.IO.Xml
         /// </summary>
         public enum Params
         {
-            url,port,user,passwd
+            server, port, user, password, database
         }
         /// <summary>
         /// 通过key读取value
@@ -39,7 +39,10 @@ namespace SpatialAnalysis.IO.Xml
             catch { }
             try { return int.Parse(value); }
             catch { }
-            return value;
+            if (value == "")
+                return null;
+            else
+                return value;
         }
         /// <summary>
         /// 保存key和value。

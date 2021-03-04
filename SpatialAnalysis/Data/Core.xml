@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Main>
   <Dictionary>
-    <add key="url" value="localhost" />
+    <add key="server" value="localhost" />
     <add key="port" value="3306" />
     <add key="user" value="root" />
-    <add key="passwd" value="#nqx&gt;W5YqLiI" />
+    <add key="password" value="123456" />
   </Dictionary>
 </Main>
