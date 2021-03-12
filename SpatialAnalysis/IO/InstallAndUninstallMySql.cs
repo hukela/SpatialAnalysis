@@ -147,6 +147,10 @@ namespace SpatialAnalysis.IO
             }
             MySqlAction.CloseConnect();
             Xml.XML.Map(Xml.XML.Params.password, "123456");
+            MySqlAction.RefreshCon();
+            string path = locolPath + @"\Dat\BuildDatabase.sql";
+            MySqlAction.OpenConnect();
+            MySqlAction.ExecuteSqlFile(path);
         }
     }
 }

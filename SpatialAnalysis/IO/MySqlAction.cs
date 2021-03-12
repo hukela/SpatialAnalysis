@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using SpatialAnalysis.IO.Xml;
 using System.Data;
+using System.Text;
 
 namespace SpatialAnalysis.IO
 {
@@ -10,7 +11,9 @@ namespace SpatialAnalysis.IO
     static class MySqlAction
     {
         private static MySqlConnection con = null;
-        //获取连接用字符串
+        /// <summary>
+        /// 刷新连接配置
+        /// </summary>
         public static void RefreshCon()
         {
             CloseConnect();
@@ -69,8 +72,15 @@ namespace SpatialAnalysis.IO
             cmd.Connection = con;
             return cmd.ExecuteNonQuery();
         }
+        /// <summary>
+        /// 执行sql文件
+        /// </summary>
+        /// <param name="path"></param>
         public static void ExecuteSqlFile(string path)
         {
+            string sql = TextFile.ReadAll(path, Encoding.UTF8);
+            MySqlCommand cmd = new MySqlCommand(sql, con);
+            cmd.ExecuteNonQuery();
         }
     }
 }

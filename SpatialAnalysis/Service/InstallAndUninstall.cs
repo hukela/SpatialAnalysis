@@ -52,8 +52,8 @@ namespace SpatialAnalysis.Service
                 SaveInstall(password);
                 program.WriteLine("初始化数据库...");
                 InstallAndUninstallMySql.ChangePassword();
-                //program.WriteLine("安装完成");
-                //Log.Info("安装数据库完成");
+                program.WriteLine("安装完成");
+                Log.Info("安装数据库完成");
             }
             catch (Exception e)
             {
