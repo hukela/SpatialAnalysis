@@ -17,12 +17,11 @@ namespace SpatialAnalysis
     {
         public App()
         {
-            //判断数据库是否可用
-            ServerState state = MySqlAction.State;
-            if (state == ServerState.NoServer)
-                XML.Map(XML.Params.haveLocalMySql, false);
+            //判断所需数据库是否可用
+            if (MySqlAction.IsConnected)
+                XML.Map(XML.Params.isCanUse, true);
             else
-                XML.Map(XML.Params.haveLocalMySql, true);
+                XML.Map(XML.Params.isCanUse, false);
             //设置主线程名称，方便调试
             Thread.CurrentThread.Name = "Main";
             //Task线程内未捕获异常处理事件

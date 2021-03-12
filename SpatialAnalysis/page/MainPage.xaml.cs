@@ -17,7 +17,6 @@ namespace SpatialAnalysis.MyPage
         }
         private void Test_Click(object sender, RoutedEventArgs e)
         {
-            XML.Map(XML.Params.haveLocalMySql, null);
         }
     }
 }

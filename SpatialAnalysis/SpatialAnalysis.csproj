@@ -104,6 +104,9 @@
     <Compile Include="Page\MySqlPage.xaml.cs">
       <DependentUpon>MySqlPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Page\UnavailablePage.xaml.cs">
+      <DependentUpon>UnavailablePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />
     <Compile Include="Window\CloseButton.cs" />
@@ -150,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Page\MySqlPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Page\UnavailablePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

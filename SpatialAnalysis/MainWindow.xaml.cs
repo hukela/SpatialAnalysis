@@ -1,4 +1,5 @@
-﻿using SpatialAnalysis.MyPage;
+﻿using SpatialAnalysis.IO.Xml;
+using SpatialAnalysis.MyPage;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,15 +13,30 @@ namespace SpatialAnalysis
         public MainWindow()
         {
             InitializeComponent();
+            IsCanUse();
             //设置初始值
-            pageFrame.Content = mainPage;
             lastButton = toMainPage;
             toMainPage.IsEnabled = false;
         }
         //初始化页面
         MainPage mainPage = new MainPage();
+        UnavailablePage unavailablePage;
         AddRecordPage addRecord = new AddRecordPage();
         MySqlPage mySqlPage = new MySqlPage();
+        //若数据库不可用，则关闭相关功能
+        public void IsCanUse()
+        {
+            bool isEnabled = XML.Map(XML.Params.isCanUse);
+            toAddRecord.IsEnabled = isEnabled;
+            if(isEnabled)
+                pageFrame.Content = mainPage;
+            else
+            {
+                if (unavailablePage == null)
+                    unavailablePage = new UnavailablePage();
+                pageFrame.Content = unavailablePage;
+            }
+        }
         //上一个跳转按键
         Button lastButton;
         //关闭当前按键，并打开上一个按键
