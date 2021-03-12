@@ -1,7 +1,6 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
-using System;
 using System.IO;
 using System.ServiceProcess;
 using System.Text;

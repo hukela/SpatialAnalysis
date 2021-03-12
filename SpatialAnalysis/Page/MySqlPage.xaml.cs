@@ -1,4 +1,5 @@
-﻿using SpatialAnalysis.Service;
+﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.Service;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,6 +13,12 @@ namespace SpatialAnalysis.MyPage
         public MySqlPage()
         {
             InitializeComponent();
+        }
+        //加载页面数据
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            MySqlBean bean = MySqlService.GetBean();
+            DataContext = bean;
         }
         //安装MySql
         private void InstallButton_Click(object sender, RoutedEventArgs e)

@@ -1,6 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
+using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO.Xml;
 using System.Data;
+using System.ServiceProcess;
 using System.Text;
 
 namespace SpatialAnalysis.IO
@@ -10,6 +12,21 @@ namespace SpatialAnalysis.IO
     /// </summary>
     static class MySqlAction
     {
+        /// <summary>
+        /// 查看是否连接
+        /// </summary>
+        public static bool IsConnected
+        {
+            get
+            {
+                if (con == null)
+                    return false;
+                if (con.State == ConnectionState.Closed || con.State == ConnectionState.Broken)
+                    return false;
+                else
+                    return true;
+            }
+        }
         private static MySqlConnection con = null;
         /// <summary>
         /// 刷新连接配置
@@ -81,6 +98,27 @@ namespace SpatialAnalysis.IO
             string sql = TextFile.ReadAll(path, Encoding.UTF8);
             MySqlCommand cmd = new MySqlCommand(sql, con);
             cmd.ExecuteNonQuery();
+        }
+        /// <summary>
+        /// 获取MySql服务状态
+        /// </summary>
+        public static ServerState State
+        {
+            get
+            {
+                ServiceController[] services = ServiceController.GetServices();
+                foreach (ServiceController service in services)
+                {
+                    if (service.ServiceName == "MySQL")
+                    {
+                        if (service.Status == ServiceControllerStatus.Stopped)
+                            return ServerState.Stopped;
+                        else
+                            return ServerState.Running;
+                    }
+                }
+                return ServerState.NoServer;
+            }
         }
     }
 }

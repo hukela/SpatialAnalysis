@@ -14,6 +14,9 @@ namespace SpatialAnalysis.IO.Xml
         /// </summary>
         public enum Params
         {
+            //判断本地数据库是否可用
+            isCanUse,
+            //数据库相关参数
             server, port, user, password, database
         }
         /// <summary>
@@ -39,7 +42,7 @@ namespace SpatialAnalysis.IO.Xml
             catch { }
             try { return int.Parse(value); }
             catch { }
-            if (value == "")
+            if (value == "null")
                 return null;
             else
                 return value;
@@ -52,6 +55,9 @@ namespace SpatialAnalysis.IO.Xml
         public static void Map(Params param, object value)
         {
             string key = param.ToString();
+            //防止空异常
+            if (value == null)
+                value = "null";
             //根节点:Main
             XElement Main = XElement.Load(filePath);
             XElement dict = Main.Element("Dictionary");

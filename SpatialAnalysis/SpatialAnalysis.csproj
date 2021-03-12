@@ -95,6 +95,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Entity\MySqlBean.cs" />
+    <Compile Include="Entity\ServerState.cs" />
     <Compile Include="IO\Cmd.cs" />
     <Compile Include="IO\InstallAndUninstallMySql.cs" />
     <Compile Include="IO\MySqlAction.cs" />
@@ -103,6 +105,7 @@
       <DependentUpon>MySqlPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Service\InstallAndUninstall.cs" />
+    <Compile Include="Service\MySqlService.cs" />
     <Compile Include="Window\CloseButton.cs" />
     <Compile Include="Window\ProgramWindow.xaml.cs">
       <DependentUpon>ProgramWindow.xaml</DependentUpon>
@@ -138,7 +141,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Page\AddRecord.xaml">
+    <Page Include="Page\AddRecordPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -160,8 +163,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Page\AddRecord.xaml.cs">
-      <DependentUpon>AddRecord.xaml</DependentUpon>
+    <Compile Include="Page\AddRecordPage.xaml.cs">
+      <DependentUpon>AddRecordPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Page\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

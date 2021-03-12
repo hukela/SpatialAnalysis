@@ -17,8 +17,9 @@ namespace SpatialAnalysis
             lastButton = toMainPage;
             toMainPage.IsEnabled = false;
         }
+        //初始化页面
         MainPage mainPage = new MainPage();
-        AddRecord addRecord = new AddRecord();
+        AddRecordPage addRecord = new AddRecordPage();
         MySqlPage mySqlPage = new MySqlPage();
         //上一个跳转按键
         Button lastButton;

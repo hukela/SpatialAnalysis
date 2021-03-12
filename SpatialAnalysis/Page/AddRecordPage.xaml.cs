@@ -18,9 +18,9 @@ namespace SpatialAnalysis.MyPage
     /// <summary>
     /// AddRecord.xaml 的交互逻辑
     /// </summary>
-    public partial class AddRecord : Page
+    public partial class AddRecordPage : Page
     {
-        public AddRecord()
+        public AddRecordPage()
         {
             InitializeComponent();
         }
