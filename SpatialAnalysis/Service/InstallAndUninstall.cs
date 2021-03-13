@@ -52,7 +52,6 @@ namespace SpatialAnalysis.Service
                 SaveInstall(password);
                 program.WriteLine("初始化数据库...");
                 InstallAndUninstallMySql.ChangePassword();
-                XML.Map(XML.Params.isCanUse, true);
                 program.WriteLine("安装完成");
                 Log.Info("安装数据库完成");
             }
@@ -60,8 +59,8 @@ namespace SpatialAnalysis.Service
             {
                 program.WriteLine("错误:");
                 program.WriteLine(e.Message);
-                Log.erroe("MySql安装失败");
-                Log.add(e);
+                Log.Erroe("MySql安装失败");
+                Log.Add(e);
             }
             finally
             {
@@ -122,8 +121,8 @@ namespace SpatialAnalysis.Service
             {
                 program.WriteLine("错误:");
                 program.WriteLine(e.Message);
-                Log.erroe("MySql卸载失败");
-                Log.add(e);
+                Log.Erroe("MySql卸载失败");
+                Log.Add(e);
             }
             program.RunOver();
         }

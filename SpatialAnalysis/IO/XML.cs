@@ -14,8 +14,7 @@ namespace SpatialAnalysis.IO.Xml
         /// </summary>
         public enum Params
         {
-            //判断本地数据库是否可用
-            isCanUse,
+            //MySql配置
             //数据库相关参数
             server, port, user, password, database
         }

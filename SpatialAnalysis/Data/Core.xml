@@ -5,6 +5,5 @@
     <add key="port" value="3306" />
     <add key="user" value="root" />
     <add key="password" value="123456" />
-    <add key="isCanUse" value="False" />
   </Dictionary>
 </Main>

@@ -17,7 +17,7 @@ namespace SpatialAnalysis.IO.Log
             string message = "";
             foreach (string str in messages)
                 message += str;
-            addLog(message, "info");
+            AddLog(message, "info", 2);
         }
         /// <summary>
         /// 添加警告级别的日志信息
@@ -28,38 +28,39 @@ namespace SpatialAnalysis.IO.Log
             string message = "";
             foreach (string str in messages)
                 message += str;
-            addLog(message, "warn");
+            AddLog(message, "warn", 2);
         }
         /// <summary>
         /// 添加错误级别的日志信息
         /// </summary>
         /// <param name="messages">信息</param>
-        public static void erroe(params string[] messages)
+        public static void Erroe(params string[] messages)
         {
             string message = "";
             foreach (string str in messages)
                 message += str;
-            addLog(message, "error");
+            AddLog(message, "error", 2);
         }
         /// <summary>
         /// 添加错误级别的日志信息
         /// </summary>
         /// <param name="e">异常</param>
-        public static void add(Exception e)
+        public static void Add(Exception e, int i = 0)
         {
             string message = e.Message;
             if(e.StackTrace != null)
                 message += "\n" + e.StackTrace;
-            addLog(message, "error");
+            AddLog(message, "error", i + 2);
         }
-        private static void addLog(string message, string type)
+        // i: 回溯堆栈的索引
+        private static void AddLog(string message, string type, int i)
         {
             DateTime now = DateTime.Now;
             string filePath = logPath + "\\" + now.ToString("yyyy-MM-dd") + ".txt";
             string time = now.ToString("hh:mm:ss.fff");
             //获取添加日志的类的路径
             StackTrace trace = new StackTrace(true);
-            MethodBase method = trace.GetFrame(2).GetMethod();
+            MethodBase method = trace.GetFrame(i).GetMethod();
             string classPath = method.DeclaringType.FullName;
             message = time + " " + type + " " + classPath
                 + " [" + method.ToString() + "]: " + message;

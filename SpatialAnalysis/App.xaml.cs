@@ -17,11 +17,6 @@ namespace SpatialAnalysis
     {
         public App()
         {
-            //判断所需数据库是否可用
-            if (MySqlAction.IsConnected)
-                XML.Map(XML.Params.isCanUse, true);
-            else
-                XML.Map(XML.Params.isCanUse, false);
             //设置主线程名称，方便调试
             Thread.CurrentThread.Name = "Main";
             //Task线程内未捕获异常处理事件
@@ -34,18 +29,18 @@ namespace SpatialAnalysis
         //异常处理
         private void ExceptionHandling(object seader, UnobservedTaskExceptionEventArgs eventArgs)
         {
-            Log.erroe("Task线程内未捕获异常:");
-            Log.add(eventArgs.Exception);
+            Log.Erroe("Task线程内未捕获异常:");
+            Log.Add(eventArgs.Exception);
         }
         private void ExceptionHandling(object seader, UnhandledExceptionEventArgs eventArgs)
         {
-            Log.erroe("非UI线程未捕获异常:");
-            Log.add((Exception)eventArgs.ExceptionObject);
+            Log.Erroe("非UI线程未捕获异常:");
+            Log.Add((Exception)eventArgs.ExceptionObject);
         }
         private void ExceptionHandling(object seader, DispatcherUnhandledExceptionEventArgs eventArgs)
         {
-            Log.erroe("UI线程未捕获异常处:");
-            Log.add(eventArgs.Exception);
+            Log.Erroe("UI线程未捕获异常处:");
+            Log.Add(eventArgs.Exception);
         }
     }
 }

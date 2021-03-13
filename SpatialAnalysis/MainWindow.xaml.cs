@@ -1,4 +1,4 @@
-﻿using SpatialAnalysis.IO.Xml;
+﻿using SpatialAnalysis.IO;
 using SpatialAnalysis.MyPage;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +18,8 @@ namespace SpatialAnalysis
             lastButton = toMainPage;
             toMainPage.IsEnabled = false;
         }
+        //显示主页页面
+        Page main;
         //初始化页面
         MainPage mainPage = new MainPage();
         UnavailablePage unavailablePage;
@@ -26,15 +28,15 @@ namespace SpatialAnalysis
         //若数据库不可用，则关闭相关功能
         public void IsCanUse()
         {
-            bool isEnabled = XML.Map(XML.Params.isCanUse);
+            bool isEnabled = MySqlAction.IsConnected;
             toAddRecord.IsEnabled = isEnabled;
             if(isEnabled)
-                pageFrame.Content = mainPage;
+                main = mainPage;
             else
             {
                 if (unavailablePage == null)
                     unavailablePage = new UnavailablePage();
-                pageFrame.Content = unavailablePage;
+                main = unavailablePage;
             }
         }
         //上一个跳转按键
@@ -49,7 +51,7 @@ namespace SpatialAnalysis
         //跳转按键事件
         private void ToMainPage_Click(object sender, RoutedEventArgs e)
         {
-            pageFrame.Content = mainPage;
+            pageFrame.Content = main;
             CloseButton(toMainPage);
         }
         private void ToAddRecord_Click(object sender, RoutedEventArgs e)

@@ -111,7 +111,9 @@ namespace SpatialAnalysis.IO
                 {
                     if (service.ServiceName == "MySQL")
                     {
-                        if (service.Status == ServiceControllerStatus.Stopped)
+                        ServiceControllerStatus status = service.Status;
+                        service.Dispose();
+                        if (status == ServiceControllerStatus.Stopped)
                             return ServerState.Stopped;
                         else
                             return ServerState.Running;
@@ -119,6 +121,22 @@ namespace SpatialAnalysis.IO
                 }
                 return ServerState.NoServer;
             }
+        }
+        /// <summary>
+        /// 开启MySql服务
+        /// </summary>
+        public static void StartServer()
+        {
+            using (ServiceController service = new ServiceController("MySQL"))
+                service.Start();
+        }
+        /// <summary>
+        /// 关闭MySql服务
+        /// </summary>
+        public static void StopServer()
+        {
+            using (ServiceController service = new ServiceController("MySQL"))
+                service.Stop();
         }
     }
 }
