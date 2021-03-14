@@ -1,4 +1,4 @@
-﻿using SpatialAnalysis.IO;
+﻿using SpatialAnalysis.IO.Xml;
 using System;
 namespace Test
 {
@@ -6,6 +6,7 @@ namespace Test
     {
         static void Main(string[] args)
         {
+            XML.Map(XML.Params.password, "123456");
         }
     }
 }

@@ -128,7 +128,10 @@ namespace SpatialAnalysis.IO
         public static void StartServer()
         {
             using (ServiceController service = new ServiceController("MySQL"))
-                service.Start();
+            {
+                if (service.Status == ServiceControllerStatus.Stopped)
+                    service.Start();
+            }
         }
         /// <summary>
         /// 关闭MySql服务
@@ -136,7 +139,10 @@ namespace SpatialAnalysis.IO
         public static void StopServer()
         {
             using (ServiceController service = new ServiceController("MySQL"))
-                service.Stop();
+            {
+                if (service.Status == ServiceControllerStatus.Running)
+                    service.Stop();
+            }
         }
     }
 }

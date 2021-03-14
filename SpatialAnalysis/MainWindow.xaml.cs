@@ -13,10 +13,15 @@ namespace SpatialAnalysis
         public MainWindow()
         {
             InitializeComponent();
-            IsCanUse();
             //设置初始值
+            pageFrame.Content = main;
             lastButton = toMainPage;
             toMainPage.IsEnabled = false;
+        }
+        //当窗口加载完成后执行
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            IsCanUse();
         }
         //显示主页页面
         Page main;

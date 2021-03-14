@@ -133,20 +133,24 @@ namespace SpatialAnalysis.IO
         /// <summary>
         /// 建立数据表
         /// </summary>
-        public static void ChangePassword()
+        public static void ChangePassword(string password)
         {
-            ServiceController service = new ServiceController { ServiceName = "MySQL" };
-            service.Start();
+            MySqlAction.StartServer();
             MySqlAction.OpenConnect();
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                //因为初始密码有很多限制，所以这里要修改一下密码
-                cmd.CommandText = @"ALTER USER root@localhost IDENTIFIED BY '123456', root@localhost PASSWORD EXPIRE NEVER;";
+                cmd.CommandText = "ALTER USER root@localhost IDENTIFIED BY '" + password + "', root@localhost PASSWORD EXPIRE NEVER;";
                 MySqlAction.Write(cmd);
             }
             MySqlAction.CloseConnect();
-            Xml.XML.Map(Xml.XML.Params.password, "123456");
+            //刷新连接配置
             MySqlAction.RefreshCon();
+        }
+        /// <summary>
+        /// 建立数据库和相应表格
+        /// </summary>
+        public static void BuildTable()
+        {
             string path = locolPath + @"\Dat\BuildDatabase.sql";
             MySqlAction.OpenConnect();
             MySqlAction.ExecuteSqlFile(path);

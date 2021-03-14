@@ -1,6 +1,7 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
 using SpatialAnalysis.IO.Log;
+using SpatialAnalysis.IO.Xml;
 using System;
 using System.Windows;
 
@@ -34,7 +35,34 @@ namespace SpatialAnalysis.Service
                 bean.MySqlConnect = "已连接";
             else
                 bean.MySqlConnect = "未连接";
+            bean.User = XML.Map(XML.Params.user);
+            bean.Password = XML.Map(XML.Params.password);
+            bean.Server = XML.Map(XML.Params.server);
+            bean.Port = XML.Map(XML.Params.port);
+            bean.Database = XML.Map(XML.Params.database);
+            object auto; //防止空异常
+            auto = XML.Map(XML.Params.autoStartServer);
+            if (auto == null)
+                bean.AutoStartServer = false;
+            else
+                bean.AutoStartServer = (bool)auto;
+            auto = XML.Map(XML.Params.autoConnent);
+            if (auto == null)
+                bean.AutoConnent = false;
+            else
+                bean.AutoConnent = (bool)auto;
             return bean;
+        }
+        //保存相关配置
+        public static void SaveConfig(MySqlBean bean)
+        {
+            XML.Map(XML.Params.server, bean.Server);
+            XML.Map(XML.Params.port, bean.Port);
+            XML.Map(XML.Params.user, bean.User);
+            XML.Map(XML.Params.password, bean.Password);
+            XML.Map(XML.Params.database, bean.Database);
+            XML.Map(XML.Params.autoStartServer, bean.AutoStartServer);
+            XML.Map(XML.Params.autoConnent, bean.AutoConnent);
         }
         public static void OpenConnect()
         {

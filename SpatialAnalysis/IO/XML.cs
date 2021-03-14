@@ -15,6 +15,7 @@ namespace SpatialAnalysis.IO.Xml
         public enum Params
         {
             //MySql配置
+            autoStartServer, autoConnent,
             //数据库相关参数
             server, port, user, password, database
         }
@@ -44,7 +45,18 @@ namespace SpatialAnalysis.IO.Xml
             if (value == "null")
                 return null;
             else
+            {
+                //为了解决string型的数字
+                if(value.IndexOf("str:") == 0)
+                    try
+                    {
+                        string forInt = value.Substring(4);
+                        int.Parse(forInt);
+                        return forInt;
+                    }
+                    catch { }
                 return value;
+            }
         }
         /// <summary>
         /// 保存key和value。
@@ -57,6 +69,14 @@ namespace SpatialAnalysis.IO.Xml
             //防止空异常
             if (value == null)
                 value = "null";
+            //为了解决string型的数字
+            if (value is string)
+                try
+                {
+                    int.Parse((string)value);
+                    value = "str:" + value;
+                }
+                catch { }
             //根节点:Main
             XElement Main = XElement.Load(filePath);
             XElement dict = Main.Element("Dictionary");

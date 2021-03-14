@@ -1,12 +1,14 @@
 ﻿<Window x:Class="SpatialAnalysis.MainWindow"
-xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-xmlns:Fluent="urn:fluent-ribbon"
-xmlns:local="clr-namespace:SpatialAnalysis"
-mc:Ignorable="d"
-Title="MainWindow" Height="602" Width="910">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Fluent="urn:fluent-ribbon"
+        xmlns:local="clr-namespace:SpatialAnalysis"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Title="MainWindow" Height="602" Width="910">
+
     <Window.Resources>
         <ResourceDictionary Source="Dictionary/Main.xaml"/>
     </Window.Resources>

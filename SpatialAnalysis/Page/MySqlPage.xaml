@@ -54,25 +54,25 @@
             <TextBlock Text="配置：" Style="{StaticResource title}"/>
             <Border Grid.ColumnSpan="3" Style="{StaticResource border}"/>
             <TextBlock Text="用户：" Grid.Row="2" Grid.Column="1" Style="{StaticResource message}"/>
-            <TextBox Grid.Row="2" Grid.Column="1"/>
+            <TextBox x:Name="user" Text="{Binding User}" Grid.Row="2" Grid.Column="1"/>
             <TextBlock Text="密码：" Grid.Row="2" Grid.Column="2" Style="{StaticResource message}"/>
-            <TextBox Grid.Row="2" Grid.Column="2"/>
+            <TextBox x:Name="password" Text="{Binding Password}" Grid.Row="2" Grid.Column="2"/>
             <TextBlock Text="地址：" Grid.Row="3" Grid.Column="1" Style="{StaticResource message}"/>
-            <TextBox Grid.Row="3" Grid.Column="1"/>
+            <TextBox x:Name="server" Text="{Binding Server}" Grid.Row="3" Grid.Column="1"/>
             <TextBlock Text="端口：" Grid.Row="3" Grid.Column="2" Style="{StaticResource message}"/>
-            <TextBox Grid.Row="3" Grid.Column="2"/>
+            <TextBox x:Name="port" Text="{Binding Port}" Grid.Row="3" Grid.Column="2"/>
             <TextBlock Text="数据库名：" Grid.Row="4" Grid.Column="1" Style="{StaticResource message}"/>
-            <TextBox Grid.Row="4" Grid.Column="1"/>
+            <TextBox x:Name="database" Text="{Binding Database}" Grid.Row="4" Grid.Column="1"/>
             <WrapPanel Grid.Row="5" Grid.Column="1">
                 <TextBlock Text="是否自动开关数据库：" Margin="19,8,0,0"/>
-                <CheckBox/>
+                <CheckBox x:Name="autoStartServer" IsChecked="{Binding Path=AutoStartServer}"/>
             </WrapPanel>
             <WrapPanel Grid.Row="5" Grid.Column="2">
                 <TextBlock Text="是否自动连接数据库：" Margin="40,8,0,0"/>
-                <CheckBox/>
+                <CheckBox x:Name="autoConnent" IsChecked="{Binding Path=AutoConnent}"/>
             </WrapPanel>
-            <Button Content="还原配置" Grid.Row="5" Grid.Column="2" Margin="0,42,0,0"/>
-            <Button Content="应用配置" Grid.Row="5" Grid.Column="2" Margin="196,42,0,0"/>
+            <Button x:Name="rollback" Content="还原配置" Click="Rollback_Click" Grid.Row="5" Grid.Column="2" Margin="0,42,0,0"/>
+            <Button x:Name="useConfig" Content="应用配置" Click="UseConfig_Click" Grid.Row="5" Grid.Column="2" Margin="196,42,0,0"/>
         </Grid>
         <!-- 操作栏 -->
         <Grid Grid.Row="3">

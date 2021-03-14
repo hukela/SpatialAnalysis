@@ -23,6 +23,21 @@ namespace SpatialAnalysis.MyPage
             DataContext = bean;
             haveLocalMySql = bean.haveLocalMySql;
         }
+        //还原配置
+        private void Rollback_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext = MySqlService.GetBean();
+        }
+        //应用配置
+        private void UseConfig_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("是否确定修改配置", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                MySqlBean bean = (MySqlBean)DataContext;
+                MySqlService.SaveConfig(bean);
+                MessageBox.Show("修改成功", "提示", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+        }
         //打开连接
         private void OpenConnect_Click(object sender, RoutedEventArgs e)
         {
