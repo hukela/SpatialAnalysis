@@ -1,14 +1,15 @@
 ﻿<Page x:Class="SpatialAnalysis.MyPage.AddRecordPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:SpatialAnalysis.MyPage"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
+      Loaded="Page_Loaded"
       Title="AddRecord" d:DesignHeight="550" d:DesignWidth="702">
 
     <Page.Resources>
-        <ResourceDictionary Source="/Dictionary/AddRecord.xaml"/>
+        <ResourceDictionary Source="/Dictionary/AddRecord/AddRecord.xaml"/>
     </Page.Resources>
     <Grid>
         <!-- 定义表格结构 -->
@@ -25,18 +26,18 @@
         </Grid.ColumnDefinitions>
         <!-- 表单 -->
         <TextBlock Text="事件标题：" Style="{StaticResource left-row1}"/>
-        <TextBox Style="{StaticResource right-row1}"/>
+        <TextBox x:Name="title" Text="{Binding Path=Title}" Style="{StaticResource right-row1}"/>
         <TextBlock Text="备注：" Style="{StaticResource left-row2}"/>
-        <TextBox Style="{StaticResource right-row2}"/>
+        <TextBox x:Name="remark" Text="{Binding Path=Remark}" Style="{StaticResource right-row2}"/>
         <TextBlock Text="事件类型：" Style="{StaticResource left-row3}"/>
-        <WrapPanel  Style="{StaticResource radio}">
-            <RadioButton x:Name="R1" Content="日常使用" IsChecked="True"/>
-            <RadioButton x:Name="R2" Content="安装软件"/>
-            <RadioButton x:Name="R3" Content="垃圾清理"/>
+        <WrapPanel Style="{StaticResource radio}">
+            <RadioButton GroupName="type" Content="日常使用" IsChecked="{Binding Path=Type, Converter={StaticResource incidentType}, ConverterParameter=0}"/>
+            <RadioButton GroupName="type" Content="安装软件" IsChecked="{Binding Path=Type, Converter={StaticResource incidentType}, ConverterParameter=1}"/>
+            <RadioButton GroupName="type" Content="垃圾清理" IsChecked="{Binding Path=Type, Converter={StaticResource incidentType}, ConverterParameter=2}"/>
         </WrapPanel>
         <Canvas>
             <TextBlock Text="距离上一次记录：- 天" Style="{StaticResource lastTime}"/>
-            <Button x:Name="submit" Content="开始记录" Style="{StaticResource submit}"/>
+            <Button x:Name="submit" Content="开始记录" Click="Submit_Click" Style="{StaticResource submit}"/>
         </Canvas>
     </Grid>
 </Page>

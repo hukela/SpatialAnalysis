@@ -33,7 +33,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -95,6 +95,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dictionary\AddRecord\IncidentTypeConvert.cs" />
+    <Compile Include="Entity\AddRecordBean.cs" />
     <Compile Include="Entity\MySqlBean.cs" />
     <Compile Include="Entity\ServerState.cs" />
     <Compile Include="IO\Cmd.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Page\UnavailablePage.xaml.cs">
       <DependentUpon>UnavailablePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Service\AddRecordServive.cs" />
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />
     <Compile Include="Window\CloseButton.cs" />
@@ -116,7 +119,7 @@
     <Compile Include="Window\TextWindow.xaml.cs">
       <DependentUpon>TextWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dictionary\AddRecord.xaml">
+    <Page Include="Dictionary\AddRecord\AddRecord.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -136,7 +139,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Entity\Incident.cs" />
     <Compile Include="IO\Base.cs" />
     <Compile Include="IO\Log.cs" />
     <Compile Include="IO\XML.cs" />
