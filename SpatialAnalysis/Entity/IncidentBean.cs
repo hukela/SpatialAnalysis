@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Globalization;
-using System.Windows.Data;
 
 namespace SpatialAnalysis.Entity
 {
-    class AddRecordBean
+    class IncidentBean
     {
+        public long Id { get; set; }
+        public DateTime CreatTime { get; set; }
         public string Title { get; set; }
-        public string Remark { get; set; }
+        public string Explain { get; set; }
         public IncidentType Type { get; set; }
     }
     enum IncidentType

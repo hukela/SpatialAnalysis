@@ -96,13 +96,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Dictionary\AddRecord\IncidentTypeConvert.cs" />
-    <Compile Include="Entity\AddRecordBean.cs" />
+    <Compile Include="Entity\IncidentBean.cs" />
     <Compile Include="Entity\MySqlBean.cs" />
     <Compile Include="Entity\ServerState.cs" />
     <Compile Include="IO\Cmd.cs" />
     <Compile Include="IO\InstallAndUninstallMySql.cs" />
     <Compile Include="IO\MySqlAction.cs" />
     <Compile Include="IO\TextFile.cs" />
+    <Compile Include="Mapper\IncidentMapper.cs" />
     <Compile Include="Page\MySqlPage.xaml.cs">
       <DependentUpon>MySqlPage.xaml</DependentUpon>
     </Compile>
@@ -232,5 +233,6 @@
     <Content Include="Data\BuildDatabase.sql" />
     <Content Include="Data\MySql.Data.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

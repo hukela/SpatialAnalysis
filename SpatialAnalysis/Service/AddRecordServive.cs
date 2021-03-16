@@ -1,16 +1,19 @@
 ﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.Mapper;
+using System;
 
 namespace SpatialAnalysis.Service
 {
     class AddRecordServive
     {
-        public static AddRecordBean GetBean()
+        public static IncidentBean GetBean()
         {
-            AddRecordBean bean = new AddRecordBean();
-            bean.Title = "aaa";
-            bean.Remark = "ccc";
-            bean.Type = IncidentType.clear;
-            return bean;
+            return new IncidentBean { Type = IncidentType.daily };
+        }
+        public static void AddIncident(IncidentBean bean)
+        {
+            bean.CreatTime = DateTime.Now;
+            IncidentMapper.AddOne(bean);
         }
     }
 }

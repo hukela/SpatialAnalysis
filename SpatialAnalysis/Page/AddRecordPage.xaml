@@ -26,9 +26,9 @@
         </Grid.ColumnDefinitions>
         <!-- 表单 -->
         <TextBlock Text="事件标题：" Style="{StaticResource left-row1}"/>
-        <TextBox x:Name="title" Text="{Binding Path=Title}" Style="{StaticResource right-row1}"/>
+        <TextBox Text="{Binding Path=Title}" Style="{StaticResource right-row1}"/>
         <TextBlock Text="备注：" Style="{StaticResource left-row2}"/>
-        <TextBox x:Name="remark" Text="{Binding Path=Remark}" Style="{StaticResource right-row2}"/>
+        <TextBox Text="{Binding Path=Explain}" Style="{StaticResource right-row2}"/>
         <TextBlock Text="事件类型：" Style="{StaticResource left-row3}"/>
         <WrapPanel Style="{StaticResource radio}">
             <RadioButton GroupName="type" Content="日常使用" IsChecked="{Binding Path=Type, Converter={StaticResource incidentType}, ConverterParameter=0}"/>

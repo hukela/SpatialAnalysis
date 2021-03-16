@@ -1,4 +1,5 @@
-﻿using SpatialAnalysis.Service;
+﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.Service;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,7 +22,8 @@ namespace SpatialAnalysis.MyPage
         //添加事件
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
-
+            IncidentBean bean = (IncidentBean)DataContext;
+            AddRecordServive.AddIncident(bean);
         }
     }
 }
