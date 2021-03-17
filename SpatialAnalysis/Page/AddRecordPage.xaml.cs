@@ -23,6 +23,16 @@ namespace SpatialAnalysis.MyPage
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
             IncidentBean bean = (IncidentBean)DataContext;
+            if (bean.Title.Length > 20)
+            {
+                MessageBox.Show("标题不得超过20个字符", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+            if (bean.Explain.Length > 500)
+            {
+                MessageBox.Show("备注不得超过500个字符", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
             AddRecordServive.AddIncident(bean);
         }
     }

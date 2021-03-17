@@ -84,6 +84,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -98,6 +99,7 @@
     <Compile Include="Dictionary\AddRecord\IncidentTypeConvert.cs" />
     <Compile Include="Entity\IncidentBean.cs" />
     <Compile Include="Entity\MySqlBean.cs" />
+    <Compile Include="Entity\RecordBean.cs" />
     <Compile Include="Entity\ServerState.cs" />
     <Compile Include="IO\Cmd.cs" />
     <Compile Include="IO\InstallAndUninstallMySql.cs" />
@@ -231,6 +233,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\BuildDatabase.sql" />
+    <Content Include="Data\BuildRecord.template.sql" />
     <Content Include="Data\MySql.Data.dll" />
   </ItemGroup>
   <ItemGroup />

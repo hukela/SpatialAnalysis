@@ -62,7 +62,7 @@
             <TextBlock Text="端口：" Grid.Row="3" Grid.Column="2" Style="{StaticResource message}"/>
             <TextBox Text="{Binding Port}" Grid.Row="3" Grid.Column="2"/>
             <TextBlock Text="数据库名：" Grid.Row="4" Grid.Column="1" Style="{StaticResource message}"/>
-            <TextBox Text="{Binding Database}" Grid.Row="4" Grid.Column="1"/>
+            <TextBox Text="{Binding Database}" Width="140" Grid.Row="4" Grid.Column="1"/>
             <WrapPanel Grid.Row="5" Grid.Column="1">
                 <TextBlock Text="是否自动开关数据库：" Margin="19,8,0,0"/>
                 <CheckBox IsChecked="{Binding Path=AutoStartServer}"/>
