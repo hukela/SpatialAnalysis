@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Main>
   <Dictionary>
-    <add key="server" value="localhost" />
-    <add key="port" value="3306" />
-    <add key="user" value="root" />
-    <add key="password" value="str:123456" />
-    <add key="database" value="spatial_analysis" />
-    <add key="autoStartServer" value="False" />
-    <add key="autoConnent" value="True" />
+    <Add key="server" value="localhost" />
+    <Add key="port" value="3306" />
+    <Add key="user" value="root" />
+    <Add key="password" value="str:123456" />
+    <Add key="database" value="spatial_analysis" />
+    <Add key="autoStartServer" value="False" />
+    <Add key="autoConnent" value="True" />
   </Dictionary>
+  <FileCount>
+  </FileCount>
 </Main>

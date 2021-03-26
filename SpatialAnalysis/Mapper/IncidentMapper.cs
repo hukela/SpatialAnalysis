@@ -8,10 +8,10 @@ namespace SpatialAnalysis.Mapper
     static class IncidentMapper
     {
         /// <summary>
-        /// 添加一条数据
+        /// 添加一行数据
         /// </summary>
-        /// <param name="bean">要添加的时间bean</param>
-        /// <returns>该事件的id</returns>
+        /// <param name="bean">对应的bean</param>
+        /// <returns>该行的id</returns>
         public static int AddOne(IncidentBean bean)
         {
             using (MySqlCommand cmd = new MySqlCommand())

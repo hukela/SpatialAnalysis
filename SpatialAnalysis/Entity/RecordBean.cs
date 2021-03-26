@@ -5,31 +5,67 @@ namespace SpatialAnalysis.Entity
 {
     class RecordBean
     {
-        ulong Id { get; set; }
-        ulong ParentId { get; set; }
-        uint ParentRecord { get; set; }
-        string Name { get; set; }
-        string Postfix { get; set; }
-        string Path { get; set; }
-        bool Type { get; set; }
-        uint NumberOfPlies { get; set; }
-        BigInteger Size { get; set; }
-        BigInteger SpaceUsage { get; set; }
-        DateTime CerateTime { get; set; }
-        DateTime ModifyTime { get; set; }
-        DateTime VisitTime { get; set; }
-        string User { get; set; }
-        ulong FileCount { get; set; }
-        ulong PictureCount { get; set; }
-        ulong VideoCount { get; set; }
-        ulong ProjectCount { get; set; }
-        ulong ExeCount { get; set; }
-        ulong DllCount { get; set; }
-        ulong TxtCount { get; set; }
-        ulong ConfigCount { get; set; }
-        ulong NullCount { get; set; }
-        ulong OtherCount { get; set; }
-        double CreateVariance { get; set; }
-        DateTime CreateAverage { get; set; }
+        public ulong Id { get; set; }
+        public ulong ParentId { get; set; }
+        public uint ParentRecord { get; set; }
+        public string FullName { get; set; }
+        public bool Type { get; set; }
+        public uint Plies { get; set; }
+        public BigInteger Size { get; set; }
+        public BigInteger SpaceUsage { get; set; }
+        public DateTime CerateTime { get; set; }
+        public DateTime ModifyTime { get; set; }
+        public DateTime VisitTime { get; set; }
+        public string Owner { get; set; }
+        public ulong FileCount { get; set; }
+        public ulong PictureCount { get; set; }
+        public ulong VideoCount { get; set; }
+        public ulong ProjectCount { get; set; }
+        public ulong ExeCount { get; set; }
+        public ulong DllCount { get; set; }
+        public ulong TxtCount { get; set; }
+        public ulong ConfigCount { get; set; }
+        public ulong NullCount { get; set; }
+        public ulong OtherCount { get; set; }
+        public double CreateVariance { get; set; }
+        public DateTime CreateAverage { get; set; }
+        /// <summary>
+        /// 将另外一个RecordBean中的相关数据加入的该bean中
+        /// </summary>
+        /// <param name="bean">要添加的bean</param>
+        public void Add(RecordBean bean)
+        {
+            if (Size == null)
+                Size = new BigInteger(0);
+            Size += bean.Size;
+            if (SpaceUsage == null)
+                SpaceUsage = new BigInteger(0);
+            SpaceUsage += bean.SpaceUsage;
+            FileCount += bean.FileCount;
+            PictureCount += bean.PictureCount;
+            VideoCount += bean.VideoCount;
+            ProjectCount += bean.ProjectCount;
+            ExeCount += bean.ExeCount;
+            DllCount += bean.DllCount;
+            TxtCount += bean.TxtCount;
+            ConfigCount += bean.ConfigCount;
+            NullCount += bean.NullCount;
+            OtherCount += bean.OtherCount;
+            //继承最新的修改和访问时间
+            if (ModifyTime == null)
+                ModifyTime = bean.ModifyTime;
+            else
+            {
+                if (bean.ModifyTime > ModifyTime)
+                    ModifyTime = bean.ModifyTime;
+            }
+            if (VisitTime == null)
+                VisitTime = bean.VisitTime;
+            else
+            {
+                if (bean.VisitTime > VisitTime)
+                    VisitTime = bean.VisitTime;
+            }
+        }
     }
 }

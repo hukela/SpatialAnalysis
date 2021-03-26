@@ -9,7 +9,7 @@
       Title="AddRecord" d:DesignHeight="550" d:DesignWidth="702">
 
     <Page.Resources>
-        <ResourceDictionary Source="/Dictionary/AddRecord/AddRecord.xaml"/>
+        <ResourceDictionary Source="/Dictionary/AddRecord.xaml"/>
     </Page.Resources>
     <Grid>
         <!-- 定义表格结构 -->

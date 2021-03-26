@@ -26,17 +26,9 @@ namespace SpatialAnalysis.IO.Xml
         /// <returns>value</returns>
         public static dynamic Map(Params param)
         {
-            string key = param.ToString();
-            //跳转到Dictionary节点
-            XElement dict = XElement.Load(filePath).Element("Dictionary");
-            //遍历筛选key所指的节点
-            IEnumerable<XElement> a = from xml in dict.Elements("add")
-                                      where xml.Attribute("key").Value == key
-                                      select xml;
-            XElement add = a.SingleOrDefault();
-            if (add == null)
+            string value = Read(param.ToString(), "Dictionary", "Add");
+            if (value == null)
                 return null;
-            string value = add.Attribute("value").Value;
             //自动返回对应的数据类型
             try { return bool.Parse(value); }
             catch { }
@@ -77,19 +69,38 @@ namespace SpatialAnalysis.IO.Xml
                     value = "str:" + value;
                 }
                 catch { }
+            Write(key, value.ToString(), "Dictionary", "Add");
+        }
+        //读取
+        protected static string Read(string key, string firstNode, string secondNode)
+        {
+            //跳转到firstNode节点
+            XElement dict = XElement.Load(filePath).Element(firstNode);
+            //遍历筛选key所指的secondNode节点
+            IEnumerable<XElement> a = from xml in dict.Elements(secondNode)
+                                      where xml.Attribute("key").Value == key
+                                      select xml;
+            XElement add = a.SingleOrDefault();
+            if (add == null)
+                return null;
+            return add.Attribute("value").Value;
+        }
+        //写入
+        protected static void Write(string key, string value, string firstNode, string secondNode)
+        {
             //根节点:Main
             XElement Main = XElement.Load(filePath);
-            XElement dict = Main.Element("Dictionary");
-            IEnumerable<XElement> a = from xml in dict.Elements("add")
+            XElement dict = Main.Element(firstNode);
+            IEnumerable<XElement> a = from xml in dict.Elements(secondNode)
                                       where xml.Attribute("key").Value == key
                                       select xml;
             XElement add = a.SingleOrDefault();
             //如果不存在则新建一个
-            if(add == null)
+            if (add == null)
             {
                 XAttribute keyAttribute = new XAttribute("key", key);
                 XAttribute valueAttribute = new XAttribute("value", value.ToString());
-                add = new XElement("add", keyAttribute, valueAttribute);
+                add = new XElement(secondNode, keyAttribute, valueAttribute);
                 dict.Add(add);
             }
             else

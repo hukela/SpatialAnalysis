@@ -106,15 +106,19 @@
     <Compile Include="IO\MySqlAction.cs" />
     <Compile Include="IO\TextFile.cs" />
     <Compile Include="Mapper\IncidentMapper.cs" />
+    <Compile Include="Mapper\RecordMapper.cs" />
     <Compile Include="Page\MySqlPage.xaml.cs">
       <DependentUpon>MySqlPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Page\UnavailablePage.xaml.cs">
       <DependentUpon>UnavailablePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Service\AddRecordPatter\BeanFactory.cs" />
+    <Compile Include="Service\AddRecordPatter\FileCount.cs" />
     <Compile Include="Service\AddRecordServive.cs" />
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />
+    <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Window\CloseButton.cs" />
     <Compile Include="Window\ProgramWindow.xaml.cs">
       <DependentUpon>ProgramWindow.xaml</DependentUpon>
@@ -122,7 +126,7 @@
     <Compile Include="Window\TextWindow.xaml.cs">
       <DependentUpon>TextWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dictionary\AddRecord\AddRecord.xaml">
+    <Page Include="Dictionary\AddRecord.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

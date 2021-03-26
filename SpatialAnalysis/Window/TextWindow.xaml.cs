@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace SpatialAnalysis.MyWindow
 {
@@ -24,14 +12,24 @@ namespace SpatialAnalysis.MyWindow
             InitializeComponent();
         }
         private delegate void WriteMessage(string str);
+        //被冻结的信息
+        private string freezedMessage;
+        /// <summary>
+        /// 重写原有信息
+        /// </summary>
+        /// <param name="message">信息</param>
         public void WriteAll(string message)
         {
             //这里委托用作匿名函数，直接将一个函数当作一个参数传递过去。
             DelegateMe(delegate (string str)
             {
-                content.Text = str;
+                content.Text = freezedMessage + str;
             }, message);
         }
+        /// <summary>
+        /// 添加一行信息
+        /// </summary>
+        /// <param name="message">信息</param>
         public void WriteLine(string message)
         {
             DelegateMe(delegate (string str)
@@ -39,6 +37,10 @@ namespace SpatialAnalysis.MyWindow
                 content.Text += str + "\n";
             }, message);
         }
+        /// <summary>
+        /// 添加信息
+        /// </summary>
+        /// <param name="message">信息</param>
         public void Write(string message)
         {
             DelegateMe(delegate (string str)
@@ -46,13 +48,26 @@ namespace SpatialAnalysis.MyWindow
                 content.Text += str;
             }, message);
         }
+        /// <summary>
+        /// 清空内容
+        /// </summary>
         public void Clean()
         {
             if (content.Dispatcher.CheckAccess())
+            {
                 content.Text = "";
+                freezedMessage = "";
+            }
             else
                 //无参数的函数可以直接使用Invoke()方法
                 content.Dispatcher.Invoke(Clean);
+        }
+        /// <summary>
+        /// 冻结原有信息，让WriteAll()无法重写这些信息
+        /// </summary>
+        public void Freeze()
+        {
+            freezedMessage = content.Text;
         }
         private void DelegateMe(WriteMessage me, string message)
         {

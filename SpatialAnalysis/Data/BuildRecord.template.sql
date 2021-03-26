@@ -16,13 +16,11 @@ USE `spatial_analysis`;
 
 /*Table structure for table `record` */
 
-CREATE TABLE `record_[id]` (
+CREATE TABLE `record` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '文件id',
   `parent_id` bigint unsigned DEFAULT NULL COMMENT '上一级的id',
   `parent_record` int unsigned DEFAULT NULL COMMENT '所对应的表id',
-  `name` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件名',
-  `postfix` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '文件后缀',
-  `path` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件所在路径',
+  `fall_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件全名',
   `type` bit(1) NOT NULL COMMENT '是否是文件夹',
   `number_of_plies` int unsigned DEFAULT NULL COMMENT '上面有多少个文件夹',
   `size` varchar(14) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '大小(字节)',
@@ -30,7 +28,7 @@ CREATE TABLE `record_[id]` (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
   `visit_time` datetime DEFAULT NULL COMMENT '访问时间',
-  `user` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '所有者',
+  `owner` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '所有者',
   `file_count` bigint unsigned DEFAULT '0' COMMENT '文档类文件个数',
   `picture_count` bigint unsigned DEFAULT '0' COMMENT '图片类文件个数',
   `video_count` bigint unsigned DEFAULT '0' COMMENT '视频类文件个数',
