@@ -10,24 +10,60 @@ namespace SpatialAnalysis.Mapper
         /// <summary>
         /// 添加一行数据
         /// </summary>
-        /// <param name="bean">对应的bean</param>
+        /// <param name="bean">对应的数据实体</param>
+        /// <param name="incidentId">对应的事件id</param>
         /// <returns>该行的id</returns>
-        public static int AddOne(RecordBean bean)
+        public static ulong AddOne(RecordBean bean, int incidentId)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "INSERT INTO record " +
-                    "(parent_record, fall_name, `type`, plies, " +
-                    "size, space_usage, create_time, modify_time, visit_time, `owner`, " +
-                    "file_count, picture_count, video_count, project_count, exe_count, " +
-                    "dll_count. txt_count, config_count, null_count, other_count, " +
-                    "create_variance, create_average) " +
+                cmd.CommandText =
+                    "INSERT INTO record_" +
+                    incidentId + " " +
+                    "(parent_record, " +
+                    "fall_name, " +
+                    "`type`, " +
+                    "plies, " +
+                    "size, " +
+                    "space_usage, " +
+                    "create_time, " +
+                    "modify_time, " +
+                    "visit_time, " +
+                    "`owner`, " +
+                    "file_count, " +
+                    "picture_count, " +
+                    "video_count, " +
+                    "project_count, " +
+                    "dll_count, " +
+                    "txt_count, " +
+                    "data_count, " +
+                    "null_count, " +
+                    "other_count, " +
+                    "create_variance, " +
+                    "create_average) " +
                     "VALUES " +
-                    "(@parent_record, @fall_name, @type, " +
-                    "@plies, @size, @space_usage, @create_time, @modify_time, " +
-                    "@visit_time, @owner, @file_count, @picture_count, @video_count, " +
-                    "@project_count, @exe_count, @dll_count. txt_count, @config_count, " +
-                    "@null_count, @other_count, @create_variance, @create_average);";
+                    "(@parent_record, " +
+                    "@fall_name, " +
+                    "@type, " +
+                    "@plies, " +
+                    "@size, " +
+                    "@space_usage, " +
+                    "@create_time, " +
+                    "@modify_time, " +
+                    "@visit_time, " +
+                    "@owner, " +
+                    "@file_count, " +
+                    "@picture_count, " +
+                    "@video_count, " +
+                    "@project_count, " +
+                    "@exe_count, " +
+                    "@dll_count, " +
+                    "@txt_count, " +
+                    "@data_count, " +
+                    "@null_count, " +
+                    "@other_count, " +
+                    "@create_variance, " +
+                    "@create_average);";
                 cmd.Parameters.Add("parent_record", MySqlDbType.UInt32).Value = bean.ParentRecord;
                 cmd.Parameters.Add("fall_name", MySqlDbType.VarChar, 80).Value = bean.FullName;
                 cmd.Parameters.Add("type", MySqlDbType.Bit).Value = bean.Type;
@@ -42,33 +78,52 @@ namespace SpatialAnalysis.Mapper
                 cmd.Parameters.Add("picture_count", MySqlDbType.UInt64).Value = bean.PictureCount;
                 cmd.Parameters.Add("video_count", MySqlDbType.UInt64).Value = bean.VideoCount;
                 cmd.Parameters.Add("project_count", MySqlDbType.UInt64).Value = bean.ProjectCount;
-                cmd.Parameters.Add("exe_count", MySqlDbType.UInt64).Value = bean.ExeCount;
                 cmd.Parameters.Add("dll_count", MySqlDbType.UInt64).Value = bean.DllCount;
                 cmd.Parameters.Add("txt_count", MySqlDbType.UInt64).Value = bean.TxtCount;
-                cmd.Parameters.Add("config_count", MySqlDbType.UInt64).Value = bean.ConfigCount;
+                cmd.Parameters.Add("data_count", MySqlDbType.UInt64).Value = bean.DataCount;
                 cmd.Parameters.Add("null_count", MySqlDbType.UInt64).Value = bean.NullCount;
                 cmd.Parameters.Add("other_count", MySqlDbType.UInt64).Value = bean.OtherCount;
                 cmd.Parameters.Add("create_variance", MySqlDbType.Double).Value = bean.CreateVariance;
                 cmd.Parameters.Add("Create_average", MySqlDbType.DateTime).Value = bean.CreateAverage;
                 MySqlAction.Write(cmd);
             }
-            int id;
+            ulong id;
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "SELECT LAST_INSERT_ID();";
                 DataTable table = MySqlAction.Read(cmd);
-                id = (int)table.Rows[0][0];
+                id = (ulong)table.Rows[0][0];
             }
             return id;
         }
-        public static void SetParentId(ulong childId, ulong ParentId)
+        /// <summary>
+        /// 通过id设置父级id
+        /// </summary>
+        /// <param name="id">要修改的行id</param>
+        /// <param name="incidentId">对应的事件id</param>
+        /// <param name="ParentId">父级id</param>
+        public static void SetParentId(ulong id, ulong ParentId, int incidentId)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "UPDATE record SET parent_id = @parent_id WHERE id = @id;";
-                cmd.Parameters.Add("id", MySqlDbType.UInt64).Value = childId;
+                cmd.CommandText = "UPDATE record_" + incidentId +" SET parent_id = @parent_id WHERE id = @id;";
+                cmd.Parameters.Add("id", MySqlDbType.UInt64).Value = id;
                 cmd.Parameters.Add("parent_id", MySqlDbType.UInt64).Value = ParentId;
                 MySqlAction.Write(cmd);
+            }
+        }
+        /// <summary>
+        /// 获取表中的记录总数
+        /// </summary>
+        /// <param name="incidentId">对应的事件id</param>
+        /// <returns>记录总数</returns>
+        public static ulong Count(int incidentId)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "SELECT COUNT(1) FROM record_" + incidentId + ";";
+                DataTable table = MySqlAction.Read(cmd);
+                return (ulong)table.Rows[0][0];
             }
         }
     }

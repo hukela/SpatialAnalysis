@@ -9,8 +9,13 @@ namespace SpatialAnalysis.Service.AddRecordPatter
 {
     class BeanFactory
     {
-        //获取文件相关信息
-        private static RecordBean GetFileBean(FileInfo file, uint plies)
+        /// <summary>
+        /// 获取文件相关信息
+        /// </summary>
+        /// <param name="file">文件info</param>
+        /// <param name="plies">层数</param>
+        /// <returns></returns>
+        public static RecordBean GetFileBean(FileInfo file, uint plies)
         {
             FileSecurity security = file.GetAccessControl();
             IdentityReference owner = security.GetOwner(typeof(NTAccount));
@@ -24,12 +29,42 @@ namespace SpatialAnalysis.Service.AddRecordPatter
                 CerateTime = file.CreationTime,
                 ModifyTime = file.LastWriteTime,
                 VisitTime = file.LastAccessTime,
-                Owner = owner.ToString()
+                Owner = owner.ToString(),
+                IsChange = true
             };
+            //这里后面添加上判断文件是否变化的功能
+            //初始化时所有未赋值的不能为null的变量会自动赋值为0，这里不需要再去赋值。
+            //遍历枚举类，设置文件类别
+            string extension = file.Extension;
+            if (extension == "")
+            {
+                bean.NullCount = 1;
+                return bean;
+            }
+            foreach (string type in Enum.GetNames(typeof(FileCount.FileType)))
+            {
+                string[] postfixes = FileCount.FilePostfix(type);
+                foreach (string postfix in postfixes)
+                {
+                    if (extension == postfix)
+                    {
+                        string countName = char.ToUpper(type[0]) + type.Substring(1) + "Count";
+                        //设置对应属性名的数值
+                        typeof(RecordBean).GetProperty(countName).SetValue(bean, 1);
+                        return bean;
+                    }
+                }
+            }
+            bean.OtherCount = 1;
             return bean;
         }
-        //获取文件夹相关信息
-        private static RecordBean GetDirBean(DirectoryInfo dir, uint plies)
+        /// <summary>
+        /// 获取文件夹相关信息
+        /// </summary>
+        /// <param name="dir">文件夹info</param>
+        /// <param name="plies">层数</param>
+        /// <returns></returns>
+        public static RecordBean GetDirBean(DirectoryInfo dir, uint plies)
         {
             DirectorySecurity security = dir.GetAccessControl();
             IdentityReference owner = security.GetOwner(typeof(NTAccount));

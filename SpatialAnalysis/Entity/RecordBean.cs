@@ -21,14 +21,15 @@ namespace SpatialAnalysis.Entity
         public ulong PictureCount { get; set; }
         public ulong VideoCount { get; set; }
         public ulong ProjectCount { get; set; }
-        public ulong ExeCount { get; set; }
         public ulong DllCount { get; set; }
         public ulong TxtCount { get; set; }
-        public ulong ConfigCount { get; set; }
+        public ulong DataCount { get; set; }
         public ulong NullCount { get; set; }
         public ulong OtherCount { get; set; }
         public double CreateVariance { get; set; }
         public DateTime CreateAverage { get; set; }
+        //判断该文件或文件夹是否被改变
+        public bool IsChange { get; set; }
         /// <summary>
         /// 将另外一个RecordBean中的相关数据加入的该bean中
         /// </summary>
@@ -45,12 +46,12 @@ namespace SpatialAnalysis.Entity
             PictureCount += bean.PictureCount;
             VideoCount += bean.VideoCount;
             ProjectCount += bean.ProjectCount;
-            ExeCount += bean.ExeCount;
             DllCount += bean.DllCount;
             TxtCount += bean.TxtCount;
-            ConfigCount += bean.ConfigCount;
+            DataCount += bean.DataCount;
             NullCount += bean.NullCount;
             OtherCount += bean.OtherCount;
+            IsChange = bean.IsChange && IsChange;
             //继承最新的修改和访问时间
             if (ModifyTime == null)
                 ModifyTime = bean.ModifyTime;

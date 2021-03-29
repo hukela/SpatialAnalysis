@@ -10,5 +10,11 @@
     <Add key="autoConnent" value="True" />
   </Dictionary>
   <FileCount>
+    <Add key="file" value=".pdf,.doc,.xls,ppt,.docx,.xlsx,.pptx,.wps,.et,pds" />
+    <Add key="picture" value=".gif,.jpg,.jpeg,.pne" />
+    <Add key="video" value=".psd,.ai,.prproj,.fla" />
+    <Add key="dll" value=".exe,.dll,.jar,.pyd,.js" />
+    <Add key="txt" value=".txt,.chm,.html,.json,.xml,.config,ini,.css" />
+    <Add key="data" value=".db,.dat,.zip,.rar" />
   </FileCount>
 </Main>

@@ -11,40 +11,35 @@ namespace SpatialAnalysis.IO.Log
         /// <summary>
         /// 添加日志信息
         /// </summary>
-        /// <param name="messages">信息</param>
-        public static void Info(params string[] messages)
+        /// <param name="message">信息</param>
+        /// <param name="i">堆栈回溯</param>
+        public static void Info(string message, int i = 0)
         {
-            string message = "";
-            foreach (string str in messages)
-                message += str;
-            AddLog(message, "info", 2);
+            AddLog(message, "info", 2 + i);
         }
         /// <summary>
         /// 添加警告级别的日志信息
         /// </summary>
-        /// <param name="messages">信息</param>
-        public static void Warn(params string[] messages)
+        /// <param name="message">信息</param>
+        /// <param name="i">堆栈回溯</param>
+        public static void Warn(string message, int i = 0)
         {
-            string message = "";
-            foreach (string str in messages)
-                message += str;
-            AddLog(message, "warn", 2);
+            AddLog(message, "warn", 2 + i);
         }
         /// <summary>
         /// 添加错误级别的日志信息
         /// </summary>
-        /// <param name="messages">信息</param>
-        public static void Erroe(params string[] messages)
+        /// <param name="message">信息</param>
+        /// <param name="i">堆栈回溯</param>
+        public static void Erroe(string message, int i = 0)
         {
-            string message = "";
-            foreach (string str in messages)
-                message += str;
-            AddLog(message, "error", 2);
+            AddLog(message, "error", 2 + i);
         }
         /// <summary>
         /// 添加错误级别的日志信息
         /// </summary>
         /// <param name="e">异常</param>
+        /// <param name="i">堆栈回溯</param>
         public static void Add(Exception e, int i = 0)
         {
             string message = e.Message;

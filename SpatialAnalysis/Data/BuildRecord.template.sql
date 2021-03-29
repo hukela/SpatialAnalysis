@@ -16,7 +16,7 @@ USE `spatial_analysis`;
 
 /*Table structure for table `record` */
 
-CREATE TABLE `record` (
+CREATE TABLE `record_[id]` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '文件id',
   `parent_id` bigint unsigned DEFAULT NULL COMMENT '上一级的id',
   `parent_record` int unsigned DEFAULT NULL COMMENT '所对应的表id',
@@ -33,10 +33,9 @@ CREATE TABLE `record` (
   `picture_count` bigint unsigned DEFAULT '0' COMMENT '图片类文件个数',
   `video_count` bigint unsigned DEFAULT '0' COMMENT '视频类文件个数',
   `project_count` bigint unsigned DEFAULT '0' COMMENT '工程文件类文件个数',
-  `exe_count` bigint unsigned DEFAULT '0' COMMENT '可执行类文件个数',
-  `dll_count` bigint unsigned DEFAULT '0' COMMENT '类库文件个数',
+  `dll_count` bigint unsigned DEFAULT '0' COMMENT '可执行类文件个数',
   `txt_count` bigint unsigned DEFAULT '0' COMMENT '文本文件个数',
-  `config_count` bigint unsigned DEFAULT '0' COMMENT '配置类文件个数',
+  `data_count` bigint unsigned DEFAULT '0' COMMENT '压缩包类和数据类',
   `null_count` bigint unsigned DEFAULT '0' COMMENT '无后缀名文件个数',
   `other_count` bigint unsigned DEFAULT '0' COMMENT '其它文件个数',
   `create_variance` double unsigned DEFAULT NULL COMMENT '下一级文件或文件夹创建时间的方差',

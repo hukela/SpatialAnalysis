@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+﻿using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SpatialAnalysis.MyWindow
 {
@@ -31,14 +19,40 @@ namespace SpatialAnalysis.MyWindow
             int handle = new WindowInteropHelper(this).Handle.ToInt32();
             CloseButton.Disable(handle);
         }
-        public void Clean()
+        //被冻结的信息
+        private string freezedMessage = "";
+        /// <summary>
+        /// 清空内容
+        /// </summary>
+        public void Clean(bool cleanFreeze)
         {
             if (content.Dispatcher.CheckAccess())
-                content.Text = "";
+            {
+                if (cleanFreeze)
+                {
+                    content.Text = "";
+                    freezedMessage = "";
+                }
+                else
+                    content.Text = freezedMessage;
+            }
             else
-                content.Dispatcher.Invoke(Clean);
+            {
+                CleanDel me = new CleanDel(Clean);
+                content.Dispatcher.Invoke(me);
+            }
         }
-        //允许关闭窗口
+        private delegate void CleanDel(bool cleanFreeze);
+        /// <summary>
+        /// 冻结原有信息，让WriteAll()无法重写这些信息
+        /// </summary>
+        public void Freeze()
+        {
+            freezedMessage = content.Text;
+        }
+        /// <summary>
+        /// 告知线程结束，并允许关闭窗口
+        /// </summary>
         public void RunOver()
         {
             if (content.Dispatcher.CheckAccess())
@@ -49,6 +63,21 @@ namespace SpatialAnalysis.MyWindow
             else
                 content.Dispatcher.Invoke(RunOver);
         }
+        /// <summary>
+        /// 添加信息
+        /// </summary>
+        /// <param name="message">信息</param>
+        public void Write(string message)
+        {
+            DelegateMe(delegate (string str)
+            {
+                content.Text += str;
+            }, message);
+        }
+        /// <summary>
+        /// 添加一行信息
+        /// </summary>
+        /// <param name="message">信息</param>
         public void WriteLine(string message)
         {
             DelegateMe(delegate (string str)
@@ -56,11 +85,16 @@ namespace SpatialAnalysis.MyWindow
                 content.Text += str + "\n";
             }, message);
         }
-        public void Write(string message)
+        /// <summary>
+        /// 重写原有信息
+        /// </summary>
+        /// <param name="message">信息</param>
+        public void WriteAll(string message)
         {
+            //这里委托用作匿名函数，直接将一个函数当作一个参数传递过去。
             DelegateMe(delegate (string str)
             {
-                content.Text += str;
+                content.Text = str;
             }, message);
         }
         private delegate void WriteMessage(string str);

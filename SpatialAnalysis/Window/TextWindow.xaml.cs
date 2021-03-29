@@ -12,18 +12,15 @@ namespace SpatialAnalysis.MyWindow
             InitializeComponent();
         }
         private delegate void WriteMessage(string str);
-        //被冻结的信息
-        private string freezedMessage;
         /// <summary>
-        /// 重写原有信息
+        /// 添加信息
         /// </summary>
         /// <param name="message">信息</param>
-        public void WriteAll(string message)
+        public void Write(string message)
         {
-            //这里委托用作匿名函数，直接将一个函数当作一个参数传递过去。
             DelegateMe(delegate (string str)
             {
-                content.Text = freezedMessage + str;
+                content.Text += str;
             }, message);
         }
         /// <summary>
@@ -38,14 +35,15 @@ namespace SpatialAnalysis.MyWindow
             }, message);
         }
         /// <summary>
-        /// 添加信息
+        /// 重写原有信息
         /// </summary>
         /// <param name="message">信息</param>
-        public void Write(string message)
+        public void WriteAll(string message)
         {
+            //这里委托用作匿名函数，直接将一个函数当作一个参数传递过去。
             DelegateMe(delegate (string str)
             {
-                content.Text += str;
+                content.Text = str;
             }, message);
         }
         /// <summary>
@@ -56,18 +54,10 @@ namespace SpatialAnalysis.MyWindow
             if (content.Dispatcher.CheckAccess())
             {
                 content.Text = "";
-                freezedMessage = "";
             }
             else
                 //无参数的函数可以直接使用Invoke()方法
                 content.Dispatcher.Invoke(Clean);
-        }
-        /// <summary>
-        /// 冻结原有信息，让WriteAll()无法重写这些信息
-        /// </summary>
-        public void Freeze()
-        {
-            freezedMessage = content.Text;
         }
         private void DelegateMe(WriteMessage me, string message)
         {

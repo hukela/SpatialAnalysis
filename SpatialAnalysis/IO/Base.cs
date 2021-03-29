@@ -18,6 +18,9 @@ namespace SpatialAnalysis.IO
                 case "Release":
                     path = path.Remove(path.Length - 12);
                     break;
+                case "Test":
+                    path = path.Remove(path.Length - 15) + @"\SpatialAnalysis";
+                    break;
                 default: break;
             }
             locolPath = path;

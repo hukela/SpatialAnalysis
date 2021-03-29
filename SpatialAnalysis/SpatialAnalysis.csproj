@@ -96,6 +96,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\DataForXML.cs" />
     <Compile Include="Dictionary\AddRecord\IncidentTypeConvert.cs" />
     <Compile Include="Entity\IncidentBean.cs" />
     <Compile Include="Entity\MySqlBean.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
+    <Compile Include="Utils\ForTest.cs" />
     <Compile Include="Window\CloseButton.cs" />
     <Compile Include="Window\ProgramWindow.xaml.cs">
       <DependentUpon>ProgramWindow.xaml</DependentUpon>

@@ -1,4 +1,5 @@
-﻿using SpatialAnalysis.IO.Xml;
+﻿using System;
+using SpatialAnalysis.IO.Xml;
 
 namespace SpatialAnalysis.Service.AddRecordPatter
 {
@@ -9,16 +10,29 @@ namespace SpatialAnalysis.Service.AddRecordPatter
         /// </summary>
         public enum FileType
         {
-            picture, video, project, exe, dll, txt, config
+            file, picture, video, project, dll, txt, data
         }
         /// <summary>
         /// 获取对应类型的后缀名
         /// </summary>
         /// <param name="type">类型</param>
-        /// <returns></returns>
-        public string[] FilePostfix(FileType type)
+        /// <returns>后缀名列表</returns>
+        public static string[] FilePostfix(FileType type)
         {
             string value = Read(type.ToString(), "FileCount", "Add");
+            if (value == "null")
+                return null;
+            else
+                return value.Split(',');
+        }
+        /// <summary>
+        /// 获取对应类型的后缀名
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>后缀名列表</returns>
+        internal static string[] FilePostfix(string type)
+        {
+            string value = Read(type, "FileCount", "Add");
             if (value == "null")
                 return null;
             else
@@ -29,11 +43,11 @@ namespace SpatialAnalysis.Service.AddRecordPatter
         /// </summary>
         /// <param name="type">类型</param>
         /// <param name="postfix">后缀名</param>
-        public void FilePostfix(FileType type, string[] postfix)
+        public static void FilePostfix(FileType type, string[] postfix)
         {
+            string value = "";
             if (postfix.Length == 0)
-                return;
-            string value = "null";
+                value = "null";
             for (int i = 0; i < postfix.Length; i++)
             {
                 value += postfix[i];

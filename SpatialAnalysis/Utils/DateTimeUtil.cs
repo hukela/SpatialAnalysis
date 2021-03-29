@@ -16,7 +16,13 @@ namespace SpatialAnalysis.Utils
         {
             return Convert.ToInt64(dateTime.Subtract(_dtStart).TotalMilliseconds);
         }
-
+        /// <summary>
+        /// 获取当前时间戳
+        /// </summary>
+        public static long GetTimeStamp()
+        {
+            return GetTimeStamp(DateTime.Now);
+        }
         /// <summary> 
         /// 根据时间戳获取时间
         /// </summary>  
