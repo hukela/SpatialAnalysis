@@ -1,9 +1,11 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 
 namespace SpatialAnalysis.IO
 {
@@ -101,9 +103,11 @@ namespace SpatialAnalysis.IO
             {
                 if(service.ServiceName == "MySQL")
                 {
-                    //先关闭服务
-                    if(service.Status == ServiceControllerStatus.Running)
-                        service.Stop();
+                    //先关闭相关进程
+                    Process[] arr = Process.GetProcessesByName("mysqld");
+                    arr[0].Kill();
+                    arr[1].Kill();
+                    Thread.Sleep(1000);
                     //删除服务
                     Cmd cmd = new Cmd();
                     cmd.RunCmd("sc delete MySQL");

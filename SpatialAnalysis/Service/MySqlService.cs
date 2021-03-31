@@ -40,17 +40,8 @@ namespace SpatialAnalysis.Service
             bean.Server = XML.Map(XML.Params.server);
             bean.Port = XML.Map(XML.Params.port);
             bean.Database = XML.Map(XML.Params.database);
-            object auto; //防止空异常
-            auto = XML.Map(XML.Params.autoStartServer);
-            if (auto == null)
-                bean.AutoStartServer = false;
-            else
-                bean.AutoStartServer = (bool)auto;
-            auto = XML.Map(XML.Params.autoConnent);
-            if (auto == null)
-                bean.AutoConnent = false;
-            else
-                bean.AutoConnent = (bool)auto;
+            bean.AutoConnent = XML.Map(XML.Params.isAutoConnent);
+            bean.AutoStartServer = XML.Map(XML.Params.isAutoStartServer);
             return bean;
         }
         //保存相关配置
@@ -61,8 +52,8 @@ namespace SpatialAnalysis.Service
             XML.Map(XML.Params.user, bean.User);
             XML.Map(XML.Params.password, bean.Password);
             XML.Map(XML.Params.database, bean.Database);
-            XML.Map(XML.Params.autoStartServer, bean.AutoStartServer);
-            XML.Map(XML.Params.autoConnent, bean.AutoConnent);
+            XML.Map(XML.Params.isAutoStartServer, bean.AutoStartServer);
+            XML.Map(XML.Params.isAutoConnent, bean.AutoConnent);
         }
         public static void OpenConnect()
         {

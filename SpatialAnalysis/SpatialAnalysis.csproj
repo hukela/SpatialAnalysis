@@ -119,6 +119,7 @@
     <Compile Include="Service\AddRecordServive.cs" />
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />
+    <Compile Include="Service\StartupAndExit.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Utils\ForTest.cs" />
     <Compile Include="Window\CloseButton.cs" />

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -15,7 +14,9 @@ namespace SpatialAnalysis.IO.Xml
         public enum Params
         {
             //MySql配置
-            autoStartServer, autoConnent,
+            isAutoStartServer, isAutoConnent,
+            //安装重启
+            isRestart,
             //数据库相关参数
             server, port, user, password, database
         }
@@ -28,7 +29,12 @@ namespace SpatialAnalysis.IO.Xml
         {
             string value = Read(param.ToString(), "Dictionary", "Add");
             if (value == null)
-                return null;
+            {
+                if (param.ToString().Substring(0, 2) == "is")
+                    return false;
+                else
+                    return null;
+            }
             //自动返回对应的数据类型
             try { return bool.Parse(value); }
             catch { }

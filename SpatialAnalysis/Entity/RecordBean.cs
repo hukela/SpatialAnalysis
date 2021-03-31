@@ -17,6 +17,7 @@ namespace SpatialAnalysis.Entity
         public DateTime ModifyTime { get; set; }
         public DateTime VisitTime { get; set; }
         public string Owner { get; set; }
+        public sbyte ExceptionCode { get; set; }
         public ulong FileCount { get; set; }
         public ulong PictureCount { get; set; }
         public ulong VideoCount { get; set; }

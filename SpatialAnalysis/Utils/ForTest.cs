@@ -1,4 +1,8 @@
-﻿using System;
+﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.Service.AddRecordPatter;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace SpatialAnalysis.Utils
 {
@@ -9,9 +13,9 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
-            System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
-            foreach (System.IO.DriveInfo di in drives)
-                Console.WriteLine(di.Name);
+            Process[] arr = Process.GetProcessesByName("mysqld");
+            foreach (Process p in arr)
+                Console.WriteLine(p.Id);
         }
     }
 }

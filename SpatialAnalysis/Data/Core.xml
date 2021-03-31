@@ -5,16 +5,15 @@
     <Add key="port" value="3306" />
     <Add key="user" value="root" />
     <Add key="password" value="str:123456" />
-    <Add key="database" value="spatial_analysis" />
-    <Add key="autoStartServer" value="False" />
-    <Add key="autoConnent" value="True" />
+    <Add key="database" value="null" />
   </Dictionary>
   <FileCount>
     <Add key="file" value=".pdf,.doc,.xls,ppt,.docx,.xlsx,.pptx,.wps,.et,pds" />
     <Add key="picture" value=".gif,.jpg,.jpeg,.pne" />
-    <Add key="video" value=".psd,.ai,.prproj,.fla" />
+    <Add key="video" value=".avi,.mp4,.mkv,.webm,.flv,.mov,.wmv,.3gp,.3g2,.mpg" />
     <Add key="dll" value=".exe,.dll,.jar,.pyd,.js" />
     <Add key="txt" value=".txt,.chm,.html,.json,.xml,.config,ini,.css" />
     <Add key="data" value=".db,.dat,.zip,.rar" />
+    <Add key="project" value=".psd,.ai,.prproj,.fla" />
   </FileCount>
 </Main>

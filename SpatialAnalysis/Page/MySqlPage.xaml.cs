@@ -74,6 +74,7 @@ namespace SpatialAnalysis.MyPage
             {
                 InstallAndUninstall install = new InstallAndUninstall();
                 install.BeginInstall();
+                Page_Loaded(null, null);
             }
         }
         //卸载MySql
@@ -83,6 +84,7 @@ namespace SpatialAnalysis.MyPage
             {
                 InstallAndUninstall uninstall = new InstallAndUninstall();
                 uninstall.BeginUnInstall();
+                Page_Loaded(null, null);
             }
         }
     }

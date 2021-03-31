@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
+using System;
 using System.Data;
 
 namespace SpatialAnalysis.Mapper
@@ -12,12 +13,12 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         /// <param name="bean">对应的bean</param>
         /// <returns>该行的id</returns>
-        public static int AddOne(IncidentBean bean)
+        public static uint AddOne(IncidentBean bean)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "INSERT INTO " +
-                "incident (creat_time,title,`explain`,`type`) " +
+                "incident (`creat_time`,`title`,`explain`,`type`) " +
                 "value (@creat_time,@title,@explain,@type);";
                 cmd.Parameters.Add("creat_time", MySqlDbType.DateTime).Value = bean.CreatTime.ToString();
                 cmd.Parameters.Add("title", MySqlDbType.VarChar, 20).Value = bean.Title;
@@ -25,12 +26,13 @@ namespace SpatialAnalysis.Mapper
                 cmd.Parameters.Add("type", MySqlDbType.UByte).Value = (int)bean.Type;
                 MySqlAction.Write(cmd);
             }
-            int id;
+            uint id;
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "SELECT LAST_INSERT_ID();";
                 DataTable table = MySqlAction.Read(cmd);
-                id = (int)table.Rows[0][0];
+                //查询id默认类型为ulong
+                id = Convert.ToUInt32(table.Rows[0][0]);
             }
             return id;
         }

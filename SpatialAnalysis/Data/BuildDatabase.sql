@@ -16,16 +16,18 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`spatial_analysis` /*!40100 DEFAULT CHAR
 
 USE `spatial_analysis`;
 
-/*Table structure for table `file` */
+/*Table structure for table `incident` */
 
-DROP TABLE IF EXISTS `file`;
+DROP TABLE IF EXISTS `incident`;
 
-CREATE TABLE `file` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-/*Data for the table `file` */
+CREATE TABLE `incident` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '事件id',
+  `creat_time` datetime NOT NULL COMMENT '创建时间',
+  `title` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '事件标题',
+  `explain` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '事件描述',
+  `type` tinyint unsigned DEFAULT NULL COMMENT '事件类别',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

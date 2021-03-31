@@ -74,8 +74,10 @@ namespace SpatialAnalysis.IO
             if (con.State == ConnectionState.Broken)
                 OpenConnect();
             cmd.Connection = con;
-            MySqlDataReader reader = cmd.ExecuteReader();
-            return reader.GetSchemaTable();
+            MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            return table;
         }
         /// <summary>
         /// 更改数据库数据

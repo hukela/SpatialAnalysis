@@ -31,7 +31,7 @@ namespace SpatialAnalysis.IO.Log
         /// </summary>
         /// <param name="message">信息</param>
         /// <param name="i">堆栈回溯</param>
-        public static void Erroe(string message, int i = 0)
+        public static void Error(string message, int i = 0)
         {
             AddLog(message, "error", 2 + i);
         }

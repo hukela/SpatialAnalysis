@@ -54,6 +54,7 @@ namespace SpatialAnalysis.Service
                 //因为初始密码有很多限制，所以这里要修改一下密码
                 password = "123456";
                 InstallAndUninstallMySql.ChangePassword(password);
+                Thread.Sleep(1000);
                 XML.Map(XML.Params.password, password);
                 InstallAndUninstallMySql.BuildTable();
                 XML.Map(XML.Params.database, "spatial_analysis");
@@ -64,7 +65,7 @@ namespace SpatialAnalysis.Service
             {
                 program.WriteLine("错误:");
                 program.WriteLine(e.Message);
-                Log.Erroe("MySql安装失败");
+                Log.Error("MySql安装失败");
                 Log.Add(e);
             }
             finally
@@ -90,7 +91,7 @@ namespace SpatialAnalysis.Service
                     }
                 }
             }
-                program.RunOver();
+            program.RunOver();
         }
         /// <summary>
         /// 开始卸载
@@ -109,6 +110,7 @@ namespace SpatialAnalysis.Service
             ProgramWindow program = (ProgramWindow)obj;
             Thread.Sleep(1000);
             program.WriteLine("开始卸载");
+            MySqlAction.CloseConnect();
             try
             {
                 program.WriteLine("卸载服务...");
@@ -116,6 +118,7 @@ namespace SpatialAnalysis.Service
                     program.WriteLine("未检测到服务");
                 program.WriteLine("清理注册表...");
                 InstallAndUninstallMySql.DeleteRegedit();
+                XML.Map(XML.Params.database, null);
                 program.WriteLine("删除文件...");
                 if (!InstallAndUninstallMySql.Remove())
                     program.WriteLine("未检测到文件");
@@ -126,7 +129,7 @@ namespace SpatialAnalysis.Service
             {
                 program.WriteLine("错误:");
                 program.WriteLine(e.Message);
-                Log.Erroe("MySql卸载失败");
+                Log.Error("MySql卸载失败");
                 Log.Add(e);
             }
             program.RunOver();

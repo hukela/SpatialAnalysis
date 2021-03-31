@@ -1,4 +1,5 @@
 ﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.IO.Log;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -17,8 +18,29 @@ namespace SpatialAnalysis.Service.AddRecordPatter
         /// <returns></returns>
         public static RecordBean GetFileBean(FileInfo file, uint plies)
         {
-            FileSecurity security = file.GetAccessControl();
-            IdentityReference owner = security.GetOwner(typeof(NTAccount));
+            //有些文件无法获得拥有者
+            string owner;
+            try
+            {
+                FileSecurity security = file.GetAccessControl();
+                IdentityReference identity = security.GetOwner(typeof(NTAccount));
+                owner = identity.ToString();
+            }
+            catch (IdentityNotMappedException e)
+            {
+                owner = "null";
+                Log.Warn("获取文件有者失败：" + file.FullName + " " + e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                owner = "null";
+                Log.Warn("获取文件有者失败：" + file.FullName + " " + e.Message.Replace("\r\n", ""));
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                owner = "UnauthorizedAccess";
+                Log.Warn("获取文件有者失败：" + file.FullName + " " + e.Message);
+            }
             RecordBean bean = new RecordBean()
             {
                 FullName = file.FullName,
@@ -29,8 +51,9 @@ namespace SpatialAnalysis.Service.AddRecordPatter
                 CerateTime = file.CreationTime,
                 ModifyTime = file.LastWriteTime,
                 VisitTime = file.LastAccessTime,
-                Owner = owner.ToString(),
-                IsChange = true
+                Owner = owner,
+                ExceptionCode = 0,
+                IsChange = true,
             };
             //这里后面添加上判断文件是否变化的功能
             //初始化时所有未赋值的不能为null的变量会自动赋值为0，这里不需要再去赋值。
@@ -50,7 +73,7 @@ namespace SpatialAnalysis.Service.AddRecordPatter
                     {
                         string countName = char.ToUpper(type[0]) + type.Substring(1) + "Count";
                         //设置对应属性名的数值
-                        typeof(RecordBean).GetProperty(countName).SetValue(bean, 1);
+                        typeof(RecordBean).GetProperty(countName).SetValue(bean, (ulong)1);
                         return bean;
                     }
                 }
@@ -66,15 +89,36 @@ namespace SpatialAnalysis.Service.AddRecordPatter
         /// <returns></returns>
         public static RecordBean GetDirBean(DirectoryInfo dir, uint plies)
         {
-            DirectorySecurity security = dir.GetAccessControl();
-            IdentityReference owner = security.GetOwner(typeof(NTAccount));
+            string owner;
+            try
+            {
+                DirectorySecurity security = dir.GetAccessControl();
+                IdentityReference identity = security.GetOwner(typeof(NTAccount));
+                owner = identity.ToString();
+            }
+            catch (IdentityNotMappedException e)
+            {
+                owner = "null";
+                Log.Warn("获取文件夹所有者失败。" + dir.FullName + " " + e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                owner = "null";
+                Log.Warn("获取文件夹有者失败。" + dir.FullName + " " + e.Message.Replace("\r\n", ""));
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                owner = "UnauthorizedAccess";
+                Log.Warn("获取文件夹有者失败。" + dir.FullName + " " + e.Message);
+            }
             return new RecordBean()
             {
                 FullName = dir.FullName,
                 Type = true,
                 Plies = plies,
                 CerateTime = dir.CreationTime,
-                Owner = owner.ToString()
+                Owner = owner,
+                ExceptionCode = 0,
             };
         }
         //获取文件占用空间

@@ -39,7 +39,7 @@ namespace SpatialAnalysis.MyWindow
             else
             {
                 CleanDel me = new CleanDel(Clean);
-                content.Dispatcher.Invoke(me);
+                content.Dispatcher.Invoke(me, cleanFreeze);
             }
         }
         private delegate void CleanDel(bool cleanFreeze);
@@ -48,7 +48,10 @@ namespace SpatialAnalysis.MyWindow
         /// </summary>
         public void Freeze()
         {
-            freezedMessage = content.Text;
+            if (content.Dispatcher.CheckAccess())
+                freezedMessage = content.Text;
+            else
+                content.Dispatcher.Invoke(Freeze);
         }
         /// <summary>
         /// 告知线程结束，并允许关闭窗口
@@ -94,7 +97,7 @@ namespace SpatialAnalysis.MyWindow
             //这里委托用作匿名函数，直接将一个函数当作一个参数传递过去。
             DelegateMe(delegate (string str)
             {
-                content.Text = str;
+                content.Text = freezedMessage + str;
             }, message);
         }
         private delegate void WriteMessage(string str);

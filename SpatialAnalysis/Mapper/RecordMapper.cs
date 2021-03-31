@@ -13,34 +13,35 @@ namespace SpatialAnalysis.Mapper
         /// <param name="bean">对应的数据实体</param>
         /// <param name="incidentId">对应的事件id</param>
         /// <returns>该行的id</returns>
-        public static ulong AddOne(RecordBean bean, int incidentId)
+        public static ulong AddOne(RecordBean bean, uint incidentId)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText =
                     "INSERT INTO record_" +
-                    incidentId + " " +
-                    "(parent_record, " +
-                    "fall_name, " +
+                    incidentId + " (" +
+                    "`parent_record`, " +
+                    "`fall_name`, " +
                     "`type`, " +
-                    "plies, " +
-                    "size, " +
-                    "space_usage, " +
-                    "create_time, " +
-                    "modify_time, " +
-                    "visit_time, " +
+                    "`plies`, " +
+                    "`size`, " +
+                    "`space_usage`, " +
+                    "`create_time`, " +
+                    "`modify_time`, " +
+                    "`visit_time`, " +
                     "`owner`, " +
-                    "file_count, " +
-                    "picture_count, " +
-                    "video_count, " +
-                    "project_count, " +
-                    "dll_count, " +
-                    "txt_count, " +
-                    "data_count, " +
-                    "null_count, " +
-                    "other_count, " +
-                    "create_variance, " +
-                    "create_average) " +
+                    "`exception_code`, " +
+                    "`file_count`, " +
+                    "`picture_count`, " +
+                    "`video_count`, " +
+                    "`project_count`, " +
+                    "`dll_count`, " +
+                    "`txt_count`, " +
+                    "`data_count`, " +
+                    "`null_count`, " +
+                    "`other_count`, " +
+                    "`create_variance`, " +
+                    "`create_average`) " +
                     "VALUES " +
                     "(@parent_record, " +
                     "@fall_name, " +
@@ -52,11 +53,11 @@ namespace SpatialAnalysis.Mapper
                     "@modify_time, " +
                     "@visit_time, " +
                     "@owner, " +
+                    "@exception_code, " +
                     "@file_count, " +
                     "@picture_count, " +
                     "@video_count, " +
                     "@project_count, " +
-                    "@exe_count, " +
                     "@dll_count, " +
                     "@txt_count, " +
                     "@data_count, " +
@@ -74,6 +75,7 @@ namespace SpatialAnalysis.Mapper
                 cmd.Parameters.Add("modify_time", MySqlDbType.DateTime).Value = bean.ModifyTime;
                 cmd.Parameters.Add("visit_time", MySqlDbType.DateTime).Value = bean.VisitTime;
                 cmd.Parameters.Add("owner", MySqlDbType.VarChar, 30).Value = bean.Owner;
+                cmd.Parameters.Add("exception_code", MySqlDbType.Byte).Value = bean.ExceptionCode;
                 cmd.Parameters.Add("file_count", MySqlDbType.UInt64).Value = bean.FileCount;
                 cmd.Parameters.Add("picture_count", MySqlDbType.UInt64).Value = bean.PictureCount;
                 cmd.Parameters.Add("video_count", MySqlDbType.UInt64).Value = bean.VideoCount;
@@ -102,7 +104,7 @@ namespace SpatialAnalysis.Mapper
         /// <param name="id">要修改的行id</param>
         /// <param name="incidentId">对应的事件id</param>
         /// <param name="ParentId">父级id</param>
-        public static void SetParentId(ulong id, ulong ParentId, int incidentId)
+        public static void SetParentId(ulong id, ulong ParentId, uint incidentId)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
@@ -117,7 +119,7 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         /// <param name="incidentId">对应的事件id</param>
         /// <returns>记录总数</returns>
-        public static ulong Count(int incidentId)
+        public static ulong Count(uint incidentId)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {

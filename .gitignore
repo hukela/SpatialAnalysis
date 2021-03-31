@@ -266,3 +266,5 @@ SpatialAnalysis/Log
 SpatialAnalysis/Data/mysql-8.0.22-winx64.zip
 SpatialAnalysis/Data/MySql.Data.dll
 SpatialAnalysis/MySql
+/SpatialAnalysis/Data/InitializeMySQL.cmd
+/SpatialAnalysis/Data/InstallMySQL.cmd
