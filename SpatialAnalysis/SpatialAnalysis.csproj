@@ -101,6 +101,7 @@
     <Compile Include="Entity\IncidentBean.cs" />
     <Compile Include="Entity\MySqlBean.cs" />
     <Compile Include="Entity\RecordBean.cs" />
+    <Compile Include="Entity\RecordExCode.cs" />
     <Compile Include="Entity\ServerState.cs" />
     <Compile Include="IO\Cmd.cs" />
     <Compile Include="IO\InstallAndUninstallMySql.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Service\StartupAndExit.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Utils\ForTest.cs" />
+    <Compile Include="Utils\InternalStorage.cs" />
     <Compile Include="Window\CloseButton.cs" />
     <Compile Include="Window\ProgramWindow.xaml.cs">
       <DependentUpon>ProgramWindow.xaml</DependentUpon>

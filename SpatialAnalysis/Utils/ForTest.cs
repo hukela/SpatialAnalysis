@@ -1,8 +1,10 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.Service.AddRecordPatter;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security.AccessControl;
 
 namespace SpatialAnalysis.Utils
 {
@@ -13,9 +15,11 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
-            Process[] arr = Process.GetProcessesByName("mysqld");
-            foreach (Process p in arr)
-                Console.WriteLine(p.Id);
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict["1"] = "a";
+            Console.WriteLine(dict["1"]);
+            dict["1"] = "b";
+            Console.WriteLine(dict["1"]);
         }
     }
 }

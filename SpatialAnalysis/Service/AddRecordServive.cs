@@ -29,8 +29,8 @@ namespace SpatialAnalysis.Service
             Log.Info("开始添加记录");
             ProgramWindow window = new ProgramWindow();
             object[] objs = { window, bean };
-            Thread thread = new Thread(addRecord.AddIncidentAsyn) { Name = "addRecord" };
-            thread.Start(objs);
+            addRecord.thread = new Thread(addRecord.AddIncidentAsyn) { Name = "addRecord" };
+            addRecord.thread.Start(objs);
             window.ShowDialog();
         }
         //事件id
@@ -54,7 +54,8 @@ namespace SpatialAnalysis.Service
                 sql = sql.Replace("[id]", incidentId.ToString());
                 TextFile.WriteAll(path, Encoding.UTF8, sql);
                 MySqlAction.ExecuteSqlFile(path);
-                //向记录表中添加数据
+                //将分类数据载入内存
+                FileCount.LoadIntoStorage();
                 programWindow.WriteLine("开始记录硬盘使用空间...");
                 programWindow.WriteLine("(建议此时不要修改硬盘上的文件，以免影响最终的分析结果)");
                 programWindow.Freeze();
@@ -86,9 +87,10 @@ namespace SpatialAnalysis.Service
             //}
         }
         //用于告知当前进度的
-        BigInteger beanCount = BigInteger.Parse("0");
-        string plies2Path = "";
-        bool isRunning;
+        private BigInteger beanCount = BigInteger.Parse("0");
+        private string plies2Path = "";
+        private bool isRunning;
+        private Thread thread;
         private void ShowProgress(object obj)
         {
             ProgramWindow window = (ProgramWindow)obj;
@@ -99,10 +101,14 @@ namespace SpatialAnalysis.Service
                 if (a)
                 {
                     a = false;
-                    window.WriteLine("         *");
+                    window.WriteLine(" *");
                 }
                 else
+                {
                     a = true;
+                    window.Write("\n");
+                }
+                window.Write("当前线程状态：" + thread.ThreadState);
                 Thread.Sleep(300);
             }
         }

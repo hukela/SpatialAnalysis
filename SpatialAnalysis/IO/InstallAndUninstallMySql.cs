@@ -147,15 +147,13 @@ namespace SpatialAnalysis.IO
                 MySqlAction.Write(cmd);
             }
             MySqlAction.CloseConnect();
-            //刷新连接配置
-            MySqlAction.RefreshCon();
         }
         /// <summary>
         /// 建立数据库和相应表格
         /// </summary>
         public static void BuildTable()
         {
-            string path = locolPath + @"\Dat\BuildDatabase.sql";
+            string path = locolPath + @"\Data\BuildDatabase.sql";
             MySqlAction.OpenConnect();
             MySqlAction.ExecuteSqlFile(path);
         }

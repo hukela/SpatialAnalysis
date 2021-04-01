@@ -29,17 +29,26 @@ namespace SpatialAnalysis.Service.AddRecordPatter
             catch (IdentityNotMappedException e)
             {
                 owner = "null";
-                Log.Warn("获取文件有者失败：" + file.FullName + " " + e.Message);
+                Log.Warn("获取文件有者失败。" + file.FullName + " " + e.Message);
             }
             catch (ArgumentException e)
             {
                 owner = "null";
-                Log.Warn("获取文件有者失败：" + file.FullName + " " + e.Message.Replace("\r\n", ""));
+                Log.Warn("获取文件有者失败。" + file.FullName + " " + e.Message.Replace("\r\n", ""));
             }
             catch (UnauthorizedAccessException e)
             {
                 owner = "UnauthorizedAccess";
-                Log.Warn("获取文件有者失败：" + file.FullName + " " + e.Message);
+                Log.Warn("获取文件有者失败。" + file.FullName + " " + e.Message);
+            }
+            catch (FileNotFoundException e)
+            {
+                Log.Warn("文件不存在。" + e.Message);
+                return new RecordBean()
+                {
+                    FullName = file.FullName,
+                    ExceptionCode = 2,
+                };
             }
             RecordBean bean = new RecordBean()
             {
@@ -110,6 +119,15 @@ namespace SpatialAnalysis.Service.AddRecordPatter
             {
                 owner = "UnauthorizedAccess";
                 Log.Warn("获取文件夹有者失败。" + dir.FullName + " " + e.Message);
+            }
+            catch (FileNotFoundException e)
+            {
+                Log.Warn("文件夹不存在。" + e.Message);
+                return new RecordBean()
+                {
+                    FullName = dir.FullName,
+                    ExceptionCode = 2,
+                };
             }
             return new RecordBean()
             {

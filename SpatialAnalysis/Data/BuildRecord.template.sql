@@ -29,7 +29,7 @@ CREATE TABLE `record_[id]` (
   `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
   `visit_time` datetime DEFAULT NULL COMMENT '访问时间',
   `owner` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '所有者',
-  `exception_code` tinyint DEFAULT '0' COMMENT '异常码 0:正常, 1:权限不足',
+  `exception_code` tinyint DEFAULT '0' COMMENT '异常码',
   `file_count` bigint unsigned DEFAULT '0' COMMENT '文档类文件个数',
   `picture_count` bigint unsigned DEFAULT '0' COMMENT '图片类文件个数',
   `video_count` bigint unsigned DEFAULT '0' COMMENT '视频类文件个数',

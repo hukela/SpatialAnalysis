@@ -268,3 +268,4 @@ SpatialAnalysis/Data/MySql.Data.dll
 SpatialAnalysis/MySql
 /SpatialAnalysis/Data/InitializeMySQL.cmd
 /SpatialAnalysis/Data/InstallMySQL.cmd
+/SpatialAnalysis/Data/BuildRecord.sql

@@ -1,5 +1,6 @@
-﻿using System;
-using SpatialAnalysis.IO.Xml;
+﻿using SpatialAnalysis.IO.Xml;
+using SpatialAnalysis.Utils;
+using System;
 
 namespace SpatialAnalysis.Service.AddRecordPatter
 {
@@ -13,30 +14,35 @@ namespace SpatialAnalysis.Service.AddRecordPatter
             file, picture, video, project, dll, txt, data
         }
         /// <summary>
-        /// 获取对应类型的后缀名
+        /// 从内存中获取对应类型的后缀名
         /// </summary>
         /// <param name="type">类型</param>
         /// <returns>后缀名列表</returns>
         public static string[] FilePostfix(FileType type)
         {
-            string value = Read(type.ToString(), "FileCount", "Add");
-            if (value == "null")
-                return null;
-            else
-                return value.Split(',');
+            return (string[])InternalStorage.Get(InternalStorage.Domain.FileCount, type.ToString());
         }
         /// <summary>
-        /// 获取对应类型的后缀名
+        /// 从内存中获取对应类型的后缀名
         /// </summary>
         /// <param name="type">类型</param>
         /// <returns>后缀名列表</returns>
-        internal static string[] FilePostfix(string type)
+        public static string[] FilePostfix(string type)
         {
-            string value = Read(type, "FileCount", "Add");
-            if (value == "null")
-                return null;
-            else
-                return value.Split(',');
+            return (string[])InternalStorage.Get(InternalStorage.Domain.FileCount, type);
+        }
+        /// <summary>
+        /// 将数据由硬盘载入内存中
+        /// </summary>
+        public static void LoadIntoStorage()
+        {
+            foreach (string key in Enum.GetNames(typeof(FileCount.FileType)))
+            {
+                string value = Read(key, "FileCount", "Add");
+                if (value == "null")
+                    value = null;
+                InternalStorage.Add(InternalStorage.Domain.FileCount, key, value.Split(','));
+            }
         }
         /// <summary>
         /// 添加对应类型的后缀名

@@ -4,6 +4,7 @@ using SpatialAnalysis.IO.Log;
 using SpatialAnalysis.IO.Xml;
 using System.Threading;
 using System;
+using System.Windows;
 
 namespace SpatialAnalysis.Service
 {
@@ -49,13 +50,17 @@ namespace SpatialAnalysis.Service
                 string password = GetPasswd(initialize[1]);
                 program.WriteLine("安装数据库服务...");
                 install = InstallAndUninstallMySql.Install();
+                //刷新连接配置
                 SaveInstall(password);
+                MySqlAction.RefreshCon();
                 program.WriteLine("初始化数据库...");
                 //因为初始密码有很多限制，所以这里要修改一下密码
                 password = "123456";
                 InstallAndUninstallMySql.ChangePassword(password);
-                Thread.Sleep(1000);
+                //刷新连接配置
                 XML.Map(XML.Params.password, password);
+                MySqlAction.RefreshCon();
+                //向数据库中建立相应库和表格
                 InstallAndUninstallMySql.BuildTable();
                 XML.Map(XML.Params.database, "spatial_analysis");
                 program.WriteLine("安装完成");
@@ -68,29 +73,27 @@ namespace SpatialAnalysis.Service
                 Log.Error("MySql安装失败");
                 Log.Add(e);
             }
-            finally
+            if (initialize != null)
             {
-                if (initialize != null)
+                //只有主线程可以新建窗口
+                TextWindow textWindow;
+                textWindow = App.Current.Dispatcher.Invoke(delegate ()
                 {
-                    //只有主线程可以新建窗口
-                    TextWindow textWindow;
-                    textWindow = App.Current.Dispatcher.Invoke(delegate ()
-                    {
-                        textWindow = new TextWindow();
-                        textWindow.Show();
-                        return textWindow;
-                    });
-                    textWindow.WriteLine("建立数据库:");
-                    textWindow.WriteLine(initialize[0]);
-                    textWindow.WriteLine(initialize[1]);
-                    if (install != null)
-                    {
-                        textWindow.WriteLine("安装数据库:");
-                        textWindow.WriteLine(install[0]);
-                        textWindow.WriteLine(install[1]);
-                    }
+                    textWindow = new TextWindow();
+                    textWindow.Show();
+                    return textWindow;
+                });
+                textWindow.WriteLine("建立数据库:");
+                textWindow.WriteLine(initialize[0]);
+                textWindow.WriteLine(initialize[1]);
+                if (install != null)
+                {
+                    textWindow.WriteLine("安装数据库:");
+                    textWindow.WriteLine(install[0]);
+                    textWindow.WriteLine(install[1]);
                 }
             }
+            RefreshIsCanUse();
             program.RunOver();
         }
         /// <summary>
@@ -132,9 +135,9 @@ namespace SpatialAnalysis.Service
                 Log.Error("MySql卸载失败");
                 Log.Add(e);
             }
+            RefreshIsCanUse();
             program.RunOver();
         }
-
         //获取密码
         private string GetPasswd(string message)
         {
@@ -151,6 +154,16 @@ namespace SpatialAnalysis.Service
             XML.Map(XML.Params.port, 3306);
             XML.Map(XML.Params.user, "root");
             XML.Map(XML.Params.password, password);
+        }
+        //刷新应用对于连接的识别状态
+        private void RefreshIsCanUse()
+        {
+            Application app = Application.Current;
+            app.Dispatcher.Invoke(delegate()
+            {
+                MainWindow main = (MainWindow)app.MainWindow;
+                main.IsCanUse();
+            });
         }
     }
 }
