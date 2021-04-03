@@ -1,4 +1,5 @@
 ﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.IO;
 using SpatialAnalysis.Service.AddRecordPatter;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,7 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-            dict["1"] = "a";
-            Console.WriteLine(dict["1"]);
-            dict["1"] = "b";
-            Console.WriteLine(dict["1"]);
+            MftReader.openMft();
         }
     }
 }

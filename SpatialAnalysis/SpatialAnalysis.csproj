@@ -105,6 +105,7 @@
     <Compile Include="Entity\ServerState.cs" />
     <Compile Include="IO\Cmd.cs" />
     <Compile Include="IO\InstallAndUninstallMySql.cs" />
+    <Compile Include="IO\MftReader.cs" />
     <Compile Include="IO\MySqlAction.cs" />
     <Compile Include="IO\TextFile.cs" />
     <Compile Include="Mapper\IncidentMapper.cs" />
