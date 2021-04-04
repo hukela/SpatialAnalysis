@@ -22,5 +22,10 @@ namespace SpatialAnalysis.Utils
         {
             return dict[name + "-" + key];
         }
+        public static void Clean()
+        {
+            //释放掉原有的内存
+            dict = new Dictionary<string, object>();
+        }
     }
 }

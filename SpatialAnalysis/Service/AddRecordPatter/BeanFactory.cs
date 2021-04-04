@@ -18,51 +18,17 @@ namespace SpatialAnalysis.Service.AddRecordPatter
         /// <returns></returns>
         public static RecordBean GetFileBean(FileInfo file, uint plies)
         {
-            //有些文件无法获得拥有者
-            string owner;
-            try
-            {
-                FileSecurity security = file.GetAccessControl();
-                IdentityReference identity = security.GetOwner(typeof(NTAccount));
-                owner = identity.ToString();
-            }
-            catch (IdentityNotMappedException e)
-            {
-                owner = "null";
-                Log.Warn("获取文件有者失败。" + file.FullName + " " + e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                owner = "null";
-                Log.Warn("获取文件有者失败。" + file.FullName + " " + e.Message.Replace("\r\n", ""));
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                owner = "UnauthorizedAccess";
-                Log.Warn("获取文件有者失败。" + file.FullName + " " + e.Message);
-            }
-            catch (FileNotFoundException e)
-            {
-                Log.Warn("文件不存在。" + e.Message);
-                return new RecordBean()
-                {
-                    FullName = file.FullName,
-                    ExceptionCode = 2,
-                };
-            }
             RecordBean bean = new RecordBean()
             {
                 FullName = file.FullName,
-                Type = false,
                 Plies = plies,
                 Size = file.Length,
                 SpaceUsage = GetSpaceUsage(file.FullName),
                 CerateTime = file.CreationTime,
                 ModifyTime = file.LastWriteTime,
                 VisitTime = file.LastAccessTime,
-                Owner = owner,
                 ExceptionCode = 0,
-                IsChange = true,
+                AllCount = 1,
             };
             //这里后面添加上判断文件是否变化的功能
             //初始化时所有未赋值的不能为null的变量会自动赋值为0，这里不需要再去赋值。
@@ -80,14 +46,46 @@ namespace SpatialAnalysis.Service.AddRecordPatter
                 {
                     if (extension == postfix)
                     {
-                        string countName = char.ToUpper(type[0]) + type.Substring(1) + "Count";
+                        //为了加快程序运行效率，这里改用笨方法
+                        switch (type)
+                        {
+                            case "file":
+                                bean.FileCount = 1;
+                                break;
+                            case "picture":
+                                bean.PictureCount = 1;
+                                break;
+                            case "video":
+                                bean.VideoCount = 1;
+                                break;
+                            case "project":
+                                bean.ProjectCount = 1;
+                                break;
+                            case "zip":
+                                bean.ZipCount = 1;
+                                break;
+                            case "dll":
+                                bean.DllCount = 1;
+                                break;
+                            case "txt":
+                                bean.TxtCount = 1;
+                                break;
+                            case "data":
+                                bean.DataCount = 1;
+                                break;
+                            default:
+                                throw new ApplicationException("发现了未知的文件类型");
+                        }
+                        //string countName = char.ToUpper(type[0]) + type.Substring(1) + "Count";
                         //设置对应属性名的数值
-                        typeof(RecordBean).GetProperty(countName).SetValue(bean, (ulong)1);
+                        //typeof(RecordBean).GetProperty(countName).SetValue(bean, (ulong)1);
                         return bean;
                     }
                 }
             }
             bean.OtherCount = 1;
+            //整理未知的后缀名
+            FileCount.AddOtherPostfix(extension);
             return bean;
         }
         /// <summary>
@@ -132,7 +130,6 @@ namespace SpatialAnalysis.Service.AddRecordPatter
             return new RecordBean()
             {
                 FullName = dir.FullName,
-                Type = true,
                 Plies = plies,
                 CerateTime = dir.CreationTime,
                 Owner = owner,

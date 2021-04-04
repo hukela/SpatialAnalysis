@@ -22,7 +22,6 @@ namespace SpatialAnalysis.Mapper
                     incidentId + " (" +
                     "`parent_record`, " +
                     "`fall_name`, " +
-                    "`type`, " +
                     "`plies`, " +
                     "`size`, " +
                     "`space_usage`, " +
@@ -31,10 +30,12 @@ namespace SpatialAnalysis.Mapper
                     "`visit_time`, " +
                     "`owner`, " +
                     "`exception_code`, " +
+                    "`all_count`, " +
                     "`file_count`, " +
                     "`picture_count`, " +
                     "`video_count`, " +
                     "`project_count`, " +
+                    "`zip_count`, " +
                     "`dll_count`, " +
                     "`txt_count`, " +
                     "`data_count`, " +
@@ -42,10 +43,9 @@ namespace SpatialAnalysis.Mapper
                     "`other_count`, " +
                     "`create_variance`, " +
                     "`create_average`) " +
-                    "VALUES " +
-                    "(@parent_record, " +
+                    "VALUES (" +
+                    "@parent_record, " +
                     "@fall_name, " +
-                    "@type, " +
                     "@plies, " +
                     "@size, " +
                     "@space_usage, " +
@@ -54,10 +54,12 @@ namespace SpatialAnalysis.Mapper
                     "@visit_time, " +
                     "@owner, " +
                     "@exception_code, " +
+                    "@all_count, " +
                     "@file_count, " +
                     "@picture_count, " +
                     "@video_count, " +
                     "@project_count, " +
+                    "@zip_count, " +
                     "@dll_count, " +
                     "@txt_count, " +
                     "@data_count, " +
@@ -67,7 +69,6 @@ namespace SpatialAnalysis.Mapper
                     "@create_average);";
                 cmd.Parameters.Add("parent_record", MySqlDbType.UInt32).Value = bean.ParentRecord;
                 cmd.Parameters.Add("fall_name", MySqlDbType.VarChar, 80).Value = bean.FullName;
-                cmd.Parameters.Add("type", MySqlDbType.Bit).Value = bean.Type;
                 cmd.Parameters.Add("plies", MySqlDbType.UInt32).Value = bean.Plies;
                 cmd.Parameters.Add("size", MySqlDbType.VarChar, 14).Value = bean.Size.ToString();
                 cmd.Parameters.Add("space_usage", MySqlDbType.VarChar, 14).Value = bean.SpaceUsage.ToString();
@@ -76,17 +77,19 @@ namespace SpatialAnalysis.Mapper
                 cmd.Parameters.Add("visit_time", MySqlDbType.DateTime).Value = bean.VisitTime;
                 cmd.Parameters.Add("owner", MySqlDbType.VarChar, 30).Value = bean.Owner;
                 cmd.Parameters.Add("exception_code", MySqlDbType.Byte).Value = bean.ExceptionCode;
-                cmd.Parameters.Add("file_count", MySqlDbType.UInt64).Value = bean.FileCount;
-                cmd.Parameters.Add("picture_count", MySqlDbType.UInt64).Value = bean.PictureCount;
-                cmd.Parameters.Add("video_count", MySqlDbType.UInt64).Value = bean.VideoCount;
-                cmd.Parameters.Add("project_count", MySqlDbType.UInt64).Value = bean.ProjectCount;
-                cmd.Parameters.Add("dll_count", MySqlDbType.UInt64).Value = bean.DllCount;
-                cmd.Parameters.Add("txt_count", MySqlDbType.UInt64).Value = bean.TxtCount;
-                cmd.Parameters.Add("data_count", MySqlDbType.UInt64).Value = bean.DataCount;
-                cmd.Parameters.Add("null_count", MySqlDbType.UInt64).Value = bean.NullCount;
-                cmd.Parameters.Add("other_count", MySqlDbType.UInt64).Value = bean.OtherCount;
+                cmd.Parameters.Add("all_count", MySqlDbType.UInt32).Value = bean.AllCount;
+                cmd.Parameters.Add("file_count", MySqlDbType.UInt32).Value = bean.FileCount;
+                cmd.Parameters.Add("picture_count", MySqlDbType.UInt32).Value = bean.PictureCount;
+                cmd.Parameters.Add("video_count", MySqlDbType.UInt32).Value = bean.VideoCount;
+                cmd.Parameters.Add("project_count", MySqlDbType.UInt32).Value = bean.ProjectCount;
+                cmd.Parameters.Add("zip_count", MySqlDbType.UInt32).Value = bean.ZipCount;
+                cmd.Parameters.Add("dll_count", MySqlDbType.UInt32).Value = bean.DllCount;
+                cmd.Parameters.Add("txt_count", MySqlDbType.UInt32).Value = bean.TxtCount;
+                cmd.Parameters.Add("data_count", MySqlDbType.UInt32).Value = bean.DataCount;
+                cmd.Parameters.Add("null_count", MySqlDbType.UInt32).Value = bean.NullCount;
+                cmd.Parameters.Add("other_count", MySqlDbType.UInt32).Value = bean.OtherCount;
                 cmd.Parameters.Add("create_variance", MySqlDbType.Double).Value = bean.CreateVariance;
-                cmd.Parameters.Add("Create_average", MySqlDbType.DateTime).Value = bean.CreateAverage;
+                cmd.Parameters.Add("create_average", MySqlDbType.DateTime).Value = bean.CreateAverage;
                 MySqlAction.Write(cmd);
             }
             ulong id;
@@ -119,13 +122,13 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         /// <param name="incidentId">对应的事件id</param>
         /// <returns>记录总数</returns>
-        public static ulong Count(uint incidentId)
+        public static long Count(uint incidentId)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "SELECT COUNT(1) FROM record_" + incidentId + ";";
                 DataTable table = MySqlAction.Read(cmd);
-                return (ulong)table.Rows[0][0];
+                return (long)table.Rows[0][0];
             }
         }
     }

@@ -37,14 +37,14 @@ namespace SpatialAnalysis.Service
         private uint incidentId;
         private void AddIncidentAsyn(object obj)
         {
-            long startTime = DateTimeUtil.GetTimeStamp();
+            DateTime startTime = DateTime.Now;
             Thread.Sleep(1000);
             object[] objs = (object[])obj;
             ProgramWindow programWindow = (ProgramWindow)objs[0];
             IncidentBean bean = (IncidentBean)objs[1];
             programWindow.WriteLine("初始化...");
-            //try
-            //{
+            try
+            {
                 bean.CreatTime = DateTime.Now;
                 incidentId = IncidentMapper.AddOne(bean);
                 //新建记录表
@@ -64,30 +64,31 @@ namespace SpatialAnalysis.Service
                 showProgress.Start(programWindow);
                 DriveInfo[] drives = DriveInfo.GetDrives();
                 //遍历分区
-                /*
                 foreach (DriveInfo drive in drives)
                 {
                     DirectoryInfo rootDir = new DirectoryInfo(drive.Name);
-                    SeeDirectory(rootDir, 0, textWindow);
+                    SeeDirectory(rootDir, 0);
                 }
-                */
-                SeeDirectory(new DirectoryInfo(@"C:\"), 0);
+                Thread.Sleep(300);
                 isRunning = false;
-                ulong count = RecordMapper.Count(incidentId);
-                long consumptionTime = DateTimeUtil.GetTimeStamp() - startTime;
-                Log.Info("硬盘使用清空记录完成, 记录：" + count + "，耗时：" + consumptionTime);
-                programWindow.WriteAll("数据记录完成");
+                long count = RecordMapper.Count(incidentId);
+                TimeSpan consumption = DateTime.Now - startTime;
+                Log.Info(string.Concat("硬盘使用清空记录完成, 记录：", count, "(", beanCount, ")，耗时：", consumption));
+                Log.Info(string.Concat("发现的未知扩展名：", FileCount.GetOtherPostfix()));
+                programWindow.WriteAll("数据记录完成，耗时：" +
+                    string.Concat(consumption.Days * 24 + consumption.Hours, "小时", consumption.Minutes, "分"));
                 programWindow.RunOver();
-            //}
-            //catch (Exception e)
-            //{
-            //    Log.Add(e);
-            //    programWindow.WriteLine("错误：");
-            //    programWindow.WriteLine(e.Message);
-            //}
+            }
+            catch (Exception e)
+            {
+                Log.Add(e);
+                programWindow.WriteLine("错误：");
+                programWindow.WriteLine(e.Message);
+                throw e;
+            }
         }
         //用于告知当前进度的
-        private BigInteger beanCount = BigInteger.Parse("0");
+        private ulong beanCount = 0;
         private string plies2Path = "";
         private bool isRunning;
         private Thread thread;
@@ -137,7 +138,7 @@ namespace SpatialAnalysis.Service
             }
             //用于记录子节点的id
             uint idIndex = 0;
-            ulong[] ids = new ulong[dirs.Length + files.Length];
+            ulong[] ids = new ulong[dirs.Length];
             //遍历整个文件夹
             foreach (DirectoryInfo dir in dirs)
             {
@@ -152,8 +153,6 @@ namespace SpatialAnalysis.Service
                 RecordBean fileBean = BeanFactory.GetFileBean(file, plies);
                 bean.Add(fileBean);
                 countTime += DateTimeUtil.GetTimeStamp(file.CreationTime);
-                //将文件bean存入数据库
-                ids[idIndex] = RecordMapper.AddOne(fileBean, incidentId); idIndex++;
             }
             //计算平均数和方差
             int number = dirs.Length + files.Length;
@@ -180,10 +179,7 @@ namespace SpatialAnalysis.Service
             beanCount++;
             //设置子一级的父id
             foreach (ulong id in ids)
-            {
                 RecordMapper.SetParentId(id, bean.Id, incidentId);
-                beanCount++;
-            }
             return bean;
         }
     }

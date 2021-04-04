@@ -10,7 +10,7 @@ namespace SpatialAnalysis.Utils
         private static DateTime _dtStart = new DateTime(1970, 1, 1, 8, 0, 0);
 
         /// <summary> 
-        /// 获取时间戳 
+        /// 根据时间戳获取时间
         /// </summary>  
         public static long GetTimeStamp(DateTime dateTime)
         {
@@ -23,14 +23,6 @@ namespace SpatialAnalysis.Utils
         {
             return GetTimeStamp(DateTime.Now);
         }
-        /// <summary> 
-        /// 根据时间戳获取时间
-        /// </summary>  
-        public static DateTime TimeStampToDateTime(string timeStamp)
-        {
-            return _dtStart.AddMilliseconds(Convert.ToInt64(timeStamp));
-        }
-
         /// <summary> 
         /// 根据时间戳获取时间
         /// </summary>  

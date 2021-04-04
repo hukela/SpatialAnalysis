@@ -121,7 +121,6 @@ namespace SpatialAnalysis.Service
                     program.WriteLine("未检测到服务");
                 program.WriteLine("清理注册表...");
                 InstallAndUninstallMySql.DeleteRegedit();
-                XML.Map(XML.Params.database, null);
                 program.WriteLine("删除文件...");
                 if (!InstallAndUninstallMySql.Remove())
                     program.WriteLine("未检测到文件");
@@ -154,6 +153,7 @@ namespace SpatialAnalysis.Service
             XML.Map(XML.Params.port, 3306);
             XML.Map(XML.Params.user, "root");
             XML.Map(XML.Params.password, password);
+            XML.Map(XML.Params.database, null);
         }
         //刷新应用对于连接的识别状态
         private void RefreshIsCanUse()
