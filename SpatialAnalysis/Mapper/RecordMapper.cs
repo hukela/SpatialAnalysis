@@ -21,7 +21,7 @@ namespace SpatialAnalysis.Mapper
             {
                 string param = string.Empty;
                 string value = string.Empty;
-                if (isFirst)
+                if (!isFirst)
                 {
                     param = "`incident_id`, `target_id`, ";
                     value = "@incident_id, @target_id, ";
@@ -68,7 +68,7 @@ namespace SpatialAnalysis.Mapper
                 cmd.Parameters.Add("exception_code", MySqlDbType.Byte).Value = bean.ExceptionCode;
                 cmd.Parameters.Add("file_count", MySqlDbType.UInt32).Value = bean.FileCount;
                 cmd.Parameters.Add("dir_count", MySqlDbType.UInt32).Value = bean.DirCount;
-                if (isFirst)
+                if (!isFirst)
                 {
                     cmd.Parameters.Add("incident_id", MySqlDbType.UInt32).Value = bean.IncidentId;
                     cmd.Parameters.Add("target_id", MySqlDbType.UInt64).Value = bean.TargetId;
@@ -89,7 +89,7 @@ namespace SpatialAnalysis.Mapper
         {
             uint incidentId = 0;
             ulong targetId = 0;
-            if (row["incident_id"] != null)
+            if (row.Table.Columns.Contains("incident_id"))
             {
                 incidentId = (uint)row["incident_id"];
                 targetId = (ulong)row["target_id"];
@@ -166,7 +166,7 @@ namespace SpatialAnalysis.Mapper
                 cmd.CommandText = string.Concat(
                     "select * " +
                     "from record_", incidentId,
-                    "where `id` = @id;");
+                    " where `id` = @id;");
                 cmd.Parameters.Add("id", MySqlDbType.UInt64).Value = id;
                 table = MySqlAction.Read(cmd);
             }
@@ -187,6 +187,18 @@ namespace SpatialAnalysis.Mapper
                 cmd.CommandText = "SELECT COUNT(1) FROM record_" + incidentId + ";";
                 DataTable table = MySqlAction.Read(cmd);
                 return (long)table.Rows[0][0];
+            }
+        }
+        /// <summary>
+        /// 删除对应事件的记录表格
+        /// </summary>
+        /// <param name="incidentId">事件id</param>
+        public static void DeleteTable(uint incidentId)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = string.Concat("DROP TABLE IF EXISTS `record_", incidentId, "`;");
+                MySqlAction.Write(cmd);
             }
         }
     }

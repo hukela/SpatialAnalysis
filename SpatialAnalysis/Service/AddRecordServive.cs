@@ -48,6 +48,9 @@ namespace SpatialAnalysis.Service
                 bean.Incident_state = 1;
                 incidentId = IncidentMapper.AddOne(bean);
                 isFirst = IncidentMapper.IsFirstRecord();
+                //第一次记录必须保证索引表为空
+                if (isFirst)
+                    DirIndexMapper.CleanAll();
                 //新建记录表
                 Extend.BuildTable(incidentId, isFirst);
                 programWindow.WriteLine("开始记录硬盘使用空间...");
@@ -64,7 +67,11 @@ namespace SpatialAnalysis.Service
                     SeeDirectory(rootDir, 0);
                 }
                 isRunning = false;
+                //收尾工作
                 long count = RecordMapper.Count(incidentId);
+                IncidentMapper.SetStateById(incidentId, 0);
+                if (isFirst)
+                    Extend.DeleteErrorTable(incidentId);
                 TimeSpan consumption = DateTime.Now - startTime;
                 Log.Info(string.Concat("数据记录完成, 记录：", count, "(", beanCount, ")，耗时：", consumption));
                 programWindow.WriteAll("数据记录完成，耗时：" +
@@ -102,6 +109,7 @@ namespace SpatialAnalysis.Service
                     window.Write("\n");
                 }
                 window.Write("当前线程状态：" + thread.ThreadState);
+                //窗口的刷新时间
                 Thread.Sleep(300);
             }
         }
@@ -160,14 +168,15 @@ namespace SpatialAnalysis.Service
             else
             {
                 RecordBean targetBean = Extend.GetLastBean(bean.Path);
-                bean.IsChange = bean.IsChange || !Extend.IsSameBean(bean, targetBean);
-                //添加索引
-                bean.IncidentId = targetBean.IncidentId;
-                bean.TargetId = targetBean.Id;
+                if (targetBean == null)
+                    bean.IsChange = true;
+                else
+                    bean.IsChange = bean.IsChange || !Extend.IsSameBean(bean, targetBean);
                 //如果该bean没有变化，则不再记录
                 if (bean.IsChange)
                 {
                     bean.Id = RecordMapper.AddOne(bean, incidentId, false);
+                    beanCount++;
                     //刷新索引
                     DirIndexMapper.RefreshIndex(new DirIndexBean()
                     {
@@ -184,8 +193,15 @@ namespace SpatialAnalysis.Service
                             //将未改变的bena也记录下来
                             dirBean.ParentId = bean.Id;
                             RecordMapper.AddOne(dirBean, incidentId, false);
+                            beanCount++;
                         }
                     }
+                }
+                else
+                {
+                    //为未改变节点添加索引
+                    bean.IncidentId = targetBean.IncidentId;
+                    bean.TargetId = targetBean.Id;
                 }
             }
             return bean;

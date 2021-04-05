@@ -15,7 +15,7 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "INSERT INTO incident VALUE (@path, @incident_id, @targect_id);";
+                cmd.CommandText = "INSERT INTO dir_index VALUE (@path, @incident_id, @targect_id);";
                 cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = bean.Path;
                 cmd.Parameters.Add("incident_id", MySqlDbType.UInt32).Value = bean.IncidentId;
                 cmd.Parameters.Add("targect_id", MySqlDbType.UInt64).Value = bean.TargectId;
@@ -44,11 +44,14 @@ namespace SpatialAnalysis.Mapper
                 cmd.CommandText = "SELECT * FROM dir_index WHERE path = @path;";
                 cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
                 DataTable table = MySqlAction.Read(cmd);
-                return GetBeanByTable(table.Rows[0]);
+                if (table.Rows.Count == 0)
+                    return null;
+                else
+                    return GetBeanByTable(table.Rows[0]);
             }
         }
         /// <summary>
-        /// 添加一行数据
+        /// 刷新一行数据
         /// </summary>
         /// <param name="bean">对应的数据实体</param>
         public static void RefreshIndex(DirIndexBean bean)
@@ -64,6 +67,17 @@ namespace SpatialAnalysis.Mapper
             }
             if (n == 0)
                 AddOne(bean);
+        }
+        /// <summary>
+        /// 清空索引表数据
+        /// </summary>
+        public static void CleanAll()
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "DELETE FROM dir_index WHERE TRUE;";
+                MySqlAction.Write(cmd);
+            }
         }
     }
 }

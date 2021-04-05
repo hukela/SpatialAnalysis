@@ -1,6 +1,7 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
 using SpatialAnalysis.Mapper;
+using System.IO;
 using System.Text;
 
 namespace SpatialAnalysis.Service.AddRecordExtend
@@ -29,7 +30,16 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 sql = sql.Replace("[/isFirstRecord]", "");
             }
             TextFile.WriteAll(path, Encoding.UTF8, sql);
-            //MySqlAction.ExecuteSqlFile(path);
+            MySqlAction.ExecuteSqlFile(path);
+            File.Delete(path);
+        }
+        //删除作废表格
+        public static void DeleteErrorTable(uint incidentId)
+        {
+            if (incidentId == 1)
+                return;
+            for (uint i = 1; i < incidentId; i++)
+                RecordMapper.DeleteTable(i);
         }
         //判断两个bean是否相同
         public static bool IsSameBean(RecordBean bean, RecordBean targetBean)
@@ -43,7 +53,11 @@ namespace SpatialAnalysis.Service.AddRecordExtend
         public static RecordBean GetLastBean(string path)
         {
             DirIndexBean dirIndex = DirIndexMapper.GetOneByPath(path);
+            if (dirIndex == null)
+                return null;
             RecordBean bean = RecordMapper.GetOneById(dirIndex.TargectId, dirIndex.IncidentId);
+            if (bean == null)
+                return null;
             //告知该bean是属于哪一个事件的
             bean.IncidentId = dirIndex.IncidentId;
             return bean;

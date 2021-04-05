@@ -45,7 +45,7 @@ namespace SpatialAnalysis.Service
                 InstallAndUninstallMySql.Configurate();
                 program.WriteLine("生成安装脚本...");
                 InstallAndUninstallMySql.BuildCmd();
-                program.WriteLine("生成数据库...");
+                program.WriteLine("初始化数据库...");
                 initialize = InstallAndUninstallMySql.Initialize();
                 string password = GetPasswd(initialize[1]);
                 program.WriteLine("安装数据库服务...");
@@ -53,7 +53,7 @@ namespace SpatialAnalysis.Service
                 //刷新连接配置
                 SaveInstall(password);
                 MySqlAction.RefreshCon();
-                program.WriteLine("初始化数据库...");
+                program.WriteLine("建立软件所需的数据表...");
                 //因为初始密码有很多限制，所以这里要修改一下密码
                 password = "123456";
                 InstallAndUninstallMySql.ChangePassword(password);
@@ -63,7 +63,7 @@ namespace SpatialAnalysis.Service
                 //向数据库中建立相应库和表格
                 InstallAndUninstallMySql.BuildTable();
                 XML.Map(XML.Params.database, "spatial_analysis");
-                program.WriteLine("安装完成");
+                program.WriteLine("数据库安装完成。");
                 Log.Info("安装数据库完成");
             }
             catch (Exception e)
