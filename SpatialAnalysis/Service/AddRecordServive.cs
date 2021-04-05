@@ -1,14 +1,10 @@
 ﻿using SpatialAnalysis.Entity;
-using SpatialAnalysis.IO;
 using SpatialAnalysis.IO.Log;
 using SpatialAnalysis.Mapper;
 using SpatialAnalysis.MyWindow;
-using SpatialAnalysis.Service.AddRecordPatter;
-using SpatialAnalysis.Utils;
+using SpatialAnalysis.Service.AddRecordExtend;
 using System;
 using System.IO;
-using System.Numerics;
-using System.Text;
 using System.Threading;
 
 namespace SpatialAnalysis.Service
@@ -17,7 +13,7 @@ namespace SpatialAnalysis.Service
     {
         public static IncidentBean GetBean()
         {
-            return new IncidentBean { Type = IncidentType.daily };
+            return new IncidentBean();
         }
         /// <summary>
         /// 添加记录
@@ -33,6 +29,8 @@ namespace SpatialAnalysis.Service
             addRecord.thread.Start(objs);
             window.ShowDialog();
         }
+        //是否是第一次记录
+        private bool isFirst;
         //事件id
         private uint incidentId;
         private void AddIncidentAsyn(object obj)
@@ -45,17 +43,13 @@ namespace SpatialAnalysis.Service
             programWindow.WriteLine("初始化...");
             try
             {
+                //处理事件
                 bean.CreatTime = DateTime.Now;
+                bean.Incident_state = 1;
                 incidentId = IncidentMapper.AddOne(bean);
+                isFirst = IncidentMapper.IsFirstRecord();
                 //新建记录表
-                string templatePath = Base.locolPath + @"\Data\BuildRecord.template.sql";
-                string path = Base.locolPath + @"\Data\BuildRecord.sql";
-                string sql = TextFile.ReadAll(templatePath, Encoding.UTF8);
-                sql = sql.Replace("[id]", incidentId.ToString());
-                TextFile.WriteAll(path, Encoding.UTF8, sql);
-                MySqlAction.ExecuteSqlFile(path);
-                //将分类数据载入内存
-                FileCount.LoadIntoStorage();
+                Extend.BuildTable(incidentId, isFirst);
                 programWindow.WriteLine("开始记录硬盘使用空间...");
                 programWindow.WriteLine("(建议此时不要修改硬盘上的文件，以免影响最终的分析结果)");
                 programWindow.Freeze();
@@ -69,12 +63,10 @@ namespace SpatialAnalysis.Service
                     DirectoryInfo rootDir = new DirectoryInfo(drive.Name);
                     SeeDirectory(rootDir, 0);
                 }
-                Thread.Sleep(300);
                 isRunning = false;
                 long count = RecordMapper.Count(incidentId);
                 TimeSpan consumption = DateTime.Now - startTime;
-                Log.Info(string.Concat("硬盘使用清空记录完成, 记录：", count, "(", beanCount, ")，耗时：", consumption));
-                Log.Info(string.Concat("发现的未知扩展名：", FileCount.GetOtherPostfix()));
+                Log.Info(string.Concat("数据记录完成, 记录：", count, "(", beanCount, ")，耗时：", consumption));
                 programWindow.WriteAll("数据记录完成，耗时：" +
                     string.Concat(consumption.Days * 24 + consumption.Hours, "小时", consumption.Minutes, "分"));
                 programWindow.RunOver();
@@ -120,8 +112,6 @@ namespace SpatialAnalysis.Service
             if (plies == 2)
                 plies2Path = baseDir.FullName;
             RecordBean bean = BeanFactory.GetDirBean(baseDir, plies);
-            //计算平均数和方差用到
-            double countTime = 0;
             //获取文件和文件夹列表
             DirectoryInfo[] dirs;
             FileInfo[] files;
@@ -136,50 +126,68 @@ namespace SpatialAnalysis.Service
                 bean.ExceptionCode = 1;
                 return bean;
             }
-            //用于记录子节点的id
-            uint idIndex = 0;
-            ulong[] ids = new ulong[dirs.Length];
+            //用于记录子节点的bean
+            RecordBean[] dirBeans = new RecordBean[dirs.Length];;
             //遍历整个文件夹
-            foreach (DirectoryInfo dir in dirs)
+            for (int i = 0; i < dirs.Length; i++)
             {
-                RecordBean dirBean = SeeDirectory(dir, plies + 1);
+                RecordBean dirBean = SeeDirectory(dirs[i], plies + 1);
                 bean.Add(dirBean);
-                countTime += DateTimeUtil.GetTimeStamp(dirBean.CerateTime);
-                ids[idIndex] = dirBean.Id; idIndex++;
+                dirBeans[i] = dirBean;
             }
             //遍历整个文件
             foreach (FileInfo file in files)
             {
                 RecordBean fileBean = BeanFactory.GetFileBean(file, plies);
                 bean.Add(fileBean);
-                countTime += DateTimeUtil.GetTimeStamp(file.CreationTime);
             }
-            //计算平均数和方差
-            int number = dirs.Length + files.Length;
-            if (number != 0)
+            if (isFirst)
             {
-                double averageTime = countTime / number;
-                bean.CreateAverage = DateTimeUtil.TimeStampToDateTime(Convert.ToInt64(averageTime));
-                double variance = 0;
-                foreach (DirectoryInfo dir in dirs)
+                //记录并获取当前id
+                bean.Id = RecordMapper.AddOne(bean, incidentId, true);
+                //记录索引
+                DirIndexMapper.AddOne(new DirIndexBean()
                 {
-                    long dirCreateTime = DateTimeUtil.GetTimeStamp(dir.CreationTime);
-                    variance += Math.Pow(averageTime - dirCreateTime, 2);
-                }
-                foreach (FileInfo file in files)
-                {
-                    long fileCreateTime = DateTimeUtil.GetTimeStamp(file.CreationTime);
-                    variance += Math.Pow(averageTime - fileCreateTime, 2);
-                }
-                variance = variance / number;
-                bean.CreateVariance = variance;
+                    Path = bean.Path,
+                    IncidentId = incidentId,
+                    TargectId = bean.Id,
+                });
+                beanCount++;
+                //设置子一级的父id
+                foreach (RecordBean dirBean in dirBeans)
+                    RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
             }
-            //记录并获取当前id
-            bean.Id = RecordMapper.AddOne(bean, incidentId);
-            beanCount++;
-            //设置子一级的父id
-            foreach (ulong id in ids)
-                RecordMapper.SetParentId(id, bean.Id, incidentId);
+            else
+            {
+                RecordBean targetBean = Extend.GetLastBean(bean.Path);
+                bean.IsChange = bean.IsChange || !Extend.IsSameBean(bean, targetBean);
+                //添加索引
+                bean.IncidentId = targetBean.IncidentId;
+                bean.TargetId = targetBean.Id;
+                //如果该bean没有变化，则不再记录
+                if (bean.IsChange)
+                {
+                    bean.Id = RecordMapper.AddOne(bean, incidentId, false);
+                    //刷新索引
+                    DirIndexMapper.RefreshIndex(new DirIndexBean()
+                    {
+                        Path = bean.Path,
+                        IncidentId = incidentId,
+                        TargectId = bean.Id,
+                    });
+                    foreach (RecordBean dirBean in dirBeans)
+                    {
+                        if (dirBean.IsChange)
+                            RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
+                        else
+                        {
+                            //将未改变的bena也记录下来
+                            dirBean.ParentId = bean.Id;
+                            RecordMapper.AddOne(dirBean, incidentId, false);
+                        }
+                    }
+                }
+            }
             return bean;
         }
     }

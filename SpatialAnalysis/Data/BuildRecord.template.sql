@@ -16,38 +16,40 @@ USE `spatial_analysis`;
 
 /*Table structure for table `record` */
 
+DROP TABLE IF EXISTS `record_[id]`;
+
 CREATE TABLE `record_[id]` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '文件id',
-  `parent_id` bigint unsigned DEFAULT NULL COMMENT '上一级的id',
-  `parent_record` int unsigned DEFAULT NULL COMMENT '所对应的表id',
-  `fall_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件全名',
+  `parent_id` bigint unsigned NOT NULL COMMENT '上一级的id',
+  [isFirstRecord]
+  `incident_id` int unsigned DEFAULT '0' COMMENT '所对应的表id',
+  `target_id` bigint unsigned DEFAULT '0' COMMENT '指向对应表中节点的id',
+  [/isFirstRecord]
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '路径',
   `plies` int unsigned DEFAULT NULL COMMENT '上面有多少个文件夹',
-  `size` varchar(14) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '大小(字节)',
-  `space_usage` varchar(14) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '占用空间(字节)',
+  `size` varchar(14) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '大小(字节)',
+  `space_usage` varchar(14) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '占用空间(字节)',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
   `visit_time` datetime DEFAULT NULL COMMENT '访问时间',
-  `owner` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '所有者',
+  `owner` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '所有者',
   `exception_code` tinyint DEFAULT '0' COMMENT '异常码',
-  `all_count` int unsigned DEFAULT '0' COMMENT	 '文件总数',
-  `file_count` int unsigned DEFAULT '0' COMMENT '文档类文件个数',
-  `picture_count` int unsigned DEFAULT '0' COMMENT '图片类文件个数',
-  `video_count` int unsigned DEFAULT '0' COMMENT '视频类文件个数',
-  `project_count` int unsigned DEFAULT '0' COMMENT '工程文件类文件个数',
-  `zip_count` int unsigned DEFAULT '0' COMMENT'压缩包类文件个数',
-  `dll_count` int unsigned DEFAULT '0' COMMENT '二进制类文件个数',
-  `txt_count` int unsigned DEFAULT '0' COMMENT '文本类文件个数',
-  `data_count` int unsigned DEFAULT '0' COMMENT '数据类文件个数',
-  `null_count` int unsigned DEFAULT '0' COMMENT '无后缀名文件个数',
-  `other_count` int unsigned DEFAULT '0' COMMENT '其它文件个数',
-  `create_variance` double unsigned DEFAULT NULL COMMENT '下一级文件或文件夹创建时间的方差',
-  `create_average` datetime DEFAULT NULL COMMENT '下一级文件或文件夹的平均创建时间',
+  `file_count` int unsigned DEFAULT '0' COMMENT '文件总数',
+  `dir_count` int unsigned DEFAULT '0' COMMENT '文件夹总数',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `path` (`path`),
   KEY `prient` (`parent_id`),
   CONSTRAINT `for_prient_[id]` FOREIGN KEY (`parent_id`) REFERENCES `record_[id]` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `record` */
+
+insert  into `record_[id]`(`id`,`parent_id`,[isFirstRecord]`incident_id`,`target_id`,[/isFirstRecord]`path`,`plies`,`size`,`space_usage`,`create_time`,`modify_time`,`visit_time`,`owner`,`exception_code`,`file_count`,`dir_count`) values  (0,0,[isFirstRecord]0,0,[/isFirstRecord]'\\\\.\\',0,'0','0','1601-01-01 00:00:00','1601-01-01 00:00:00','1601-01-01 00:00:00',NULL,0,0,0);
+
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+

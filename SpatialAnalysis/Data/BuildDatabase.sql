@@ -16,16 +16,27 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`spatial_analysis` /*!40100 DEFAULT CHAR
 
 USE `spatial_analysis`;
 
+/*Table structure for table `dir_index` */
+
+DROP TABLE IF EXISTS `dir_index`;
+
+CREATE TABLE `dir_index` (
+  `path` varchar(255) NOT NULL COMMENT '璺緞',
+  `incident_id` int unsigned NOT NULL COMMENT '浜嬩欢id',
+  `targect_id` bigint unsigned NOT NULL COMMENT '瀵瑰簲鑺傜偣id',
+  PRIMARY KEY (`path`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 /*Table structure for table `incident` */
 
 DROP TABLE IF EXISTS `incident`;
 
 CREATE TABLE `incident` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '事件id',
-  `creat_time` datetime NOT NULL COMMENT '创建时间',
-  `title` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '事件标题',
-  `explain` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '事件描述',
-  `type` tinyint unsigned DEFAULT NULL COMMENT '事件类别',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '浜嬩欢id',
+  `creat_time` datetime NOT NULL COMMENT '鍒涘缓鏃堕棿',
+  `title` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '浜嬩欢鏍囬',
+  `explain` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '浜嬩欢鎻忚堪',
+  `incident_state` tinyint DEFAULT NULL COMMENT '鐘舵�侊紝0浠ｈ〃姝ｅ父',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

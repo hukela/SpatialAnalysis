@@ -96,8 +96,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\DataForXML.cs" />
-    <Compile Include="Dictionary\AddRecord\IncidentTypeConvert.cs" />
+    <Compile Include="Entity\DirIndexBean.cs" />
     <Compile Include="Entity\IncidentBean.cs" />
     <Compile Include="Entity\MySqlBean.cs" />
     <Compile Include="Entity\RecordBean.cs" />
@@ -108,6 +107,7 @@
     <Compile Include="IO\MftReader.cs" />
     <Compile Include="IO\MySqlAction.cs" />
     <Compile Include="IO\TextFile.cs" />
+    <Compile Include="Mapper\DirIndexMapper.cs" />
     <Compile Include="Mapper\IncidentMapper.cs" />
     <Compile Include="Mapper\RecordMapper.cs" />
     <Compile Include="Page\MySqlPage.xaml.cs">
@@ -116,8 +116,8 @@
     <Compile Include="Page\UnavailablePage.xaml.cs">
       <DependentUpon>UnavailablePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Service\AddRecordPatter\BeanFactory.cs" />
-    <Compile Include="Service\AddRecordPatter\FileCount.cs" />
+    <Compile Include="Service\AddRecordExtend\BeanFactory.cs" />
+    <Compile Include="Service\AddRecordExtend\Extend.cs" />
     <Compile Include="Service\AddRecordServive.cs" />
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />

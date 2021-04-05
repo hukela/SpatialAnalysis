@@ -1,6 +1,7 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
-using SpatialAnalysis.Service.AddRecordPatter;
+using SpatialAnalysis.Mapper;
+using SpatialAnalysis.Service.AddRecordExtend;
 using SpatialAnalysis.Utils;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,8 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
-            FileCount.AddOtherPostfix("ad");
-            FileCount.AddOtherPostfix("ad");
-            FileCount.AddOtherPostfix("nc");
-            Console.WriteLine(FileCount.GetOtherPostfix());
+            Extend.BuildTable(1, true);
+            Console.WriteLine("OK");
         }
     }
 }

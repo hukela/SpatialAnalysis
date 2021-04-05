@@ -2,8 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:SpatialAnalysis.Dictionary.AddRecord">
 
-    <!-- 声明转换器 -->
-    <local:IncidentTypeConvert x:Key="incidentType"/>
     <Style x:Key="left" TargetType="TextBlock">
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>

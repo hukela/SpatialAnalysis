@@ -10,6 +10,5 @@
 
     <Grid>
         <TextBlock Text="主页"/>
-        <Button x:Name="test" Content="测试" Click="Test_Click" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Page>

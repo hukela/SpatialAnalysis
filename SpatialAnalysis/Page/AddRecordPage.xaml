@@ -17,7 +17,6 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
             <RowDefinition Height="180"/>
-            <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -29,12 +28,6 @@
         <TextBox Text="{Binding Path=Title}" Style="{StaticResource right-row1}"/>
         <TextBlock Text="备注：" Style="{StaticResource left-row2}"/>
         <TextBox Text="{Binding Path=Explain}" Style="{StaticResource right-row2}"/>
-        <TextBlock Text="事件类型：" Style="{StaticResource left-row3}"/>
-        <WrapPanel Style="{StaticResource radio}">
-            <RadioButton GroupName="type" Content="日常使用" IsChecked="{Binding Path=Type, Converter={StaticResource incidentType}, ConverterParameter=0}"/>
-            <RadioButton GroupName="type" Content="安装软件" IsChecked="{Binding Path=Type, Converter={StaticResource incidentType}, ConverterParameter=1}"/>
-            <RadioButton GroupName="type" Content="垃圾清理" IsChecked="{Binding Path=Type, Converter={StaticResource incidentType}, ConverterParameter=2}"/>
-        </WrapPanel>
         <Canvas>
             <TextBlock Text="距离上一次记录：- 天" Style="{StaticResource lastTime}"/>
             <Button x:Name="submit" Content="开始记录" Click="Submit_Click" Style="{StaticResource submit}"/>

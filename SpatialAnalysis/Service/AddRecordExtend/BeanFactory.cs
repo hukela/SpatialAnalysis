@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 
-namespace SpatialAnalysis.Service.AddRecordPatter
+namespace SpatialAnalysis.Service.AddRecordExtend
 {
     class BeanFactory
     {
@@ -18,9 +18,9 @@ namespace SpatialAnalysis.Service.AddRecordPatter
         /// <returns></returns>
         public static RecordBean GetFileBean(FileInfo file, uint plies)
         {
-            RecordBean bean = new RecordBean()
+            return new RecordBean()
             {
-                FullName = file.FullName,
+                Path = file.FullName,
                 Plies = plies,
                 Size = file.Length,
                 SpaceUsage = GetSpaceUsage(file.FullName),
@@ -28,65 +28,9 @@ namespace SpatialAnalysis.Service.AddRecordPatter
                 ModifyTime = file.LastWriteTime,
                 VisitTime = file.LastAccessTime,
                 ExceptionCode = 0,
-                AllCount = 1,
+                FileCount = 1,
+                IsChange = false,
             };
-            //这里后面添加上判断文件是否变化的功能
-            //初始化时所有未赋值的不能为null的变量会自动赋值为0，这里不需要再去赋值。
-            //遍历枚举类，设置文件类别
-            string extension = file.Extension;
-            if (extension == "")
-            {
-                bean.NullCount = 1;
-                return bean;
-            }
-            foreach (string type in Enum.GetNames(typeof(FileCount.FileType)))
-            {
-                string[] postfixes = FileCount.FilePostfix(type);
-                foreach (string postfix in postfixes)
-                {
-                    if (extension == postfix)
-                    {
-                        //为了加快程序运行效率，这里改用笨方法
-                        switch (type)
-                        {
-                            case "file":
-                                bean.FileCount = 1;
-                                break;
-                            case "picture":
-                                bean.PictureCount = 1;
-                                break;
-                            case "video":
-                                bean.VideoCount = 1;
-                                break;
-                            case "project":
-                                bean.ProjectCount = 1;
-                                break;
-                            case "zip":
-                                bean.ZipCount = 1;
-                                break;
-                            case "dll":
-                                bean.DllCount = 1;
-                                break;
-                            case "txt":
-                                bean.TxtCount = 1;
-                                break;
-                            case "data":
-                                bean.DataCount = 1;
-                                break;
-                            default:
-                                throw new ApplicationException("发现了未知的文件类型");
-                        }
-                        //string countName = char.ToUpper(type[0]) + type.Substring(1) + "Count";
-                        //设置对应属性名的数值
-                        //typeof(RecordBean).GetProperty(countName).SetValue(bean, (ulong)1);
-                        return bean;
-                    }
-                }
-            }
-            bean.OtherCount = 1;
-            //整理未知的后缀名
-            FileCount.AddOtherPostfix(extension);
-            return bean;
         }
         /// <summary>
         /// 获取文件夹相关信息
@@ -123,17 +67,19 @@ namespace SpatialAnalysis.Service.AddRecordPatter
                 Log.Warn("文件夹不存在。" + e.Message);
                 return new RecordBean()
                 {
-                    FullName = dir.FullName,
+                    Path = dir.FullName,
                     ExceptionCode = 2,
                 };
             }
             return new RecordBean()
             {
-                FullName = dir.FullName,
+                Path = dir.FullName,
                 Plies = plies,
                 CerateTime = dir.CreationTime,
                 Owner = owner,
                 ExceptionCode = 0,
+                DirCount = 1,
+                IsChange = false,
             };
         }
         //获取文件占用空间

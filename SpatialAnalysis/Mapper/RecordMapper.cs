@@ -1,7 +1,9 @@
 ﻿using MySql.Data.MySqlClient;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
+using System;
 using System.Data;
+using System.Numerics;
 
 namespace SpatialAnalysis.Mapper
 {
@@ -13,15 +15,23 @@ namespace SpatialAnalysis.Mapper
         /// <param name="bean">对应的数据实体</param>
         /// <param name="incidentId">对应的事件id</param>
         /// <returns>该行的id</returns>
-        public static ulong AddOne(RecordBean bean, uint incidentId)
+        public static ulong AddOne(RecordBean bean, uint incidentId, bool isFirst)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText =
-                    "INSERT INTO record_" +
-                    incidentId + " (" +
-                    "`parent_record`, " +
-                    "`fall_name`, " +
+                string param = string.Empty;
+                string value = string.Empty;
+                if (isFirst)
+                {
+                    param = "`incident_id`, `target_id`, ";
+                    value = "@incident_id, @target_id, ";
+                }
+                cmd.CommandText = string.Concat(
+                    "INSERT INTO record_",
+                    incidentId, " (" +
+                    "`parent_id`, ",
+                    param,
+                    "`path`, " +
                     "`plies`, " +
                     "`size`, " +
                     "`space_usage`, " +
@@ -30,22 +40,12 @@ namespace SpatialAnalysis.Mapper
                     "`visit_time`, " +
                     "`owner`, " +
                     "`exception_code`, " +
-                    "`all_count`, " +
                     "`file_count`, " +
-                    "`picture_count`, " +
-                    "`video_count`, " +
-                    "`project_count`, " +
-                    "`zip_count`, " +
-                    "`dll_count`, " +
-                    "`txt_count`, " +
-                    "`data_count`, " +
-                    "`null_count`, " +
-                    "`other_count`, " +
-                    "`create_variance`, " +
-                    "`create_average`) " +
+                    "`dir_count`) " +
                     "VALUES (" +
-                    "@parent_record, " +
-                    "@fall_name, " +
+                    "@parent_id, ",
+                    value,
+                    "@path, " +
                     "@plies, " +
                     "@size, " +
                     "@space_usage, " +
@@ -54,21 +54,10 @@ namespace SpatialAnalysis.Mapper
                     "@visit_time, " +
                     "@owner, " +
                     "@exception_code, " +
-                    "@all_count, " +
                     "@file_count, " +
-                    "@picture_count, " +
-                    "@video_count, " +
-                    "@project_count, " +
-                    "@zip_count, " +
-                    "@dll_count, " +
-                    "@txt_count, " +
-                    "@data_count, " +
-                    "@null_count, " +
-                    "@other_count, " +
-                    "@create_variance, " +
-                    "@create_average);";
-                cmd.Parameters.Add("parent_record", MySqlDbType.UInt32).Value = bean.ParentRecord;
-                cmd.Parameters.Add("fall_name", MySqlDbType.VarChar, 80).Value = bean.FullName;
+                    "@dir_count);");
+                cmd.Parameters.Add("parent_id", MySqlDbType.UInt64).Value = bean.ParentId;
+                cmd.Parameters.Add("path", MySqlDbType.VarChar, 80).Value = bean.Path;
                 cmd.Parameters.Add("plies", MySqlDbType.UInt32).Value = bean.Plies;
                 cmd.Parameters.Add("size", MySqlDbType.VarChar, 14).Value = bean.Size.ToString();
                 cmd.Parameters.Add("space_usage", MySqlDbType.VarChar, 14).Value = bean.SpaceUsage.ToString();
@@ -77,19 +66,13 @@ namespace SpatialAnalysis.Mapper
                 cmd.Parameters.Add("visit_time", MySqlDbType.DateTime).Value = bean.VisitTime;
                 cmd.Parameters.Add("owner", MySqlDbType.VarChar, 30).Value = bean.Owner;
                 cmd.Parameters.Add("exception_code", MySqlDbType.Byte).Value = bean.ExceptionCode;
-                cmd.Parameters.Add("all_count", MySqlDbType.UInt32).Value = bean.AllCount;
                 cmd.Parameters.Add("file_count", MySqlDbType.UInt32).Value = bean.FileCount;
-                cmd.Parameters.Add("picture_count", MySqlDbType.UInt32).Value = bean.PictureCount;
-                cmd.Parameters.Add("video_count", MySqlDbType.UInt32).Value = bean.VideoCount;
-                cmd.Parameters.Add("project_count", MySqlDbType.UInt32).Value = bean.ProjectCount;
-                cmd.Parameters.Add("zip_count", MySqlDbType.UInt32).Value = bean.ZipCount;
-                cmd.Parameters.Add("dll_count", MySqlDbType.UInt32).Value = bean.DllCount;
-                cmd.Parameters.Add("txt_count", MySqlDbType.UInt32).Value = bean.TxtCount;
-                cmd.Parameters.Add("data_count", MySqlDbType.UInt32).Value = bean.DataCount;
-                cmd.Parameters.Add("null_count", MySqlDbType.UInt32).Value = bean.NullCount;
-                cmd.Parameters.Add("other_count", MySqlDbType.UInt32).Value = bean.OtherCount;
-                cmd.Parameters.Add("create_variance", MySqlDbType.Double).Value = bean.CreateVariance;
-                cmd.Parameters.Add("create_average", MySqlDbType.DateTime).Value = bean.CreateAverage;
+                cmd.Parameters.Add("dir_count", MySqlDbType.UInt32).Value = bean.DirCount;
+                if (isFirst)
+                {
+                    cmd.Parameters.Add("incident_id", MySqlDbType.UInt32).Value = bean.IncidentId;
+                    cmd.Parameters.Add("target_id", MySqlDbType.UInt64).Value = bean.TargetId;
+                }
                 MySqlAction.Write(cmd);
             }
             ulong id;
@@ -101,6 +84,35 @@ namespace SpatialAnalysis.Mapper
             }
             return id;
         }
+        //将数据由表格转化为bean
+        private static RecordBean GetBeanByTable(DataRow row)
+        {
+            uint incidentId = 0;
+            ulong targetId = 0;
+            if (row["incident_id"] != null)
+            {
+                incidentId = (uint)row["incident_id"];
+                targetId = (ulong)row["target_id"];
+            }
+            return new RecordBean()
+            {
+                Id = (ulong)row["id"],
+                ParentId = (ulong)row["parent_id"],
+                IncidentId = incidentId,
+                TargetId = targetId,
+                Path = (string)row["path"],
+                Plies = (uint)row["plies"],
+                Size = BigInteger.Parse((string)row["size"]),
+                SpaceUsage = BigInteger.Parse((string)row["space_usage"]),
+                CerateTime = (DateTime)row["create_time"],
+                ModifyTime = (DateTime)row["modify_time"],
+                VisitTime = (DateTime)row["visit_time"],
+                Owner = (string)row["owner"],
+                ExceptionCode = (sbyte)row["exception_code"],
+                FileCount = (uint)row["file_count"],
+                DirCount = (uint)row["dir_count"],
+            };
+        }
         /// <summary>
         /// 通过id设置父级id
         /// </summary>
@@ -111,11 +123,57 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "UPDATE record_" + incidentId +" SET parent_id = @parent_id WHERE id = @id;";
+                cmd.CommandText = "UPDATE record_" + incidentId + " SET parent_id = @parent_id WHERE id = @id;";
                 cmd.Parameters.Add("id", MySqlDbType.UInt64).Value = id;
                 cmd.Parameters.Add("parent_id", MySqlDbType.UInt64).Value = ParentId;
                 MySqlAction.Write(cmd);
             }
+        }
+        /// <summary>
+        /// 通过路径获取一个数据实体
+        /// </summary>
+        /// <param name="path">文件夹路径</param>
+        /// <param name="incidentId">对应的事件id</param>
+        /// <returns>数据实体</returns>
+        public static RecordBean GetOneByPath(string path, uint incidentId)
+        {
+            DataTable table;
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = string.Concat(
+                    "select * " +
+                    "from record_", incidentId, 
+                    "where `path` = @path;");
+                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
+                table = MySqlAction.Read(cmd);
+            }
+            if (table.Rows.Count == 0)
+                return null;
+            else
+                return GetBeanByTable(table.Rows[0]);
+        }
+        /// <summary>
+        /// 通过id获取一个数据实体
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <param name="incidentId">对应的事件id</param>
+        /// <returns>数据实体</returns>
+        public static RecordBean GetOneById(ulong id, uint incidentId)
+        {
+            DataTable table;
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = string.Concat(
+                    "select * " +
+                    "from record_", incidentId,
+                    "where `id` = @id;");
+                cmd.Parameters.Add("id", MySqlDbType.UInt64).Value = id;
+                table = MySqlAction.Read(cmd);
+            }
+            if (table.Rows.Count == 0)
+                return null;
+            else
+                return GetBeanByTable(table.Rows[0]);
         }
         /// <summary>
         /// 获取表中的记录总数
