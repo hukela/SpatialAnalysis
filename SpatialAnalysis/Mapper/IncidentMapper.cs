@@ -18,7 +18,7 @@ namespace SpatialAnalysis.Mapper
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "INSERT INTO " +
-                "incident (`create_time`,`title`,`explain`,`incident_state`) " +
+                "`incident` (`create_time`,`title`,`explain`,`incident_state`) " +
                 "VALUE (@create_time,@title,@explain,@incident_state);";
                 cmd.Parameters.Add("create_time", MySqlDbType.DateTime).Value = bean.CreateTime.ToString();
                 cmd.Parameters.Add("title", MySqlDbType.VarChar, 20).Value = bean.Title;
@@ -54,8 +54,8 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "SELECT * FROM incident " +
-                    "WHERE incident_state = 0 ORDER BY create_time DESC LIMIT 1;";
+                cmd.CommandText = "SELECT * FROM `incident` " +
+                    "WHERE `incident_state` = 0 ORDER BY `create_time` DESC LIMIT 1;";
                 DataTable table = MySqlAction.Read(cmd);
                 if (table.Rows.Count == 0)
                     return null;
@@ -70,7 +70,7 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "SELECT id FROM incident WHERE incident_state = 0";
+                cmd.CommandText = "SELECT `id` FROM `incident` WHERE `incident_state` = 0";
                 DataTable table = MySqlAction.Read(cmd);
                 if (table.Rows.Count == 0)
                     return true;
@@ -87,7 +87,7 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "UPDATE incident SET incident_state = @incident_state WHERE id = @id;";
+                cmd.CommandText = "UPDATE `incident` SET `incident_state` = @incident_state WHERE `id` = @id;";
                 cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = id;
                 cmd.Parameters.Add("incident_state", MySqlDbType.Byte).Value = state;
                 MySqlAction.Write(cmd);

@@ -15,7 +15,7 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "INSERT INTO dir_index VALUE (@path, @incident_id, @targect_id);";
+                cmd.CommandText = "INSERT INTO `dir_index` VALUE (@path, @incident_id, @targect_id);";
                 cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = bean.Path;
                 cmd.Parameters.Add("incident_id", MySqlDbType.UInt32).Value = bean.IncidentId;
                 cmd.Parameters.Add("targect_id", MySqlDbType.UInt64).Value = bean.TargectId;
@@ -41,7 +41,7 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "SELECT * FROM dir_index WHERE path = @path;";
+                cmd.CommandText = "SELECT * FROM `dir_index` WHERE `path` = @path;";
                 cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
                 DataTable table = MySqlAction.Read(cmd);
                 if (table.Rows.Count == 0)
@@ -59,7 +59,7 @@ namespace SpatialAnalysis.Mapper
             int n;
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "UPDATE dir_index SET incident_id = @incident_id, targect_id = @targect_id WHERE path = @path;";
+                cmd.CommandText = "UPDATE `dir_index` SET `incident_id` = @incident_id, `targect_id` = @targect_id WHERE `path` = @path;";
                 cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = bean.Path;
                 cmd.Parameters.Add("incident_id", MySqlDbType.UInt32).Value = bean.IncidentId;
                 cmd.Parameters.Add("targect_id", MySqlDbType.UInt64).Value = bean.TargectId;
@@ -75,7 +75,7 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "DELETE FROM dir_index WHERE TRUE;";
+                cmd.CommandText = "DELETE FROM `dir_index` WHERE TRUE;";
                 MySqlAction.Write(cmd);
             }
         }

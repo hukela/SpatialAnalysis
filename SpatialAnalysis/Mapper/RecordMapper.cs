@@ -27,8 +27,8 @@ namespace SpatialAnalysis.Mapper
                     value = "@incident_id, @target_id, ";
                 }
                 cmd.CommandText = string.Concat(
-                    "INSERT INTO record_",
-                    incidentId, " (" +
+                    "INSERT INTO `record_",
+                    incidentId, "` (" +
                     "`parent_id`, ",
                     param,
                     "`path`, " +
@@ -123,7 +123,7 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "UPDATE record_" + incidentId + " SET parent_id = @parent_id WHERE id = @id;";
+                cmd.CommandText = "UPDATE `record_" + incidentId + "` SET `parent_id` = @parent_id WHERE `id` = @id;";
                 cmd.Parameters.Add("id", MySqlDbType.UInt64).Value = id;
                 cmd.Parameters.Add("parent_id", MySqlDbType.UInt64).Value = ParentId;
                 MySqlAction.Write(cmd);
@@ -142,8 +142,8 @@ namespace SpatialAnalysis.Mapper
             {
                 cmd.CommandText = string.Concat(
                     "select * " +
-                    "from record_", incidentId, 
-                    "where `path` = @path;");
+                    "from `record_", incidentId, 
+                    "` where `path` = @path;");
                 cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
                 table = MySqlAction.Read(cmd);
             }
@@ -165,8 +165,8 @@ namespace SpatialAnalysis.Mapper
             {
                 cmd.CommandText = string.Concat(
                     "select * " +
-                    "from record_", incidentId,
-                    " where `id` = @id;");
+                    "from `record_", incidentId,
+                    "` where `id` = @id;");
                 cmd.Parameters.Add("id", MySqlDbType.UInt64).Value = id;
                 table = MySqlAction.Read(cmd);
             }
@@ -184,7 +184,7 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "SELECT COUNT(1) FROM record_" + incidentId + ";";
+                cmd.CommandText = "SELECT COUNT(1) FROM `record_" + incidentId + "`;";
                 DataTable table = MySqlAction.Read(cmd);
                 return (long)table.Rows[0][0];
             }
