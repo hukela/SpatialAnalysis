@@ -29,12 +29,14 @@ namespace SpatialAnalysis
         MainPage mainPage = new MainPage();
         UnavailablePage unavailablePage;
         AddRecordPage addRecord = new AddRecordPage();
+        TagPage tagPage = new TagPage();
         MySqlPage mySqlPage = new MySqlPage();
         //若数据库不可用，则关闭相关功能
         public void IsCanUse()
         {
             bool isEnabled = MySqlAction.IsConnected;
             toAddRecord.IsEnabled = isEnabled;
+            tagPage.IsEnabled = IsEnabled;
             if(isEnabled)
                 main = mainPage;
             else
@@ -63,6 +65,11 @@ namespace SpatialAnalysis
         {
             pageFrame.Content = addRecord;
             CloseButton(toAddRecord);
+        }
+        private void ToTagPage_Click(object sender, RoutedEventArgs e)
+        {
+            pageFrame.Content = tagPage;
+            CloseButton(toTagPage);
         }
         private void ToMySql_Click(object sender, RoutedEventArgs e)
         {

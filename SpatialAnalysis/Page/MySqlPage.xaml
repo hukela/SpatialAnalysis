@@ -9,7 +9,7 @@
       Title="MySql" d:DesignHeight="550" d:DesignWidth="720">
 
     <Page.Resources>
-        <ResourceDictionary Source="/Dictionary/MySql.xaml"/>
+        <ResourceDictionary Source="/Dictionary/MySqlDictionary.xaml"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>

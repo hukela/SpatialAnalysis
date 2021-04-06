@@ -117,6 +117,9 @@
     <Compile Include="Page\MySqlPage.xaml.cs">
       <DependentUpon>MySqlPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Page\TagPage.xaml.cs">
+      <DependentUpon>TagPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Page\UnavailablePage.xaml.cs">
       <DependentUpon>UnavailablePage.xaml</DependentUpon>
     </Compile>
@@ -137,15 +140,19 @@
     <Compile Include="Window\TextWindow.xaml.cs">
       <DependentUpon>TextWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dictionary\AddRecord.xaml">
+    <Page Include="Dictionary\AddRecordDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dictionary\Main.xaml">
+    <Page Include="Dictionary\MainDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dictionary\MySql.xaml">
+    <Page Include="Dictionary\MySqlDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dictionary\TagDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,6 +180,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Page\MySqlPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Page\TagPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -10,7 +10,7 @@
         Title="MainWindow" Height="602" Width="910">
 
     <Window.Resources>
-        <ResourceDictionary Source="Dictionary/Main.xaml"/>
+        <ResourceDictionary Source="Dictionary/MainDictionary.xaml"/>
     </Window.Resources>
     <Grid>
         <!-- 定义表格结构 -->
@@ -32,7 +32,7 @@
             <Button x:Name="toAddRecord" Content="添加记录" Click="ToAddRecord_Click"/>
             <Button Content="查看事件"/>
             <Button Content="对比模式"/>
-            <Button Content="编辑标签"/>
+            <Button x:Name="toTagPage" Content="编辑标签" Click="ToTagPage_Click"/>
             <Button x:Name="toMySqlPage" Content="MySql" Click="ToMySql_Click"/>
         </WrapPanel>
         <!-- 页面容器 -->
