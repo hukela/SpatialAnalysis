@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS `incident`;
 
 CREATE TABLE `incident` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '事件id',
-  `creat_time` datetime NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `title` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '事件标题',
   `explain` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '事件描述',
   `incident_state` tinyint DEFAULT NULL COMMENT '状态，0代表正常',

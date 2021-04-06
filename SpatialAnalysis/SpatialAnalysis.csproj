@@ -116,6 +116,7 @@
     <Compile Include="Page\UnavailablePage.xaml.cs">
       <DependentUpon>UnavailablePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Service\AddRecordExtend\AddRecord.cs" />
     <Compile Include="Service\AddRecordExtend\BeanFactory.cs" />
     <Compile Include="Service\AddRecordExtend\Extend.cs" />
     <Compile Include="Service\AddRecordServive.cs" />

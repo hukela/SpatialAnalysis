@@ -12,7 +12,6 @@ namespace SpatialAnalysis.Utils
         //用于区分的域名
         public enum Domain
         {
-            FileCount
         }
         public static void Build(Domain name)
         {

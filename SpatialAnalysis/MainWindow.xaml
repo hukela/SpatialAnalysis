@@ -31,7 +31,6 @@
             <Button x:Name="toMainPage" Content="主页" Click="ToMainPage_Click"/>
             <Button x:Name="toAddRecord" Content="添加记录" Click="ToAddRecord_Click"/>
             <Button Content="查看事件"/>
-            <Button Content="查看目录"/>
             <Button Content="对比模式"/>
             <Button Content="编辑标签"/>
             <Button x:Name="toMySqlPage" Content="MySql" Click="ToMySql_Click"/>

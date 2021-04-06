@@ -18,12 +18,12 @@ namespace SpatialAnalysis.Mapper
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "INSERT INTO " +
-                "incident (`creat_time`,`title`,`explain`,`incident_state`) " +
-                "VALUE (@creat_time,@title,@explain,@incident_state);";
-                cmd.Parameters.Add("creat_time", MySqlDbType.DateTime).Value = bean.CreatTime.ToString();
+                "incident (`create_time`,`title`,`explain`,`incident_state`) " +
+                "VALUE (@create_time,@title,@explain,@incident_state);";
+                cmd.Parameters.Add("create_time", MySqlDbType.DateTime).Value = bean.CreateTime.ToString();
                 cmd.Parameters.Add("title", MySqlDbType.VarChar, 20).Value = bean.Title;
                 cmd.Parameters.Add("explain", MySqlDbType.VarChar, 500).Value = bean.Explain;
-                cmd.Parameters.Add("incident_state", MySqlDbType.Byte).Value = bean.Incident_state;
+                cmd.Parameters.Add("incident_state", MySqlDbType.Byte).Value = bean.IncidentState;
                 MySqlAction.Write(cmd);
             }
             uint id;
@@ -35,6 +35,33 @@ namespace SpatialAnalysis.Mapper
                 id = Convert.ToUInt32(table.Rows[0][0]);
             }
             return id;
+        }
+        private static IncidentBean GetBeanByTable(DataRow row)
+        {
+            return new IncidentBean()
+            {
+                Id = (uint)row["id"],
+                CreateTime = (DateTime)row["create_time"],
+                Title = row["title"] as string,
+                Explain = row["explain"] as string,
+                IncidentState = (sbyte)row["incident_state"],
+            };
+        }
+        /// <summary>
+        /// 获取最近一条事件
+        /// </summary>
+        public static IncidentBean GetLastBean()
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "SELECT * FROM incident " +
+                    "WHERE incident_state = 0 ORDER BY create_time DESC LIMIT 1;";
+                DataTable table = MySqlAction.Read(cmd);
+                if (table.Rows.Count == 0)
+                    return null;
+                else
+                    return GetBeanByTable(table.Rows[0]);
+            }
         }
         /// <summary>
         /// 查看是否是第一个有效记录

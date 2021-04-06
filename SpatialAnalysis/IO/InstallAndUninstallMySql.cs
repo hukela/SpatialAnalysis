@@ -81,7 +81,9 @@ namespace SpatialAnalysis.IO
         public static string[] Initialize()
         {
             string path = locolPath + @"\Data\InitializeMySQL.cmd";
-            return Cmd.RunCmdFile(path);
+            string[] strs = Cmd.RunCmdFile(path);
+            File.Delete(path);
+            return strs;
         }
         /// <summary>
         /// 安装数据库
@@ -90,7 +92,9 @@ namespace SpatialAnalysis.IO
         public static string[] Install()
         {
             string path = locolPath + @"\Data\InstallMySQL.cmd";
-            return Cmd.RunCmdFile(path);
+            string[] strs = Cmd.RunCmdFile(path);
+            File.Delete(path);
+            return strs;
         }
         /// <summary>
         /// 删除MySql服务

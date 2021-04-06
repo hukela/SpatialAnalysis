@@ -29,7 +29,7 @@
         <TextBlock Text="备注：" Style="{StaticResource left-row2}"/>
         <TextBox Text="{Binding Path=Explain}" Style="{StaticResource right-row2}"/>
         <Canvas>
-            <TextBlock Text="距离上一次记录：- 天" Style="{StaticResource lastTime}"/>
+            <TextBlock x:Name="timeSpan" Text="距离上一次记录：- 天" Style="{StaticResource lastTime}"/>
             <Button x:Name="submit" Content="开始记录" Click="Submit_Click" Style="{StaticResource submit}"/>
         </Canvas>
     </Grid>
