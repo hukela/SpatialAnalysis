@@ -19,8 +19,6 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
-            Extend.BuildTable(1, true);
-            Console.WriteLine("OK");
         }
     }
 }

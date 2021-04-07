@@ -24,13 +24,13 @@ namespace SpatialAnalysis
             IsCanUse();
         }
         //显示主页页面
-        Page main;
+        private Page main;
         //初始化页面
-        MainPage mainPage = new MainPage();
-        UnavailablePage unavailablePage;
-        AddRecordPage addRecord = new AddRecordPage();
-        TagPage tagPage = new TagPage();
-        MySqlPage mySqlPage = new MySqlPage();
+        public MainPage mainPage = new MainPage();
+        private UnavailablePage unavailablePage;
+        public AddRecordPage addRecord = new AddRecordPage();
+        public TagPage tagPage = new TagPage();
+        public MySqlPage mySqlPage = new MySqlPage();
         //若数据库不可用，则关闭相关功能
         public void IsCanUse()
         {

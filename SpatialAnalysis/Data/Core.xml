@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Main>
   <Dictionary>
+    <Add key="tagColor" value="#FFE4C4,#87CEFA,#7FFF00,#FFD700" />
     <Add key="server" value="localhost" />
     <Add key="port" value="3306" />
     <Add key="user" value="root" />

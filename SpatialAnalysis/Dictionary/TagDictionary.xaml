@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:Class="SpatialAnalysis.Dictionary.TagDictionary"
                     xmlns:local="clr-namespace:SpatialAnalysis.Dictionary">
 
     <!-- 文字 -->
@@ -29,9 +30,26 @@
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
     </Style>
     <!-- 框架 -->
-    <Style x:Key="tag" TargetType="Grid">
+    <Style x:Key="tag-grid" TargetType="Grid">
         <Setter Property="Margin" Value="0,8,0,8"/>
         <Setter Property="Grid.Row" Value="2"/>
         <Setter Property="Grid.Column" Value="1"/>
+    </Style>
+    <!-- 右键菜单 -->
+    <ContextMenu x:Key="tag-item-menu">
+        <MenuItem Name="EditTag" Click="EditTag_Click" Header="编辑标签"/>
+        <MenuItem Name="DeleteTag" Click="DeleteTag_Click" Header="删除标签"/>
+    </ContextMenu>
+    <ContextMenu x:Key="tag-view-menu">
+        <MenuItem Name="NewTag" Click="NewTag_Click" Header="添加标签"/>
+    </ContextMenu>
+    <!-- 自动为相应控件添加菜单 -->
+    <Style TargetType="ListView">
+        <Setter Property="BorderThickness" Value="0,0,0,0"/>
+        <Setter Property="ContextMenu" Value="{StaticResource tag-view-menu}"/>
+    </Style>
+    <Style TargetType="ListViewItem">
+        <Setter Property="Margin" Value="0,0,20,0"/>
+        <Setter Property="ContextMenu" Value="{StaticResource tag-item-menu}"/>
     </Style>
 </ResourceDictionary>

@@ -11,7 +11,7 @@
     <Page.Resources>
         <ResourceDictionary Source="/Dictionary/TagDictionary.xaml"/>
     </Page.Resources>
-    <Grid ShowGridLines="True">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="2*"/>
@@ -29,7 +29,8 @@
             </Grid.ColumnDefinitions>
             <TextBlock Text="标签：" Style="{StaticResource title}"/>
             <Border Style="{StaticResource line}"/>
-            <Grid ShowGridLines="True" Style="{StaticResource tag}">
+            <!-- 用于展现标签的表格 -->
+            <Grid Style="{StaticResource tag-grid}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="10"/>
@@ -38,12 +39,16 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <ScrollViewer Grid.Column="0">
-                    <ListView x:Name="firstNode"/>
+                    <ListView x:Name="firstNode" SelectionChanged="Tag_Selected"/>
                 </ScrollViewer>
                 <Border Grid.Column="1" Style="{StaticResource vertical-line}"/>
-                <ScrollViewer Grid.Column="2"/>
+                <ScrollViewer Grid.Column="2">
+                    <ListView x:Name="secondNode" SelectionChanged="Tag_Selected"/>
+                </ScrollViewer>
                 <Border Grid.Column="3" Style="{StaticResource vertical-line}"/>
-                <ScrollViewer Grid.Column="4"/>
+                <ScrollViewer Grid.Column="4">
+                    <ListView x:Name="thirdNode" SelectionChanged="Tag_Selected"/>
+                </ScrollViewer>
             </Grid>
         </Grid>
     </Grid>

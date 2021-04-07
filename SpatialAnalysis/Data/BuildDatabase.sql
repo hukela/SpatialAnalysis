@@ -58,8 +58,8 @@ DROP TABLE IF EXISTS `tag`;
 CREATE TABLE `tag` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
   `parent_id` int unsigned DEFAULT NULL COMMENT '上一级的id',
-  `name` varchar(10) COLLATE utf8mb4_general_ci NOT NULL COMMENT '标签名称',
-  `color` varchar(7) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '标签颜色',
+  `name` varchar(30) COLLATE utf8mb4_general_ci NOT NULL COMMENT '标签名称',
+  `color` char(7) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '标签颜色',
   PRIMARY KEY (`id`),
   KEY `for_tag` (`parent_id`),
   CONSTRAINT `for_tag` FOREIGN KEY (`parent_id`) REFERENCES `tag` (`id`)
@@ -67,7 +67,7 @@ CREATE TABLE `tag` (
 
 /*Data for the table `tag` */
 
-insert  into `tag`(`id`,`parent_id`,`name`,`color`) values (1,NULL,'系统文件',NULL),(2,NULL,'用户文件',NULL),(3,NULL,'软件',NULL);
+insert  into `tag`(`id`,`parent_id`,`name`,`color`) values (1,NULL,'系统文件','#FFFFFF'),(2,NULL,'用户文件','#FFFFFF'),(3,NULL,'软件','#FFFFFF');
 
 /*Table structure for table `tag_view` */
 

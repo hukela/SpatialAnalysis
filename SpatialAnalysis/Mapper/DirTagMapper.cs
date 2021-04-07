@@ -24,7 +24,7 @@ namespace SpatialAnalysis.Mapper
         /// <summary>
         /// 以表格形式获取对应标签id的标注路径
         /// </summary>
-        public static DataTable GetAllInTable(uint tagId)
+        public static DataTable GetAllByTag(uint tagId)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {

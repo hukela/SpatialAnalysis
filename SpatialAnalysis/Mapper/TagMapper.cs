@@ -15,21 +15,31 @@ namespace SpatialAnalysis.Mapper
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "INSERT INTO `tag` (`parent_id`, `name`, `color`);) VALUE (@parent_id, @name, @color);";
-                cmd.Parameters.Add("parent_id", MySqlDbType.UInt32).Value = bean.ParentId;
-                cmd.Parameters.Add("name", MySqlDbType.VarChar, 10).Value = bean.Name;
+                cmd.CommandText = "INSERT INTO `tag` (`parent_id`, `name`, `color`) VALUE (@parent_id, @name, @color);";
+                object pid = bean.ParentId == 0 ? null : (object)bean.ParentId;
+                cmd.Parameters.Add("parent_id", MySqlDbType.UInt32).Value = pid;
+                cmd.Parameters.Add("name", MySqlDbType.VarChar, 30).Value = bean.Name;
                 cmd.Parameters.Add("color", MySqlDbType.VarChar, 7).Value = bean.Color;
                 MySqlAction.Write(cmd);
             }
         }
         /// <summary>
-        /// 以表格形式获取全部数据
+        /// 以表格形式获取所有根标签
         /// </summary>
-        public static DataTable GetAllInTable()
+        public static DataTable GetRootTag()
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "SELECT * FROM `tag`;";
+                cmd.CommandText = "SELECT * FROM `tag` WHERE `parent_id` IS NULL;";
+                return MySqlAction.Read(cmd);
+            }
+        }
+        public static DataTable GetChildTag(uint ParentId)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "SELECT * FROM `tag` WHERE `parent_id` = @parent_id;";
+                cmd.Parameters.Add("parent_id", MySqlDbType.UInt32).Value = ParentId;
                 return MySqlAction.Read(cmd);
             }
         }

@@ -96,6 +96,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dictionary\TagDictionary.cs" />
     <Compile Include="Entity\DirIndexBean.cs" />
     <Compile Include="Entity\DirTagBean.cs" />
     <Compile Include="Entity\IncidentBean.cs" />
@@ -130,12 +131,17 @@
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />
     <Compile Include="Service\StartupAndExit.cs" />
+    <Compile Include="Service\TagService.cs" />
+    <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Utils\ForTest.cs" />
     <Compile Include="Utils\InternalStorage.cs" />
     <Compile Include="Window\CloseButton.cs" />
     <Compile Include="Window\ProgramWindow.xaml.cs">
       <DependentUpon>ProgramWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Window\TagWindow.xaml.cs">
+      <DependentUpon>TagWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Window\TextWindow.xaml.cs">
       <DependentUpon>TextWindow.xaml</DependentUpon>
@@ -192,6 +198,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Window\ProgramWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Window\TagWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
