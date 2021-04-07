@@ -1,55 +1,52 @@
-﻿using SpatialAnalysis.MyPage;
-using System;
+﻿using SpatialAnalysis.Entity;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace SpatialAnalysis.Dictionary
 {
     //字典中的事件类
     partial class TagDictionary : ResourceDictionary
     {
+        //新建标签
         private void NewTag_Click(object sender, RoutedEventArgs e)
         {
             MainWindow main = Application.Current.MainWindow as MainWindow;
             ListView list = GetSender(sender) as ListView;
-            byte plies;
-            switch (list.Name)
-            {
-                case "firstNode":
-                    plies = 1;
-                    break;
-                case "secondNode":
-                    plies = 2;
-                    break;
-                case "thirdNode":
-                    plies = 3;
-                    break;
-                default: throw new ApplicationException("无法识别新加标签的层数");
-            }
-            main.tagPage.NewTag_Click(plies);
+            main.tagPage.NewTag_Click(list);
         }
+        //修改标签
         private void EditTag_Click(object sender, RoutedEventArgs e)
         {
             MainWindow main = Application.Current.MainWindow as MainWindow;
-            main.tagPage.EditTag_Click(GetTagId(sender));
+            ListViewItem item = GetSender(sender) as ListViewItem;
+            Grid grid = item.Content as Grid;
+            //遍历gird中的控件来获取bean
+            TagBean bean = new TagBean();
+            foreach (UIElement element in grid.Children)
+            {
+                if (element.Visibility == Visibility.Collapsed)
+                    bean = TagBean.Parse((element as TextBlock).Text);
+            }
+            main.tagPage.EditTag_Click(bean);
         }
+        //删除标签  
         private void DeleteTag_Click(object sender, RoutedEventArgs e)
         {
             MainWindow main = Application.Current.MainWindow as MainWindow;
-            main.tagPage.DeleteTag_Click(GetTagId(sender));
+            ListViewItem item = GetSender(sender) as ListViewItem;
+            Grid grid = item.Content as Grid;
+            //通过ListViewItem获取ListView
+            DependencyObject parent = VisualTreeHelper.GetParent(item);
+            while (!(parent is ListView))
+                parent = VisualTreeHelper.GetParent(parent);
+            main.tagPage.DeleteTag_Click(uint.Parse(grid.Uid), parent as ListView);
         }
         //获取触发事件控件
         private UIElement GetSender(object sender)
         {
             DependencyObject dependency = LogicalTreeHelper.GetParent(sender as MenuItem);
             return ContextMenuService.GetPlacementTarget(dependency);
-        }
-        //获取触发事件的标签id
-        private uint GetTagId(object sender)
-        {
-            ListViewItem item = GetSender(sender) as ListViewItem;
-            Grid grid = item.Content as Grid;
-            return uint.Parse(grid.Uid);
         }
     }
 }

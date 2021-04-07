@@ -52,7 +52,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -65,7 +65,7 @@
         <TextBlock Text="颜色：" Grid.Row="1"/>
         <ComboBox x:Name="selectColor" SelectionChanged="SelectColor_SelectionChanged"/>
         <TextBox x:Name="color" Text="{Binding Path=Color}" Style="{StaticResource color}"/>
-        <Button x:Name="yes" Content="确定" Click="Yes_Click" Margin="40,13,0,0"/>
-        <Button x:Name="no" Content="取消" Click="No_Click" Margin="120,13,0,0"/>
+        <Button x:Name="yes" Content="确定" Click="Yes_Click" Margin="40,14,0,0"/>
+        <Button x:Name="no" Content="取消" Click="No_Click" Margin="120,14,0,0"/>
     </Grid>
 </Window>

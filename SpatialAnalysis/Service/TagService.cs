@@ -1,4 +1,5 @@
-﻿using SpatialAnalysis.Mapper;
+﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.Mapper;
 using SpatialAnalysis.Utils;
 using System.Data;
 using System.Windows;
@@ -15,15 +16,16 @@ namespace SpatialAnalysis.Service
         /// <param name="parentId">所需标签的父级id</param>
         public static Grid[] GetItemDataSource(uint parentId)
         {
-            DataTable table;
+            TagBean[] list;
             if (parentId == 0)
-                table = TagMapper.GetRootTag();
+                list = TagMapper.GetRootTag();
             else
-                table = TagMapper.GetChildTag(parentId);
-            Grid[] list = new Grid[table.Rows.Count];
-            for (int i = 0; i < table.Rows.Count; i++)
+                list = TagMapper.GetChildTag(parentId);
+            Grid[] itemList = new Grid[list.Length];
+            for (int i = 0; i < list.Length; i++)
             {
-                byte[] rgb = ColorUtil.GetRGB((string)table.Rows[i]["color"]);
+                byte[] rgb = ColorUtil.GetRGB(list[i].Color);
+                //用于显示颜色
                 Border color = new Border()
                 {
                     Width = 12,
@@ -40,22 +42,41 @@ namespace SpatialAnalysis.Service
                     },
                     BorderThickness = new Thickness(1, 1, 1, 1),
                 };
+                //用于显示名称
                 TextBlock textBlock = new TextBlock()
                 {
                     FontSize = 16,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Margin = new Thickness(24, 0, 0, 0),
-                    Text = table.Rows[i]["name"] as string,
+                    Text = list[i].Name,
+                };
+                //用于存储bean
+                TextBlock textBean = new TextBlock()
+                {
+                    Visibility = Visibility.Collapsed,
+                    Text = list[i].ToString(),
                 };
                 Grid grid = new Grid()
                 {
-                    Uid = table.Rows[i]["id"].ToString()
+                    Uid = list[i].Id.ToString()
                 };
                 grid.Children.Add(color);
                 grid.Children.Add(textBlock);
-                list[i] = grid;
+                grid.Children.Add(textBean);
+                itemList[i] = grid;
             }
-            return list;
+            return itemList;
+        }
+        /// <summary>
+        /// 递归删除标签及其所有子标签
+        /// </summary>
+        /// <param name="tagId"></param>
+        public static void DeleteTag(uint tagId)
+        {
+            TagBean[] beanList = TagMapper.GetChildTag(tagId);
+            foreach (TagBean bean in beanList)
+                DeleteTag(bean.Id);
+            TagMapper.DeleteOne(tagId);
         }
     }
 }

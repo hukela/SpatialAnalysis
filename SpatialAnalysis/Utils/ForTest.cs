@@ -19,6 +19,8 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
+            long a = -10;
+            Console.WriteLine(Convert.ToUInt32(a));
         }
     }
 }

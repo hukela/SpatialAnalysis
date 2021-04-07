@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
+using System;
 using System.Data;
 
 namespace SpatialAnalysis.Mapper
@@ -19,28 +20,77 @@ namespace SpatialAnalysis.Mapper
                 object pid = bean.ParentId == 0 ? null : (object)bean.ParentId;
                 cmd.Parameters.Add("parent_id", MySqlDbType.UInt32).Value = pid;
                 cmd.Parameters.Add("name", MySqlDbType.VarChar, 30).Value = bean.Name;
-                cmd.Parameters.Add("color", MySqlDbType.VarChar, 7).Value = bean.Color;
+                cmd.Parameters.Add("color", MySqlDbType.String, 7).Value = bean.Color;
                 MySqlAction.Write(cmd);
             }
         }
+        //将表格转换为bean
+        private static TagBean[] GetBeanListByTable(DataTable table)
+        {
+            TagBean[] list = new TagBean[table.Rows.Count];
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                uint parentId = table.Rows[i]["parent_id"] is DBNull ? 0 : (uint)table.Rows[i]["parent_id"];
+                TagBean bean = new TagBean()
+                {
+                    Id = (uint)table.Rows[i]["id"],
+                    ParentId = parentId,
+                    Name = table.Rows[i]["name"] as string,
+                    Color = table.Rows[i]["color"] as string,
+                };
+                list[i] = bean;
+            }
+            return list;
+        }
         /// <summary>
-        /// 以表格形式获取所有根标签
+        /// 获取所有根标签
         /// </summary>
-        public static DataTable GetRootTag()
+        public static TagBean[] GetRootTag()
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "SELECT * FROM `tag` WHERE `parent_id` IS NULL;";
-                return MySqlAction.Read(cmd);
+                return GetBeanListByTable(MySqlAction.Read(cmd));
             }
         }
-        public static DataTable GetChildTag(uint ParentId)
+        /// <summary>
+        /// 获取所有子标签
+        /// </summary>
+        /// <param name="ParentId">父级标签id</param>
+        public static TagBean[] GetChildTag(uint ParentId)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "SELECT * FROM `tag` WHERE `parent_id` = @parent_id;";
                 cmd.Parameters.Add("parent_id", MySqlDbType.UInt32).Value = ParentId;
-                return MySqlAction.Read(cmd);
+                return GetBeanListByTable(MySqlAction.Read(cmd));
+            }
+        }
+        /// <summary>
+        /// 更新已有标签
+        /// </summary>
+        /// <param name="bean">对应的数据实体</param>
+        public static void UpdataOne(TagBean bean)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "UPDATE `tag` SET `name`=@name, `color`=@color WHERE `id`=@id;";
+                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = bean.Id;
+                cmd.Parameters.Add("name", MySqlDbType.VarChar, 30).Value = bean.Name;
+                cmd.Parameters.Add("color", MySqlDbType.String, 7).Value = bean.Color;
+                MySqlAction.Write(cmd);
+            }
+        }
+        /// <summary>
+        /// 根据id删除一个标签
+        /// </summary>
+        public static void DeleteOne(uint tagId)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "DELETE FROM `tag` WHERE `id`=@id;";
+                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = tagId;
+                MySqlAction.Write(cmd);
             }
         }
     }
