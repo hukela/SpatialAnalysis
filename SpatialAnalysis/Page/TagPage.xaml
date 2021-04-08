@@ -13,8 +13,8 @@
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <!-- 标签栏 -->
         <Grid Grid.Row="0">
@@ -30,7 +30,7 @@
             <TextBlock Text="标签：" Style="{StaticResource title}"/>
             <Border Style="{StaticResource line}"/>
             <!-- 用于展现标签的表格 -->
-            <Grid Style="{StaticResource tag-grid}">
+            <Grid Margin="0,8,0,8" Style="{StaticResource data-grid}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="10"/>
@@ -38,17 +38,43 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <ScrollViewer Grid.Column="0">
-                    <ListView x:Name="firstNode" SelectionChanged="Tag_Selected"/>
-                </ScrollViewer>
+                <ListView x:Name="firstNode" Grid.Column="0"
+                          SelectionChanged="Tag_Selected"
+                          ContextMenu="{StaticResource tag-view-menu}"
+                          ItemContainerStyle="{StaticResource tag-item}"/>
                 <Border Grid.Column="1" Style="{StaticResource vertical-line}"/>
-                <ScrollViewer Grid.Column="2">
-                    <ListView x:Name="secondNode" SelectionChanged="Tag_Selected"/>
-                </ScrollViewer>
+                <ListView x:Name="secondNode" Grid.Column="2"
+                          SelectionChanged="Tag_Selected"
+                          ContextMenu="{StaticResource tag-view-menu}"
+                          ItemContainerStyle="{StaticResource tag-item}"/>
                 <Border Grid.Column="3" Style="{StaticResource vertical-line}"/>
-                <ScrollViewer Grid.Column="4">
-                    <ListView x:Name="thirdNode" SelectionChanged="Tag_Selected"/>
-                </ScrollViewer>
+                <ListView x:Name="thirdNode" Grid.Column="4"
+                          SelectionChanged="Tag_Selected"
+                          ContextMenu="{StaticResource tag-view-menu}"
+                          ItemContainerStyle="{StaticResource tag-item}"/>
+            </Grid>
+        </Grid>
+        <!-- 地址栏 -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="tagName" Text="[标签]所标注的地址：" Style="{StaticResource title}"/>
+            <Border Style="{StaticResource line}"/>
+            <Grid x:Name="pathGrid" Margin="0,8,30,16" Style="{StaticResource data-grid}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource vertical-line}"/>
+                <ListView x:Name="pathList" Grid.Column="1"
+                          ItemContainerStyle="{StaticResource path-item}"/>
             </Grid>
         </Grid>
     </Grid>

@@ -12,7 +12,7 @@ namespace SpatialAnalysis.Entity
         public override string ToString()
         {
             //防止字符串中也有&
-            string name = Name.Replace("&", "[and]");
+            string name = Name.Replace("&", "[{and}]");
             return string.Concat(Id, '&', ParentId, "&", name, "&", Color);
         }
         public static TagBean Parse(string str)
@@ -24,7 +24,7 @@ namespace SpatialAnalysis.Entity
                 {
                     Id = uint.Parse(strs[0]),
                     ParentId = uint.Parse(strs[1]),
-                    Name = strs[2].Replace("[and]", "&"),
+                    Name = strs[2].Replace("[{and}]", "&"),
                     Color = strs[3],
                 };
             }

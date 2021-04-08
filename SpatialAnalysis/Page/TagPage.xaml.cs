@@ -3,8 +3,12 @@ using SpatialAnalysis.Mapper;
 using SpatialAnalysis.MyWindow;
 using SpatialAnalysis.Service;
 using System;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace SpatialAnalysis.MyPage
 {
@@ -16,6 +20,8 @@ namespace SpatialAnalysis.MyPage
         //为方便刷新页面
         private ListView[] nodeList;
         long[] nodeParentId;
+        //当前所展示的标签
+        uint selectedTagId;
         public TagPage()
         {
             nodeList = new ListView[3];
@@ -33,7 +39,7 @@ namespace SpatialAnalysis.MyPage
         //加载页面数据
         private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            firstNode.ItemsSource = TagService.GetItemDataSource(0);
+            firstNode.ItemsSource = TagService.GetTagItemSource(0);
         }
         //通过名称获取节点层级
         private int GetPliesByName(string name)
@@ -60,7 +66,7 @@ namespace SpatialAnalysis.MyPage
                 {
                     int indiex = -1;
                     uint parentId = Convert.ToUInt32(nodeParentId[i]);
-                    Grid[] items = TagService.GetItemDataSource(parentId);
+                    Grid[] items = TagService.GetTagItemSource(parentId);
                     nodeList[i].ItemsSource = items;
                     for (int k = 0; k < items.Length; k++)
                         if (nodeParentId[i + 1] == long.Parse(items[k].Uid))
@@ -80,27 +86,38 @@ namespace SpatialAnalysis.MyPage
             if (node.SelectedItem == null)
                 return;
             Grid grid = node.SelectedItem as Grid;
-            uint tagId = uint.Parse(grid.Uid);
+            //遍历gird中的控件来获取bean
+            TagBean bean = new TagBean();
+            foreach (UIElement element in grid.Children)
+            {
+                if (element.Visibility == Visibility.Collapsed)
+                    bean = TagBean.Parse((element as TextBlock).Text);
+            }
+            //刷新标签栏
+            selectedTagId = bean.Id;
             int plies = GetPliesByName(node.Name);
             switch (plies)
             {
                 case 0:
-                    if (nodeParentId[1] == tagId)
+                    if (nodeParentId[1] == selectedTagId)
                         return;
-                    nodeParentId[1] = tagId;
+                    nodeParentId[1] = selectedTagId;
                     nodeParentId[2] = -1;
                     RefreshAll();
                     break;
                 case 1:
-                    if (nodeParentId[2] == tagId)
+                    if (nodeParentId[2] == selectedTagId)
                         return;
-                    nodeParentId[2] = tagId;
+                    nodeParentId[2] = selectedTagId;
                     RefreshAll();
                     break;
                 case 2:
-                    nodeParentId[3] = tagId;
+                    nodeParentId[3] = selectedTagId;
                     break;
             }
+            //刷新地址栏
+            tagName.Text = string.Concat('[', bean.Name, "]所标注的地址：");
+            pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
         }
         //新建标签
         public void NewTag_Click(ListView sender)
@@ -147,7 +164,124 @@ namespace SpatialAnalysis.MyPage
                         nodeParentId[i] = -1;
                 }
                 RefreshAll();
+                pathList.ItemsSource = null;
             }
+        }
+        //这里用单机事件模拟双击
+        bool isClick = false;
+        Timer timer;
+        //路径行点击事件
+        public void Path_Click(object sender, RoutedEventArgs e)
+        {
+            if (isClick)
+            {
+                timer.Stop();
+                isClick = false;
+                TextBox textBox = null;
+                Grid grid = VisualTreeHelper.GetParent(sender as UIElement) as Grid;
+                //进入编辑模式
+                foreach (UIElement element in grid.Children)
+                {
+                    if (element.Visibility == Visibility.Collapsed)
+                    {
+                        element.Visibility = Visibility.Visible;
+                        if (element is TextBox)
+                            textBox = element as TextBox;
+                    }
+                    else
+                        element.Visibility = Visibility.Collapsed;
+                }
+                editedGrid = grid;
+                isInIt = true;
+                //为ListViewItem添加相关事件
+                DependencyObject parent = VisualTreeHelper.GetParent(grid);
+                while (!(parent is ListViewItem))
+                    parent = VisualTreeHelper.GetParent(parent);
+                ListViewItem item = parent as ListViewItem;
+                item.MouseEnter += EditedItem_MouseEnter;
+                item.MouseLeave += EditedItem_MouseLeave;
+                MouseLeftButtonDown += EditedItem_MouseDown;
+                pathList.MouseLeftButtonDown += EditedItem_MouseDown;
+                tagName.MouseLeftButtonDown += EditedItem_MouseDown;
+                pathGrid.MouseLeftButtonDown += EditedItem_MouseDown;
+                //设置textBox为聚焦
+                //因为在设置后聚焦会聚焦会瞬间被ListViewItem抢去所以这里异步设置
+                DispatcherTimer setFocus = new DispatcherTimer()
+                {
+                    //一微秒后设置聚焦
+                    Interval = new TimeSpan(10000),
+                    IsEnabled = true,
+                };
+                setFocus.Tick += delegate { setFocus.Stop(); textBox.Focus(); };
+            }
+            else
+            {
+                isClick = true;
+                timer = new Timer()
+                {
+                    Interval = 300,
+                    AutoReset = false,
+                    Enabled = true,
+                };
+                timer.Elapsed += delegate { isClick = false; };
+                timer.Start();
+            }
+        }
+        //记录该编辑项中所有的相关数据
+        Grid editedGrid;
+        bool isInIt = true;
+        //鼠标移入事件
+        private void EditedItem_MouseEnter(object sender, MouseEventArgs e) { isInIt = true; }
+        //鼠标移出事件
+        private void EditedItem_MouseLeave(object sender, MouseEventArgs e) { isInIt = false; }
+        //添加或修改标签的地址
+        public void EditedItem_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (isInIt)
+                return;
+            //取消注册事件
+            MouseLeftButtonDown -= EditedItem_MouseDown;
+            pathList.MouseLeftButtonDown -= EditedItem_MouseDown;
+            tagName.MouseLeftButtonDown -= EditedItem_MouseDown;
+            pathGrid.MouseLeftButtonDown -= EditedItem_MouseDown;
+            //获取相关信息
+            string editedGridUid = editedGrid.Uid;
+            string editedPath = null;
+            foreach (UIElement element in editedGrid.Children)
+            {
+                if (element is TextBox)
+                    editedPath = (element as TextBox).Text;
+            }
+            if (editedPath != string.Empty)
+            {
+                if (editedGridUid == "newPath")
+                {
+                    DirTagMapper.AddOne(new DirTagBean()
+                    {
+                        TagId = selectedTagId,
+                        Path = editedPath,
+                    });
+                }
+                else
+                {
+                    DirTagMapper.EditOne(new DirTagBean()
+                    {
+                        Id = uint.Parse(editedGridUid),
+                        Path = editedPath,
+                    });
+                }
+            }
+            int index = pathList.SelectedIndex;
+            pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
+            pathList.SelectedIndex = index;
+            isInIt = true; //设置为true，关闭该方法的相应
+        }
+        //删除路径
+        public void DeletePath_Click(object sender, RoutedEventArgs e)
+        {
+            Grid grid = VisualTreeHelper.GetParent(sender as UIElement) as Grid;
+            DirTagMapper.DeleteOneById(uint.Parse(grid.Uid));
+            pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
         }
     }
 }
