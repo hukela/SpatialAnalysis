@@ -4,8 +4,9 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SpatialAnalysis.MyPage"
-      mc:Ignorable="d" 
-      Title="ComparisonPage" d:DesignHeight="550" d:DesignWidth="720">
+      mc:Ignorable="d"
+      Loaded="Page_Loaded"
+      Title="ComparisonPage" d:DesignHeight="550" d:DesignWidth="702">
 
     <Page.Resources>
         <ResourceDictionary Source="/Dictionary/ComparisonDictionary.xaml"/>
@@ -15,6 +16,18 @@
             <RowDefinition Height="70"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ComboBox Margin="30"/>
+        <ComboBox x:Name="incident1" Margin="8,0,0,0"/>
+        <ComboBox x:Name="incident2" Margin="280,0,0,0"/>
+        <Button Content="返回" Margin="559,0,0,0" Visibility="Collapsed"/>
+        <Button Content="根目录" Margin="622,0,0,0" Visibility="Collapsed"/>
+        <Button Content="进行分析" Margin="570,0,0,0"/>
+        <Grid Grid.Row="1" ShowGridLines="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TreeView/>
+        </Grid>
     </Grid>
 </Page>

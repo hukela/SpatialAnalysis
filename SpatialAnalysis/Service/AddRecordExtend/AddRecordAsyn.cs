@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace SpatialAnalysis.Service.AddRecordExtend
 {
-    class AddRecord
+    class AddRecordAsyn
     {
         //是否是第一次记录
         private bool isFirst;

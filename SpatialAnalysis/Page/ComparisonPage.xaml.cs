@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using SpatialAnalysis.Service;
+using System.Windows.Controls;
 
 namespace SpatialAnalysis.MyPage
 {
@@ -10,6 +11,11 @@ namespace SpatialAnalysis.MyPage
         public ComparisonPage()
         {
             InitializeComponent();
+        }
+        private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            incident1.ItemsSource = ComparisonService.GetComboBoxResource();
+            incident2.ItemsSource = ComparisonService.GetComboBoxResource();
         }
     }
 }

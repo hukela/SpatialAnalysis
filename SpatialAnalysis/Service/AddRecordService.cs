@@ -24,7 +24,7 @@ namespace SpatialAnalysis.Service
         /// <param name="bean">事件bean</param>
         public static void AddIncident(IncidentBean bean)
         {
-            AddRecord addRecord = new AddRecord();
+            AddRecordAsyn addRecord = new AddRecordAsyn();
             Log.Info("开始添加记录");
             ProgramWindow window = new ProgramWindow();
             object[] objs = { window, bean };

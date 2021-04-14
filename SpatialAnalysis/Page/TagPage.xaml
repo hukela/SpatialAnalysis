@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:SpatialAnalysis.MyPage"
       mc:Ignorable="d"
       Loaded="Page_Loaded"
-      Title="TagPage" d:DesignHeight="550" d:DesignWidth="720">
+      Title="TagPage" d:DesignHeight="550" d:DesignWidth="702">
 
     <Page.Resources>
         <ResourceDictionary Source="/Dictionary/TagDictionary.xaml"/>
