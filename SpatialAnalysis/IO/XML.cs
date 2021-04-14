@@ -95,8 +95,8 @@ namespace SpatialAnalysis.IO.Xml
         protected static void Write(string key, string value, string firstNode, string secondNode)
         {
             //根节点:Main
-            XElement Main = XElement.Load(filePath);
-            XElement dict = Main.Element(firstNode);
+            XElement main = XElement.Load(filePath);
+            XElement dict = main.Element(firstNode);
             IEnumerable<XElement> a = from xml in dict.Elements(secondNode)
                                       where xml.Attribute("key").Value == key
                                       select xml;
@@ -112,7 +112,7 @@ namespace SpatialAnalysis.IO.Xml
             else
                 add.SetAttributeValue("value", value.ToString());
             //保存修改(必须是针对根节点的保存)
-            Main.Save(filePath);
+            main.Save(filePath);
         }
     }
 }

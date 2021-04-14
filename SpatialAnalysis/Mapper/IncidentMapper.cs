@@ -36,6 +36,7 @@ namespace SpatialAnalysis.Mapper
             }
             return id;
         }
+        //将表格结果改为bean
         private static IncidentBean GetBeanByTable(DataRow row)
         {
             return new IncidentBean()
@@ -61,6 +62,14 @@ namespace SpatialAnalysis.Mapper
                     return null;
                 else
                     return GetBeanByTable(table.Rows[0]);
+            }
+        }
+        public static DataTable GetSuccessIncident()
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "SELECT * FROM `incident` WHERE `incident_state` = 0;";
+                return MySqlAction.Read(cmd);
             }
         }
         /// <summary>

@@ -18,12 +18,12 @@ namespace SpatialAnalysis.MyPage
         //加载页面
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            IncidentBean bean = AddRecordServive.GetBean();
+            IncidentBean bean = AddRecordService.GetBean();
             DataContext = bean;
-            if (bean.CreateTime == null)
+            if (bean.CreateTime == DateTime.MinValue)
                 return;
             TimeSpan time = DateTime.Now - bean.CreateTime;
-            timeSpan.Text = timeSpan.Text.Replace("-", time.Days.ToString());
+            timeSpan.Text = "距离上一次记录：- 天".Replace(" - ", time.Days.ToString());
         }
         //添加事件
         private void Submit_Click(object sender, RoutedEventArgs e)
@@ -48,7 +48,7 @@ namespace SpatialAnalysis.MyPage
                     return;
                 }
             }
-            AddRecordServive.AddIncident(bean);
+            AddRecordService.AddIncident(bean);
         }
     }
 }

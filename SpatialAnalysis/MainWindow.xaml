@@ -30,8 +30,8 @@
         <WrapPanel Grid.Row="1" Grid.Column="0" Margin="0,-1,0,0">
             <Button x:Name="toMainPage" Content="主页" Click="ToMainPage_Click"/>
             <Button x:Name="toAddRecord" Content="添加记录" Click="ToAddRecord_Click"/>
-            <Button Content="查看事件"/>
-            <Button Content="对比模式"/>
+            <Button x:Name="toIncidentPage" Content="查看事件"/>
+            <Button x:Name="toComparisonPage" Content="对比模式" Click="ToComparisonPage_Click"/>
             <Button x:Name="toTagPage" Content="编辑标签" Click="ToTagPage_Click"/>
             <Button x:Name="toMySqlPage" Content="MySql" Click="ToMySql_Click"/>
         </WrapPanel>

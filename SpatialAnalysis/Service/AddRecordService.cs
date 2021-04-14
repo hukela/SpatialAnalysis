@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace SpatialAnalysis.Service
 {
-    class AddRecordServive
+    class AddRecordService
     {
         public static IncidentBean GetBean()
         {

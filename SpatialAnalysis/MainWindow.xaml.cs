@@ -29,6 +29,7 @@ namespace SpatialAnalysis
         public MainPage mainPage = new MainPage();
         private UnavailablePage unavailablePage;
         public AddRecordPage addRecord = new AddRecordPage();
+        public ComparisonPage comparisonPage = new ComparisonPage();
         public TagPage tagPage = new TagPage();
         public MySqlPage mySqlPage = new MySqlPage();
         //若数据库不可用，则关闭相关功能
@@ -36,7 +37,9 @@ namespace SpatialAnalysis
         {
             bool isEnabled = MySqlAction.IsConnected;
             toAddRecord.IsEnabled = isEnabled;
-            tagPage.IsEnabled = IsEnabled;
+            toTagPage.IsEnabled = isEnabled;
+            toIncidentPage.IsEnabled = isEnabled;
+            toComparisonPage.IsEnabled = isEnabled;
             if(isEnabled)
                 main = mainPage;
             else
@@ -65,6 +68,11 @@ namespace SpatialAnalysis
         {
             pageFrame.Content = addRecord;
             CloseButton(toAddRecord);
+        }
+        private void ToComparisonPage_Click(object sender, RoutedEventArgs e)
+        {
+            pageFrame.Content = comparisonPage;
+            CloseButton(toComparisonPage);
         }
         private void ToTagPage_Click(object sender, RoutedEventArgs e)
         {

@@ -115,6 +115,9 @@
     <Compile Include="Mapper\IncidentMapper.cs" />
     <Compile Include="Mapper\RecordMapper.cs" />
     <Compile Include="Mapper\TagMapper.cs" />
+    <Compile Include="Page\ComparisonPage.xaml.cs">
+      <DependentUpon>ComparisonPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Page\MySqlPage.xaml.cs">
       <DependentUpon>MySqlPage.xaml</DependentUpon>
     </Compile>
@@ -127,7 +130,8 @@
     <Compile Include="Service\AddRecordExtend\AddRecord.cs" />
     <Compile Include="Service\AddRecordExtend\BeanFactory.cs" />
     <Compile Include="Service\AddRecordExtend\Extend.cs" />
-    <Compile Include="Service\AddRecordServive.cs" />
+    <Compile Include="Service\AddRecordService.cs" />
+    <Compile Include="Service\ComparisonService.cs" />
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />
     <Compile Include="Service\StartupAndExit.cs" />
@@ -162,6 +166,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dictionary\ComparisonDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -180,6 +188,10 @@
     <Page Include="Page\AddRecordPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Page\ComparisonPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Page\MainPage.xaml">
       <SubType>Designer</SubType>
