@@ -66,6 +66,15 @@ namespace SpatialAnalysis.Mapper
                 return GetBeanListByTable(MySqlAction.Read(cmd));
             }
         }
+        public static TagBean GetOneById(uint tagId)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "SELECT * FROM `tag` WHERE `id` = @id;";
+                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = tagId;
+                return GetBeanListByTable(MySqlAction.Read(cmd))[0];
+            }
+        }
         /// <summary>
         /// 更新已有标签
         /// </summary>

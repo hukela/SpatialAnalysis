@@ -20,11 +20,17 @@ namespace SpatialAnalysis.Utils
         }
         public static void Set(Domain name, string key, object value)
         {
+            if (!dict.ContainsKey(name))
+                Build(name);
             dict[name][key] = value;
         }
         public static object Get(Domain name, string key)
         {
-            return dict[name][key];
+            if (!dict.ContainsKey(name))
+                return null;
+            else if (dict[name].ContainsKey(key))
+                return dict[name][key];
+            else return null;
         }
         public static void Clean(Domain name)
         {

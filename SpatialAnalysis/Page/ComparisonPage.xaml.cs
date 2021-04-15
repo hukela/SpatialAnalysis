@@ -1,4 +1,5 @@
-﻿using SpatialAnalysis.Service;
+﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.Service;
 using System.Windows.Controls;
 
 namespace SpatialAnalysis.MyPage
@@ -14,18 +15,19 @@ namespace SpatialAnalysis.MyPage
         }
         private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            //更新标签标注缓存
+            //添加标签标注缓存
             TagSupport.CheckTagSort();
             oldIncident.ItemsSource = ComparisonService.GetComboBoxResource();
+            oldIncident.SelectedIndex = 0;
             newIncident.ItemsSource = ComparisonService.GetComboBoxResource();
+            newIncident.SelectedIndex = 0;
         }
-        //进行分析
-        private void RunAnalyse_Click(object sender, System.Windows.RoutedEventArgs e)
+        //展开节点事件
+        private void TreeViewItem_Expanded(object sender, System.Windows.RoutedEventArgs e)
         {
-            Grid grid = oldIncident.SelectedItem as Grid;
-            uint original = uint.Parse(grid.Uid);
-            grid = newIncident.SelectedItem as Grid;
-            uint subsequent = uint.Parse(grid.Uid);
+            TreeViewItem item = sender as TreeViewItem;
+            DirNode dirNode = item.DataContext as DirNode;
+            ComparisonService.BuiledNodeChildren(ref dirNode);
         }
     }
 }

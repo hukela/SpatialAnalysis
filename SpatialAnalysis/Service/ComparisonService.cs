@@ -1,5 +1,6 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
+using SpatialAnalysis.Service.ComparisonExtend;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,8 +18,16 @@ namespace SpatialAnalysis.Service
         {
             DataTable table = IncidentMapper.GetSuccessIncident();
             int count = table.Rows.Count;
-            Grid[] items = new Grid[count];
-            for (int i = 0; i < count; i++)
+            Grid[] items = new Grid[count + 1];
+            items[0] = new Grid() { Uid = "unll" };
+            items[0].Children.Add(new TextBlock()
+            {
+                Text = "请选择事件",
+                FontSize = 16,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(8, 0, 0, 0),
+            });
+            for (int i = 1; i < count + 1; i++)
             {
                 TextBlock title = new TextBlock()
                 {
@@ -45,48 +54,31 @@ namespace SpatialAnalysis.Service
             return items;
         }
         /// <summary>
-        /// 获取两个事件中文件夹的子一级文件夹的比较
+        /// 获取根节点列表
         /// </summary>
-        /// <param name="oldIncidentId">以前的事件id</param>
-        /// <param name="newIncidentId">后来的事件id</param>
-        /// <param name="oldid">以前事件中的父级id</param>
-        /// <param name="newId">后来事件中的父级id</param>
-        public static DirNode[] GetDirNode(uint oldIncidentId, ulong oldid, uint newIncidentId, ulong newId)
+        /// <param name="oldIncidentId">老事件</param>
+        /// <param name="newIncidentId">新事件</param>
+        public static DirNode[] GetRootNodes(uint oldIncidentId, uint newIncidentId)
         {
-            RecordBean[] oldBeans = RecordMapper.GetBeansByPid(oldid, oldIncidentId);
-            RecordBean[] newBeans = RecordMapper.GetBeansByPid(newId, newIncidentId);
-            List<DirNode> dirNodes = new List<DirNode>();
-            //遍历比较两个bean列表
-            foreach (RecordBean oldBean in oldBeans)
+            DirNode baseNode = new DirNode()
             {
-                RecordBean newBean = null;
-                for (int i = 0; i < newBeans.Length; i++)
-                {
-                    if (oldBean.Path == newBeans[i].Path)
-                    {
-                        newBean = newBeans[i];
-                        newBeans[i] = null;
-                    }
-                }
-                DirNode dirNode = new DirNode()
-                {
-                    OldIncidentId = oldIncidentId,
-                    OldId = oldBean.Id,
-                    Name = oldBean.Name,
-                };
-                if (newBean != null)
-                {
-                    dirNode.NewIncidentId = newIncidentId;
-                    dirNode.NewId = newBean.Id;
-                    if (oldBean.Equals(newBean))
-                        dirNode.Color = "#87CEFA";
-                }
-                else
-                    dirNode.Color = "#FFC0CB";
-            }
-            foreach (RecordBean newBean in newBeans)
-            {
-            }
+                OldIncidentId = oldIncidentId,
+                OldId = 0,
+                NewIncidentId = newIncidentId,
+                NewId = 0,
+            };
+            DirNode[] nodes = BuildNodeTree.GetChildrenNodes(baseNode);
+            foreach (DirNode node in nodes)
+                node.Children = BuildNodeTree.GetChildrenNodes(node);
+            return nodes;
+        }
+        /// <summary>
+        /// 建立该节点中子节点的子节点
+        /// </summary>
+        public static void BuiledNodeChildren(ref DirNode baseNode)
+        {
+            foreach (DirNode dirNode in baseNode.Children)
+                dirNode.Children = BuildNodeTree.GetChildrenNodes(dirNode);
         }
     }
 }

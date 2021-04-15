@@ -132,7 +132,7 @@
     <Compile Include="Service\AddRecordExtend\BeanFactory.cs" />
     <Compile Include="Service\AddRecordExtend\Extend.cs" />
     <Compile Include="Service\AddRecordService.cs" />
-    <Compile Include="Service\ComparisonExtend\Extend.cs" />
+    <Compile Include="Service\ComparisonExtend\BuildNodeTree.cs" />
     <Compile Include="Service\ComparisonService.cs" />
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />

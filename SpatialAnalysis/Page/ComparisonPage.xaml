@@ -25,7 +25,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TreeView x:Name="dirTree">
                 <TreeView.Resources>
@@ -34,7 +33,7 @@
                         ItemsSource="{Binding Path=Children,
                         Mode=TwoWay,
                         UpdateSourceTrigger=PropertyChanged}">
-                        <Grid MinWidth="120">
+                        <Grid MinWidth="60" Background="{Binding Path=Color}">
                             <TextBlock Text="{Binding Path=Name,
                                 Mode=TwoWay,
                                 UpdateSourceTrigger=PropertyChanged}"
@@ -44,6 +43,18 @@
                         </Grid>
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
+                <!-- 为每一列添加点击事件 -->
+                <TreeView.Style>
+                    <Style TargetType="TreeView">
+                        <Setter Property="ItemContainerStyle">
+                            <Setter.Value>
+                                <Style TargetType="TreeViewItem">
+                                    <EventSetter Event="Expanded" Handler="TreeViewItem_Expanded"/>
+                                </Style>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TreeView.Style>
             </TreeView>
         </Grid>
     </Grid>
