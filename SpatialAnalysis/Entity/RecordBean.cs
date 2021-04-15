@@ -22,6 +22,17 @@ namespace SpatialAnalysis.Entity
         public uint DirCount { get; set; }
         //当前bean是否被改变
         public bool IsChange { get; set; }
+        //获取文件夹的名称
+        public string Name
+        {
+            get
+            {
+                if (ParentId == 0)
+                    return Path;
+                else
+                    return Path.Substring(Path.LastIndexOf('\\'));
+            }
+        }
         /// <summary>
         /// 将另外一个RecordBean中的相关数据加入的该bean中
         /// </summary>
@@ -54,6 +65,17 @@ namespace SpatialAnalysis.Entity
                 if (bean.VisitTime > VisitTime)
                     VisitTime = bean.VisitTime;
             }
+        }
+        /// <summary>
+        /// 比较两个文件夹是否一样
+        /// </summary>
+        /// <param name="bean"></param>
+        public bool Equals(RecordBean bean)
+        {
+            return Size == bean.Size
+                && FileCount == bean.FileCount
+                && DirCount == bean.DirCount
+                && SpaceUsage == bean.SpaceUsage;
         }
     }
 }

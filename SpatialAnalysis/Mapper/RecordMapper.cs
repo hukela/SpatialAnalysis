@@ -85,33 +85,41 @@ namespace SpatialAnalysis.Mapper
             return id;
         }
         //将数据由表格转化为bean
-        private static RecordBean GetBeanByTable(DataRow row)
+        private static RecordBean[] GetBeansByTable(DataTable table)
         {
-            uint incidentId = 0;
-            ulong targetId = 0;
-            if (row.Table.Columns.Contains("incident_id"))
+            int count = table.Rows.Count;
+            RecordBean[] beans = new RecordBean[count];
+            for (int i = 0; i < count; i++)
             {
-                incidentId = (uint)row["incident_id"];
-                targetId = (ulong)row["target_id"];
+                DataRow row = table.Rows[i];
+                uint incidentId = 0;
+                ulong targetId = 0;
+                if (table.Columns.Contains("incident_id"))
+                {
+                    incidentId = (uint)row["incident_id"];
+                    targetId = (ulong)row["target_id"];
+                }
+                RecordBean bean = new RecordBean()
+                {
+                    Id = (ulong)row["id"],
+                    ParentId = (ulong)row["parent_id"],
+                    IncidentId = incidentId,
+                    TargetId = targetId,
+                    Path = (string)row["path"],
+                    Plies = (uint)row["plies"],
+                    Size = BigInteger.Parse(row["size"] as string),
+                    SpaceUsage = BigInteger.Parse(row["space_usage"] as string),
+                    CerateTime = (DateTime)row["create_time"],
+                    ModifyTime = (DateTime)row["modify_time"],
+                    VisitTime = (DateTime)row["visit_time"],
+                    Owner = row["owner"] as string,
+                    ExceptionCode = (sbyte)row["exception_code"],
+                    FileCount = (uint)row["file_count"],
+                    DirCount = (uint)row["dir_count"],
+                };
+                beans[i] = bean;
             }
-            return new RecordBean()
-            {
-                Id = (ulong)row["id"],
-                ParentId = (ulong)row["parent_id"],
-                IncidentId = incidentId,
-                TargetId = targetId,
-                Path = (string)row["path"],
-                Plies = (uint)row["plies"],
-                Size = BigInteger.Parse(row["size"] as string),
-                SpaceUsage = BigInteger.Parse(row["space_usage"] as string),
-                CerateTime = (DateTime)row["create_time"],
-                ModifyTime = (DateTime)row["modify_time"],
-                VisitTime = (DateTime)row["visit_time"],
-                Owner = row["owner"] as string,
-                ExceptionCode = (sbyte)row["exception_code"],
-                FileCount = (uint)row["file_count"],
-                DirCount = (uint)row["dir_count"],
-            };
+            return beans;
         }
         /// <summary>
         /// 通过id设置父级id
@@ -128,29 +136,6 @@ namespace SpatialAnalysis.Mapper
                 cmd.Parameters.Add("parent_id", MySqlDbType.UInt64).Value = ParentId;
                 MySqlAction.Write(cmd);
             }
-        }
-        /// <summary>
-        /// 通过路径获取一个数据实体
-        /// </summary>
-        /// <param name="path">文件夹路径</param>
-        /// <param name="incidentId">对应的事件id</param>
-        /// <returns>数据实体</returns>
-        public static RecordBean GetOneByPath(string path, uint incidentId)
-        {
-            DataTable table;
-            using (MySqlCommand cmd = new MySqlCommand())
-            {
-                cmd.CommandText = string.Concat(
-                    "select * " +
-                    "from `record_", incidentId, 
-                    "` where `path` = @path;");
-                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
-                table = MySqlAction.Read(cmd);
-            }
-            if (table.Rows.Count == 0)
-                return null;
-            else
-                return GetBeanByTable(table.Rows[0]);
         }
         /// <summary>
         /// 通过id获取一个数据实体
@@ -173,7 +158,22 @@ namespace SpatialAnalysis.Mapper
             if (table.Rows.Count == 0)
                 return null;
             else
-                return GetBeanByTable(table.Rows[0]);
+                return GetBeansByTable(table)[0];
+        }
+        /// <summary>
+        /// 通过id获取其子一级文件夹
+        /// </summary>
+        /// <param name="ParentId">文件夹id</param>
+        /// <param name="incidentId">事件id</param>
+        /// <returns></returns>
+        public static RecordBean[] GetBeansByPid(ulong ParentId, uint incidentId)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = string.Concat("SELECT * FROM `record_", incidentId, "` WHERE `parent_id` = @parent_id and `id` != 0");
+                cmd.Parameters.Add("parent_id", MySqlDbType.UInt64).Value = ParentId;
+                return GetBeansByTable(MySqlAction.Read(cmd));
+            }
         }
         /// <summary>
         /// 获取表中的记录总数

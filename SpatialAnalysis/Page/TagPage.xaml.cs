@@ -254,6 +254,7 @@ namespace SpatialAnalysis.MyPage
             }
             if (editedPath != string.Empty)
             {
+                //添加
                 if (editedGridUid == "newPath")
                 {
                     DirTagMapper.AddOne(new DirTagBean()
@@ -262,6 +263,7 @@ namespace SpatialAnalysis.MyPage
                         Path = editedPath,
                     });
                 }
+                //修改
                 else
                 {
                     DirTagMapper.EditOne(new DirTagBean()
@@ -271,6 +273,7 @@ namespace SpatialAnalysis.MyPage
                     });
                 }
             }
+            TagSupport.SetTagSort();
             int index = pathList.SelectedIndex;
             pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
             pathList.SelectedIndex = index;

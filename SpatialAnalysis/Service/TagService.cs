@@ -87,15 +87,15 @@ namespace SpatialAnalysis.Service
         public static Grid[] GetPathItemSource(uint tagId)
         {
             MainWindow main = Application.Current.MainWindow as MainWindow;
-            DataTable table = DirTagMapper.GetAllByTag(tagId);
-            int count = table.Rows.Count;
+            DirTagBean[] beans = DirTagMapper.GetAllByTag(tagId);
+            int count = beans.Length;
             Grid[] items = new Grid[count + 1];
-            for (int i = 0; i < table.Rows.Count; i++)
+            for (int i = 0; i < count; i++)
             {
                 TextBlock showPath = new TextBlock()
                 {
                     FontSize = 16,
-                    Text = table.Rows[i]["path"] as string,
+                    Text = beans[i].Path,
                 };
                 showPath.MouseLeftButtonDown += main.tagPage.Path_Click;
                 showPath.MouseLeftButtonDown += main.tagPage.EditedItem_MouseDown;
@@ -103,7 +103,7 @@ namespace SpatialAnalysis.Service
                 {
                     FontSize = 16,
                     Margin = new Thickness(0, 0, 40, 0),
-                    Text = table.Rows[i]["path"] as string,
+                    Text = beans[i].Path,
                     Visibility = Visibility.Collapsed,
                 };
                 Button deleteButton = new Button()
@@ -120,7 +120,7 @@ namespace SpatialAnalysis.Service
                 deleteButton.Click += main.tagPage.DeletePath_Click;
                 Grid grid = new Grid()
                 {
-                    Uid = table.Rows[i]["id"].ToString(),
+                    Uid = beans[i].Id.ToString(),
                 };
                 grid.Children.Add(showPath);
                 grid.Children.Add(editPath);

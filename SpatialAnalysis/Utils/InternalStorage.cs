@@ -12,19 +12,23 @@ namespace SpatialAnalysis.Utils
         //用于区分的域名
         public enum Domain
         {
+            tag
         }
         public static void Build(Domain name)
         {
+            dict.Add(name, new Dictionary<string, object>());
         }
-        public static void Add(Domain name, string key, object value)
+        public static void Set(Domain name, string key, object value)
         {
+            dict[name][key] = value;
         }
         public static object Get(Domain name, string key)
         {
-            return null;
+            return dict[name][key];
         }
-        public static void Clean()
+        public static void Clean(Domain name)
         {
+            dict[name] = null;
         }
     }
 }

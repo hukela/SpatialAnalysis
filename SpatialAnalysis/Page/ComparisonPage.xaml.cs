@@ -14,8 +14,18 @@ namespace SpatialAnalysis.MyPage
         }
         private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            incident1.ItemsSource = ComparisonService.GetComboBoxResource();
-            incident2.ItemsSource = ComparisonService.GetComboBoxResource();
+            //更新标签标注缓存
+            TagSupport.CheckTagSort();
+            oldIncident.ItemsSource = ComparisonService.GetComboBoxResource();
+            newIncident.ItemsSource = ComparisonService.GetComboBoxResource();
+        }
+        //进行分析
+        private void RunAnalyse_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Grid grid = oldIncident.SelectedItem as Grid;
+            uint original = uint.Parse(grid.Uid);
+            grid = newIncident.SelectedItem as Grid;
+            uint subsequent = uint.Parse(grid.Uid);
         }
     }
 }

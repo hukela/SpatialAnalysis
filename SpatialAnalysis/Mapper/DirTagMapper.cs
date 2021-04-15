@@ -21,6 +21,23 @@ namespace SpatialAnalysis.Mapper
                 MySqlAction.Write(cmd);
             }
         }
+        //将表格数据转换为bean数据
+        private static DirTagBean[] GetBeanByTable(DataTable table)
+        {
+            int count = table.Rows.Count;
+            DirTagBean[] beans = new DirTagBean[count];
+            for (int i = 0; i < count; i++)
+            {
+                DirTagBean bean = new DirTagBean()
+                {
+                    Id = (uint)table.Rows[i]["id"],
+                    TagId = (uint)table.Rows[i]["tag_id"],
+                    Path = table.Rows[i]["path"] as string,
+                };
+                beans[i] = bean;
+            }
+            return beans;
+        }
         /// <summary>
         /// 修改一行数据
         /// </summary>
@@ -62,15 +79,27 @@ namespace SpatialAnalysis.Mapper
             }
         }
         /// <summary>
-        /// 以表格形式获取对应标签id的标注路径
+        /// 获取所有的数据
         /// </summary>
-        public static DataTable GetAllByTag(uint tagId)
+        /// <returns></returns>
+        public static DirTagBean[] GetAll()
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = "SELECT `id`,`path` FROM `dir_tag` WHERE `tag_id` = @tag_id;";
+                cmd.CommandText = "SELECT * FROM `dir_tag`;";
+                return GetBeanByTable(MySqlAction.Read(cmd));
+            }
+        }
+        /// <summary>
+        /// 获取对应标签id的标注路径
+        /// </summary>
+        public static DirTagBean[] GetAllByTag(uint tagId)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "SELECT * FROM `dir_tag` WHERE `tag_id` = @tag_id;";
                 cmd.Parameters.Add("tag_id", MySqlDbType.UInt32).Value = tagId;
-                return MySqlAction.Read(cmd);
+                return GetBeanByTable(MySqlAction.Read(cmd));
             }
         }
     }

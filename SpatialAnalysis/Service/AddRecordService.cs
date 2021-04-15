@@ -29,7 +29,7 @@ namespace SpatialAnalysis.Service
             ProgramWindow window = new ProgramWindow();
             object[] objs = { window, bean };
             //建立异步线程来记录全盘文件
-            addRecord.thread = new Thread(addRecord.AddIncidentAsyn) { Name = "addRecord" };
+            addRecord.thread = new Thread(addRecord.AddOne) { Name = "addRecord" };
             addRecord.thread.Start(objs);
             window.ShowDialog();
         }

@@ -132,15 +132,18 @@
     <Compile Include="Service\AddRecordExtend\BeanFactory.cs" />
     <Compile Include="Service\AddRecordExtend\Extend.cs" />
     <Compile Include="Service\AddRecordService.cs" />
+    <Compile Include="Service\ComparisonExtend\Extend.cs" />
     <Compile Include="Service\ComparisonService.cs" />
     <Compile Include="Service\InstallAndUninstall.cs" />
     <Compile Include="Service\MySqlService.cs" />
     <Compile Include="Service\StartupAndExit.cs" />
     <Compile Include="Service\TagService.cs" />
+    <Compile Include="Service\TagSupport.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Utils\ForTest.cs" />
     <Compile Include="Utils\InternalStorage.cs" />
+    <Compile Include="Utils\SortUtil.cs" />
     <Compile Include="Window\CloseButton.cs" />
     <Compile Include="Window\ProgramWindow.xaml.cs">
       <DependentUpon>ProgramWindow.xaml</DependentUpon>

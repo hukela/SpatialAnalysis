@@ -41,14 +41,6 @@ namespace SpatialAnalysis.Service.AddRecordExtend
             for (uint i = 1; i < incidentId; i++)
                 RecordMapper.DeleteTable(i);
         }
-        //判断两个bean是否相同
-        public static bool IsSameBean(RecordBean bean, RecordBean targetBean)
-        {
-            return bean.Size == targetBean.Size
-                && bean.FileCount == targetBean.FileCount
-                && bean.DirCount == targetBean.DirCount
-                && bean.SpaceUsage == targetBean.SpaceUsage;
-        }
         //通过路径获取最新的记录节点
         public static RecordBean GetLastBean(string path)
         {

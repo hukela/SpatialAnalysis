@@ -16,7 +16,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
         private uint incidentId;
         //当前类的线程
         public Thread thread;
-        public void AddIncidentAsyn(object obj)
+        public void AddOne(object obj)
         {
             DateTime startTime = DateTime.Now;
             Thread.Sleep(1000);
@@ -153,7 +153,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 if (targetBean == null)
                     bean.IsChange = true;
                 else
-                    bean.IsChange = bean.IsChange || !Extend.IsSameBean(bean, targetBean);
+                    bean.IsChange = bean.IsChange || bean.Equals(targetBean);
                 //如果该bean没有变化，则不再记录
                 if (bean.IsChange)
                 {
