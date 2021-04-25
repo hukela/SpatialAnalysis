@@ -97,6 +97,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Dictionary\TagDictionary.cs" />
+    <Compile Include="Entity\ComparisonInfo.cs" />
     <Compile Include="Entity\DirIndexBean.cs" />
     <Compile Include="Entity\DirNode.cs" />
     <Compile Include="Entity\DirTagBean.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Service\TagService.cs" />
     <Compile Include="Service\TagSupport.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
+    <Compile Include="Utils\ConversionUtil.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Utils\ForTest.cs" />
     <Compile Include="Utils\InternalStorage.cs" />

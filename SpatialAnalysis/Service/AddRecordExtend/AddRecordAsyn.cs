@@ -116,6 +116,12 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 bean.ExceptionCode = 1;
                 return bean;
             }
+            catch (IOException e)
+            {
+                Log.Warn(baseDir.FullName + ": " + e.Message);
+                bean.ExceptionCode = 1;
+                return bean;
+            }
             //用于记录子节点的bean
             RecordBean[] dirBeans = new RecordBean[dirs.Length]; ;
             //遍历整个文件夹
@@ -153,7 +159,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 if (targetBean == null)
                     bean.IsChange = true;
                 else
-                    bean.IsChange = bean.IsChange || bean.Equals(targetBean);
+                    bean.IsChange = bean.IsChange || !bean.Equals(targetBean);
                 //如果该bean没有变化，则不再记录
                 if (bean.IsChange)
                 {

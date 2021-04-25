@@ -71,13 +71,17 @@ namespace SpatialAnalysis.IO
         /// <returns>表格数据</returns>
         public static DataTable Read(MySqlCommand cmd)
         {
-            if (con.State == ConnectionState.Broken)
-                OpenConnect();
-            cmd.Connection = con;
-            MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-            DataTable table = new DataTable();
-            adapter.Fill(table);
-            return table;
+            //锁，因为一个链接只支持一个cmd运行
+            lock(con)
+            {
+                if (con.State == ConnectionState.Broken)
+                    OpenConnect();
+                cmd.Connection = con;
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable table = new DataTable();
+                adapter.Fill(table);
+                return table;
+            }
         }
         /// <summary>
         /// 更改数据库数据
@@ -86,10 +90,13 @@ namespace SpatialAnalysis.IO
         /// <returns>被改变的行数</returns>
         public static int Write(MySqlCommand cmd)
         {
-            if (con.State == ConnectionState.Broken)
-                OpenConnect();
-            cmd.Connection = con;
-            return cmd.ExecuteNonQuery();
+            lock(con)
+            {
+                if (con.State == ConnectionState.Broken)
+                    OpenConnect();
+                cmd.Connection = con;
+                return cmd.ExecuteNonQuery();
+            }
         }
         /// <summary>
         /// 执行sql文件

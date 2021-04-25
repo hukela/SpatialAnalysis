@@ -15,7 +15,7 @@ namespace SpatialAnalysis.Service
         /// </summary>
         public static void SetTagSort()
         {
-            Thread thrend = new Thread(SetTagSortAsyn);
+            Thread thrend = new Thread(SetTagSortAsyn) { Name = "SetTagSort" };
             thrend.Start();
         }
         public static void SetTagSortAsyn()
@@ -38,7 +38,6 @@ namespace SpatialAnalysis.Service
                     }
                 }
             }
-            InternalStorage.Build(InternalStorage.Domain.tag);
             InternalStorage.Set(InternalStorage.Domain.tag, "tagSort", beans);
         }
         /// <summary>
@@ -61,7 +60,7 @@ namespace SpatialAnalysis.Service
             isThis = false;
             foreach (DirTagBean dirTag in dirTags)
             {
-                if (dirTag.Path.IndexOf(path) != -1)
+                if (path.IndexOf(dirTag.Path) != -1)
                 {
                     tagId = dirTag.TagId;
                     if (dirTag.Path == path)

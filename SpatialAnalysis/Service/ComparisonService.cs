@@ -1,11 +1,9 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
 using SpatialAnalysis.Service.ComparisonExtend;
+using SpatialAnalysis.Utils;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Windows;
-using System.Windows.Controls;
+using System.Numerics;
 
 namespace SpatialAnalysis.Service
 {
@@ -14,43 +12,17 @@ namespace SpatialAnalysis.Service
         /// <summary>
         /// 获取事件选择列表
         /// </summary>
-        public static Grid[] GetComboBoxResource()
+        public static IncidentBean[] GetComboBoxResource()
         {
-            DataTable table = IncidentMapper.GetSuccessIncident();
-            int count = table.Rows.Count;
-            Grid[] items = new Grid[count + 1];
-            items[0] = new Grid() { Uid = "unll" };
-            items[0].Children.Add(new TextBlock()
+            IncidentBean[] beans = IncidentMapper.GetSuccessIncident();
+            IncidentBean[] items = new IncidentBean[beans.Length + 1];
+            items[0] = new IncidentBean
             {
-                Text = "请选择事件",
-                FontSize = 16,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Margin = new Thickness(8, 0, 0, 0),
-            });
-            for (int i = 1; i < count + 1; i++)
-            {
-                TextBlock title = new TextBlock()
-                {
-                    Text = table.Rows[i]["title"] as string,
-                    FontSize = 16,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Margin = new Thickness(8, 0, 0, 0),
-                };
-                TextBlock time = new TextBlock()
-                {
-                    Text = ((DateTime)table.Rows[i]["create_time"]).ToString("yy-MM-dd HH:mm"),
-                    FontSize = 16,
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    Margin = new Thickness(0, 0, 8, 0),
-                };
-                Grid grid = new Grid()
-                {
-                    Uid = table.Rows[i]["title"].ToString()
-                };
-                grid.Children.Add(title);
-                grid.Children.Add(time);
-                items[i] = grid;
-            }
+                Id = 0,
+                Title = "请选择事件",
+            };
+            for (int i = 1; i < items.Length; i++)
+                items[i] = beans[i - 1];
             return items;
         }
         /// <summary>
@@ -78,7 +50,85 @@ namespace SpatialAnalysis.Service
         public static void BuiledNodeChildren(ref DirNode baseNode)
         {
             foreach (DirNode dirNode in baseNode.Children)
-                dirNode.Children = BuildNodeTree.GetChildrenNodes(dirNode);
+            {
+                //防止重复计算
+                if (dirNode.Children != null)
+                    continue;
+                else
+                    dirNode.Children = BuildNodeTree.GetChildrenNodes(dirNode);
+            }
+        }
+        /// <summary>
+        /// 通过节点获取文件夹的比较信息
+        /// </summary>
+        public static ComparisonInfo GetInfoByNode(DirNode node)
+        {
+            //获取bean
+            RecordBean oldBean = null;
+            if (node.OldId != 0)
+                oldBean = RecordMapper.GetOneById(node.OldId, node.OldIncidentId);
+            RecordBean newBean = null;
+            if (node.NewId != 0)
+                newBean = RecordMapper.GetOneById(node.NewId, node.NewIncidentId);
+            //设置标签
+            ComparisonInfo info = new ComparisonInfo()
+            { TagName = string.Concat("标签：", node.TagName ?? "没有标签") };
+            //设置主要比较的数据
+            BigInteger oldSize, newSize, oldUsage, newUsage;
+            if (oldBean != null)
+            {
+                info.Title = oldBean.Name;
+                info.Location = oldBean.Location;
+                info.CreateTime = "创建时间：" + oldBean.CerateTime.ToString("yy-MM-dd HH:mm:ss");
+                info.OldFileCount = Convert.ToInt32(oldBean.FileCount);
+                info.OldDirCount = Convert.ToInt32(oldBean.DirCount);
+                oldSize = oldBean.Size;
+                oldUsage = oldBean.SpaceUsage;
+            }
+            else
+            {
+                oldSize = BigInteger.Zero;
+                oldUsage = BigInteger.Zero;
+            }
+            if (newBean != null)
+            {
+                info.Title = newBean.Name;
+                info.Location = newBean.Location;
+                info.CreateTime = "创建时间：" + newBean.CerateTime.ToString("yy-MM-dd HH:mm:ss");
+                info.NewFileCount = Convert.ToInt32(newBean.FileCount);
+                info.NewDirCount = Convert.ToInt32(newBean.DirCount);
+                newSize = newBean.Size;
+                newUsage = newBean.SpaceUsage;
+            }
+            else
+            {
+                newSize = BigInteger.Zero;
+                newUsage = BigInteger.Zero;
+            }
+            //单位换算
+            info.OldSize = ConversionUtil.StorageFormate(oldSize, false);
+            info.NewSize = ConversionUtil.StorageFormate(newSize, false);
+            info.SizeChanged = ConversionUtil.StorageFormate(newSize - oldSize, true);
+            info.OldUsage = ConversionUtil.StorageFormate(oldUsage, false);
+            info.NewUsage = ConversionUtil.StorageFormate(newUsage, false);
+            info.UsageChanged = ConversionUtil.StorageFormate(newUsage - oldUsage, true);
+            //设置状态
+            switch (node.Type)
+            {
+                case DirNodeType.Unchanged:
+                    info.Action = "文件夹未发生变化";
+                    break;
+                case DirNodeType.Added:
+                    info.Action = "该文件夹是新增的文件夹";
+                    break;
+                case DirNodeType.Changed:
+                    info.Action = "该文件夹发生了变化";
+                    break;
+                case DirNodeType.Deleted:
+                    info.Action = "该文件夹已经被删除";
+                    break;
+            }
+            return info;
         }
     }
 }

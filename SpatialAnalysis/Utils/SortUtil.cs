@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SpatialAnalysis.Utils
 {
+    /// <summary>
+    /// 排序用工具
+    /// </summary>
     class SortUtil
     {
 

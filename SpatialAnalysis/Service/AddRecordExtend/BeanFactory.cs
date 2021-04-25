@@ -62,6 +62,11 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 owner = "UnauthorizedAccess";
                 Log.Warn("获取文件夹有者失败。" + dir.FullName + " " + e.Message);
             }
+            catch (InvalidOperationException e)
+            {
+                owner = "UnauthorizedAccess";
+                Log.Warn("获取文件夹有者失败。" + dir.FullName + " " + e.Message);
+            }
             catch (FileNotFoundException e)
             {
                 Log.Warn("文件夹不存在。" + e.Message);

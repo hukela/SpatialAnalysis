@@ -30,7 +30,18 @@ namespace SpatialAnalysis.Entity
                 if (ParentId == 0)
                     return Path;
                 else
-                    return Path.Substring(Path.LastIndexOf('\\'));
+                    return Path.Substring(Path.LastIndexOf('\\') + 1);
+            }
+        }
+        //获取该文件夹的位置
+        public string Location
+        {
+            get
+            {
+                if (ParentId == 0)
+                    return string.Empty;
+                else
+                    return Path.Remove(Path.LastIndexOf('\\'));
             }
         }
         /// <summary>

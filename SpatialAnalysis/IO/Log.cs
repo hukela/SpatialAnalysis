@@ -42,7 +42,7 @@ namespace SpatialAnalysis.IO.Log
         /// <param name="i">堆栈回溯</param>
         public static void Add(Exception e, int i = 0)
         {
-            string message = e.Message;
+            string message = string.Concat(e.Message, " : ", e.GetType());
             if(e.StackTrace != null)
                 message += "\n" + e.StackTrace;
             AddLog(message, "error", i + 2);

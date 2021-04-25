@@ -47,16 +47,17 @@ namespace SpatialAnalysis.Service.ComparisonExtend
                     Path = oldBean.Path,
                 };
                 SetOldId(ref dirNode, oldBean, node.OldIncidentId);
+                //设置类型
                 if (newBean != null)
                 {
                     SetNewId(ref dirNode, newBean, node.NewIncidentId);
-                    //修改的背景颜色
-                    if (!oldBean.Equals(newBean))
-                        dirNode.Color = "#87CEFA";
+                    if (oldBean.Equals(newBean))
+                        dirNode.Type = DirNodeType.Unchanged;
+                    else
+                        dirNode.Type = DirNodeType.Changed;
                 }
                 else
-                    //删除的背景颜色
-                    dirNode.Color = "#FFC0CB";
+                    dirNode.Type = DirNodeType.Deleted;
                 dirNodes.Add(dirNode);
             }
             //新纪录中新增的部分
@@ -68,8 +69,8 @@ namespace SpatialAnalysis.Service.ComparisonExtend
                 {
                     Name = newBean.Name,
                     Path = newBean.Path,
-                    //新增的背景颜色
-                    Color = "#00FF7F",
+                    //新增的节点
+                    Type = DirNodeType.Added,
                 };
                 SetNewId(ref dirNode, newBean, node.NewIncidentId);
                 dirNodes.Add(dirNode);
@@ -84,6 +85,7 @@ namespace SpatialAnalysis.Service.ComparisonExtend
                     continue;
                 }
                 dirNode.TagName = tagBean.Name;
+                dirNode.IsRootTag = isThis;
                 dirNode.TagColor = tagBean.Color;
             }
             return dirNodes.ToArray();

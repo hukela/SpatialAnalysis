@@ -37,16 +37,22 @@ namespace SpatialAnalysis.Mapper
             return id;
         }
         //将表格结果改为bean
-        private static IncidentBean GetBeanByTable(DataRow row)
+        private static IncidentBean[] GetBeanByTable(DataTable table)
         {
-            return new IncidentBean()
+            int count = table.Rows.Count;
+            IncidentBean[] beans = new IncidentBean[count];
+            for (int i = 0; i < count; i++)
             {
-                Id = (uint)row["id"],
-                CreateTime = (DateTime)row["create_time"],
-                Title = row["title"] as string,
-                Explain = row["explain"] as string,
-                IncidentState = (sbyte)row["incident_state"],
-            };
+                beans[i] = new IncidentBean()
+                {
+                    Id = (uint)table.Rows[i]["id"],
+                    CreateTime = (DateTime)table.Rows[i]["create_time"],
+                    Title = table.Rows[i]["title"] as string,
+                    Explain = table.Rows[i]["explain"] as string,
+                    IncidentState = (sbyte)table.Rows[i]["incident_state"],
+                };
+            }
+            return beans;
         }
         /// <summary>
         /// 获取最近一条事件
@@ -61,15 +67,18 @@ namespace SpatialAnalysis.Mapper
                 if (table.Rows.Count == 0)
                     return null;
                 else
-                    return GetBeanByTable(table.Rows[0]);
+                    return GetBeanByTable(table)[0];
             }
         }
-        public static DataTable GetSuccessIncident()
+        /// <summary>
+        /// 获取所有的记录成功的事件
+        /// </summary>
+        public static IncidentBean[] GetSuccessIncident()
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "SELECT * FROM `incident` WHERE `incident_state` = 0;";
-                return MySqlAction.Read(cmd);
+                return GetBeanByTable(MySqlAction.Read(cmd));
             }
         }
         /// <summary>
