@@ -20,7 +20,7 @@
         <ComboBox x:Name="oldIncident" Margin="20,0,0,0" SelectionChanged="Incident_SelectionChanged">
             <ComboBox.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type local:IncidentBean}">
-                    <Grid Uid="{Binding Path=Id}">
+                    <Grid>
                         <TextBlock Text="{Binding Path=Title}"
                                    Style="{StaticResource incident-title}"/>
                         <TextBlock Text="{Binding Path=TimeFormat}"
@@ -33,7 +33,7 @@
         <ComboBox x:Name="newIncident" Margin="360,0,0,0" SelectionChanged="Incident_SelectionChanged">
             <ComboBox.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type local:IncidentBean}">
-                    <Grid Uid="{Binding Path=Id}">
+                    <Grid>
                         <TextBlock Text="{Binding Path=Title}"
                                    Style="{StaticResource incident-title}"/>
                         <TextBlock Text="{Binding Path=TimeFormat}"
@@ -56,7 +56,7 @@
                         Mode=TwoWay,
                         UpdateSourceTrigger=PropertyChanged}">
                         <WrapPanel MinWidth="60" Background="{Binding Path=Color}">
-                            <Border Background="{Binding Path=TagColor}"
+                            <Border Background="{Binding Path=Tag.Color}"
                                     Style="{StaticResource node-tag-color}"/>
                             <TextBlock Text="{Binding Path=Name,
                                 Mode=TwoWay,
@@ -102,7 +102,7 @@
                         <TextBlock Text="{Binding Path=Location}" Style="{StaticResource dir-info}"/>
                     </ScrollViewer>
                     <TextBlock Text="{Binding Path=TagName}" Grid.Row="4" Style="{StaticResource dir-info}"/>
-                    <Button Content="添加标签" Grid.Row="4" Margin="240,0,0,0"/>
+                    <Button x:Name="AddTag" Content="编辑标签" Click="AddTag_Click" Grid.Row="4" Margin="240,0,0,0"/>
                     <TextBlock Text="{Binding Path=CreateTime}" Grid.Row="5" Style="{StaticResource dir-info}"/>
                     <Border Grid.Row="6">
                         <ScrollViewer>

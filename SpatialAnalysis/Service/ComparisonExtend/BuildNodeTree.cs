@@ -76,17 +76,17 @@ namespace SpatialAnalysis.Service.ComparisonExtend
                 dirNodes.Add(dirNode);
             }
             //添加标签
+            TagBean nullTag = new TagBean() { Color = "#FFFFFF" };
             foreach (DirNode dirNode in dirNodes)
             {
                 TagBean tagBean = TagSupport.GetTagByPath(dirNode.Path, out bool isThis);
                 if (tagBean == null)
                 {
-                    dirNode.TagColor = "#FFFFFF";
+                    dirNode.Tag = nullTag;
                     continue;
                 }
-                dirNode.TagName = tagBean.Name;
                 dirNode.IsRootTag = isThis;
-                dirNode.TagColor = tagBean.Color;
+                dirNode.Tag = tagBean;
             }
             return dirNodes.ToArray();
         }

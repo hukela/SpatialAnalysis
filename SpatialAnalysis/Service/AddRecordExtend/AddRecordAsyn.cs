@@ -102,6 +102,8 @@ namespace SpatialAnalysis.Service.AddRecordExtend
             if (plies == 2)
                 plies2Path = baseDir.FullName;
             RecordBean bean = BeanFactory.GetDirBean(baseDir, plies);
+            //C盘有传送门，两个路径可以同时访问一个文件，所以这里放弃其中一个路径
+            if (bean.Path == @"C:\Users\All Users") return bean;
             //获取文件和文件夹列表
             DirectoryInfo[] dirs;
             FileInfo[] files;

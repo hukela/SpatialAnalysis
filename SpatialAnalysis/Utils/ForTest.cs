@@ -21,7 +21,12 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
-            Log.Add(new IOException("123"));
+            DirectoryInfo info = new DirectoryInfo(@"C:\Users\All Users\");
+            Console.WriteLine(info.FullName);
+            foreach (DirectoryInfo dir in info.GetDirectories())
+            {
+                Console.WriteLine(dir.FullName);
+            }
         }
     }
 }

@@ -72,7 +72,7 @@ namespace SpatialAnalysis.Service
                 newBean = RecordMapper.GetOneById(node.NewId, node.NewIncidentId);
             //设置标签
             ComparisonInfo info = new ComparisonInfo()
-            { TagName = string.Concat("标签：", node.TagName ?? "没有标签") };
+            { TagName = string.Concat("标签：", node.Tag.Name ?? "没有标签") };
             //设置主要比较的数据
             BigInteger oldSize, newSize, oldUsage, newUsage;
             if (oldBean != null)

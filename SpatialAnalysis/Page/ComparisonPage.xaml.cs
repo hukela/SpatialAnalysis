@@ -1,4 +1,5 @@
 ﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.MyWindow;
 using SpatialAnalysis.Service;
 using System.Windows.Controls;
 
@@ -27,7 +28,7 @@ namespace SpatialAnalysis.MyPage
         //实现选择框的选中事件
         private void Incident_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //在页面刚加载的时候，设置selectedIndex会触发这里的事件
+            //在页面刚加载的时候，设置selectedIndex会触发这里的事件,回导致bean为null
             if (!(newIncident.SelectedItem is IncidentBean bean))
                 return;
             uint newIncidentId = bean.Id;
@@ -54,6 +55,12 @@ namespace SpatialAnalysis.MyPage
             info.OldTime = (oldIncident.SelectedItem as IncidentBean).TimeFormat;
             info.NewTime = (newIncident.SelectedItem as IncidentBean).TimeFormat;
             comparisonGrid.DataContext = info;
+        }
+        //为所选目录添加点击事件
+        private void AddTag_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            SelectTagWindow window = new SelectTagWindow();
+            window.ShowDialog();
         }
     }
 }

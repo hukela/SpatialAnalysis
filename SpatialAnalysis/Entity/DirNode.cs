@@ -17,8 +17,7 @@
         public string Name { get; set; }
         public string Path { get; set; }
         public DirNodeType Type {get;set;}
-        public string TagName { get; set; }
-        public string TagColor { get; set; }
+        public TagBean Tag { get; set; }
         public bool IsRootTag { get; set; }
         public DirNode[] Children { get; set; }
         public string RootTagName
@@ -26,7 +25,7 @@
             get
             {
                 if (IsRootTag)
-                    return string.Concat('[', TagName, ']');
+                    return string.Concat('[', Tag.Name, ']');
                 else
                     return string.Empty;
             }

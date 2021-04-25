@@ -66,6 +66,9 @@ namespace SpatialAnalysis.Mapper
                 return GetBeanListByTable(MySqlAction.Read(cmd));
             }
         }
+        /// <summary>
+        /// 通过标签id获取数据实体
+        /// </summary>
         public static TagBean GetOneById(uint tagId)
         {
             using (MySqlCommand cmd = new MySqlCommand())
