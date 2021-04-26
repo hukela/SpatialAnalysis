@@ -9,9 +9,29 @@
         Title="标签选择" Height="260" Width="350">
 
     <Window.Resources>
-        <Style TargetType="ListBox">
+        <!-- 标签选择框 -->
+        <Style TargetType="TreeView">
             <Setter Property="Grid.Row" Value="0"/>
             <Setter Property="Margin" Value="8,8,8,8"/>
+        </Style>
+        <Style x:Key="tag-name" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="4,0,0,0"/>
+        </Style>
+        <Style x:Key="tag-color" TargetType="Border">
+            <Setter Property="Margin" Value="2,0,0,0"/>
+            <Setter Property="Width" Value="12"/>
+            <Setter Property="Height" Value="12"/>
+            <Setter Property="BorderBrush" Value="#C5C1AA"/>
+            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+        </Style>
+        <!-- 按键 -->
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Width" Value="60"/>
+            <Setter Property="Grid.Row" Value="1"/>
         </Style>
     </Window.Resources>
     <Grid>
@@ -19,10 +39,22 @@
             <RowDefinition/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="tagListBox">
-            <ListBox.Resources>
-                <ResourceDictionary Source="/Dictionary/TagSelectDictionary.xaml"/>
-            </ListBox.Resources>
-        </ListBox>
+        <TreeView x:Name="tagTree" SelectedItemChanged="TagTree_SelectedItemChanged">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate
+                    DataType="{x:Type local:TagNode}"
+                    ItemsSource="{Binding Path=Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="{Binding Path=Tag.Color}"
+                                Style="{StaticResource tag-color}"/>
+                        <TextBlock Text="{Binding Path=Tag.Name}"
+                                   Style="{StaticResource tag-name}"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <Button x:Name="yes" Content="确定" Click="Yes_Click" IsEnabled="False" Margin="84,10,0,0"/>
+        <Button x:Name="null" Content="无标签" Click="Null_Click" Margin="171,10,0,0"/>
+        <Button x:Name="no" Content="取消" Click="No_Click" Margin="259,10,0,0"/>
     </Grid>
 </Window>

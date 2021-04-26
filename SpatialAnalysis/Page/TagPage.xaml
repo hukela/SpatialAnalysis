@@ -38,20 +38,32 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <ListView x:Name="firstNode" Grid.Column="0"
-                          SelectionChanged="Tag_Selected"
-                          ContextMenu="{StaticResource tag-view-menu}"
-                          ItemContainerStyle="{StaticResource tag-item}"/>
+                <ListBox x:Name="firstNode" Grid.Column="0"
+                         SelectionChanged="Tag_Selected"
+                         ContextMenu="{StaticResource tag-view-menu}"
+                         ItemContainerStyle="{StaticResource tag-item}">
+                    <ListBox.Resources>
+                        <ResourceDictionary Source="/Dictionary/TagSelectDictionary.xaml"/>
+                    </ListBox.Resources>
+                </ListBox>
                 <Border Grid.Column="1" Style="{StaticResource vertical-line}"/>
-                <ListView x:Name="secondNode" Grid.Column="2"
-                          SelectionChanged="Tag_Selected"
-                          ContextMenu="{StaticResource tag-view-menu}"
-                          ItemContainerStyle="{StaticResource tag-item}"/>
+                <ListBox x:Name="secondNode" Grid.Column="2"
+                         SelectionChanged="Tag_Selected"
+                         ContextMenu="{StaticResource tag-view-menu}"
+                         ItemContainerStyle="{StaticResource tag-item}">
+                    <ListBox.Resources>
+                        <ResourceDictionary Source="/Dictionary/TagSelectDictionary.xaml"/>
+                    </ListBox.Resources>
+                </ListBox>
                 <Border Grid.Column="3" Style="{StaticResource vertical-line}"/>
-                <ListView x:Name="thirdNode" Grid.Column="4"
-                          SelectionChanged="Tag_Selected"
-                          ContextMenu="{StaticResource tag-view-menu}"
-                          ItemContainerStyle="{StaticResource tag-item}"/>
+                <ListBox x:Name="thirdNode" Grid.Column="4"
+                         SelectionChanged="Tag_Selected"
+                         ContextMenu="{StaticResource tag-view-menu}"
+                         ItemContainerStyle="{StaticResource tag-item}">
+                    <ListBox.Resources>
+                        <ResourceDictionary Source="/Dictionary/TagSelectDictionary.xaml"/>
+                    </ListBox.Resources>
+                </ListBox>
             </Grid>
         </Grid>
         <!-- 地址栏 -->

@@ -1,5 +1,6 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
+using SpatialAnalysis.MyWindow;
 using SpatialAnalysis.Service.ComparisonExtend;
 using SpatialAnalysis.Utils;
 using System;
@@ -57,6 +58,17 @@ namespace SpatialAnalysis.Service
                 else
                     dirNode.Children = BuildNodeTree.GetChildrenNodes(dirNode);
             }
+        }
+        public static void RefreshNode(ref DirNode dirNode)
+        {
+            //刷新标签
+            TagBean tagBean = TagSupport.GetTagByPath(dirNode.Path, out bool isThis);
+            if (tagBean == null)
+                dirNode.Tag = new TagBean() { Color = "#FFFFFF" };
+            dirNode.IsRootTag = isThis;
+            dirNode.Tag = tagBean;
+            //刷新子节点
+            dirNode.Children = BuildNodeTree.GetChildrenNodes(dirNode);
         }
         /// <summary>
         /// 通过节点获取文件夹的比较信息
@@ -129,6 +141,32 @@ namespace SpatialAnalysis.Service
                     break;
             }
             return info;
+        }
+        /// <summary>
+        /// 修改或新添标签标注
+        /// </summary>
+        /// <param name="path">标注路径</param>
+        /// <param name="isNew">是否是新建</param>
+        public static void AllOrEditTag(string path, bool isNew)
+        {
+            SelectTagWindow window = new SelectTagWindow();
+            bool? dialogResult = window.ShowDialog();
+            if (dialogResult == true)
+            {
+                TagBean tagBean = window.tagBean;
+                if (tagBean.Id == 0)
+                    DirTagMapper.DeleteOneByPath(path);
+                if (isNew)
+                    DirTagMapper.AddOne(new DirTagBean()
+                    {
+                        Path = path,
+                        TagId = tagBean.Id,
+                    });
+                else
+                    DirTagMapper.EditOneByPath(path, tagBean.Id);
+                //刷新标签缓存
+                TagSupport.SetTagSort();
+            }
         }
     }
 }

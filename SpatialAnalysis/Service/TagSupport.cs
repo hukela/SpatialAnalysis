@@ -8,8 +8,6 @@ namespace SpatialAnalysis.Service
     //提供标签支持
     class TagSupport
     {
-        public static object Thrend { get; private set; }
-
         /// <summary>
         /// 设置或刷新标签标注的数据
         /// </summary>
@@ -18,7 +16,7 @@ namespace SpatialAnalysis.Service
             Thread thrend = new Thread(SetTagSortAsyn) { Name = "SetTagSort" };
             thrend.Start();
         }
-        public static void SetTagSortAsyn()
+        private static void SetTagSortAsyn()
         {
             DirTagBean[] beans = DirTagMapper.GetAll();
             //根据标注长度进行排序

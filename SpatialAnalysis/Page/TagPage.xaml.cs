@@ -18,13 +18,13 @@ namespace SpatialAnalysis.MyPage
     public partial class TagPage : Page
     {
         //为方便刷新页面
-        private ListView[] nodeList;
+        private ListBox[] nodeList;
         long[] nodeParentId;
         //当前所展示的标签
         uint selectedTagId;
         public TagPage()
         {
-            nodeList = new ListView[3];
+            nodeList = new ListBox[3];
             nodeParentId = new long[4];
             nodeParentId[0] = 0;
             nodeParentId[1] = -1;
@@ -66,10 +66,10 @@ namespace SpatialAnalysis.MyPage
                 {
                     int indiex = -1;
                     uint parentId = Convert.ToUInt32(nodeParentId[i]);
-                    Grid[] items = TagService.GetTagItemSource(parentId);
+                    TagBean[] items = TagService.GetTagItemSource(parentId);
                     nodeList[i].ItemsSource = items;
                     for (int k = 0; k < items.Length; k++)
-                        if (nodeParentId[i + 1] == long.Parse(items[k].Uid))
+                        if (nodeParentId[i + 1] == items[k].Id)
                         {
                             indiex = k;
                             break;
@@ -82,17 +82,11 @@ namespace SpatialAnalysis.MyPage
         //标签的点击事件
         private void Tag_Selected(object sender, SelectionChangedEventArgs e)
         {
-            ListView node = sender as ListView;
+            ListBox node = sender as ListBox;
             if (node.SelectedItem == null)
                 return;
-            Grid grid = node.SelectedItem as Grid;
-            //遍历gird中的控件来获取bean
-            TagBean bean = new TagBean();
-            foreach (UIElement element in grid.Children)
-            {
-                if (element.Visibility == Visibility.Collapsed)
-                    bean = TagBean.Parse((element as TextBlock).Text);
-            }
+            //获取bean
+            TagBean bean = node.SelectedItem as TagBean;
             //刷新标签栏
             selectedTagId = bean.Id;
             int plies = GetPliesByName(node.Name);
@@ -120,7 +114,7 @@ namespace SpatialAnalysis.MyPage
             pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
         }
         //新建标签
-        public void NewTag_Click(ListView sender)
+        public void NewTag_Click(ListBox sender)
         {
             int plies = GetPliesByName(sender.Name);
             if (nodeParentId[plies] == -1)
@@ -151,7 +145,7 @@ namespace SpatialAnalysis.MyPage
             }
         }
         //删除标签
-        public void DeleteTag_Click(uint tagId, ListView sender)
+        public void DeleteTag_Click(uint tagId, ListBox sender)
         {
             if (MessageBox.Show("是否确定删除该标签和其所有的子标签", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
@@ -265,13 +259,7 @@ namespace SpatialAnalysis.MyPage
                 }
                 //修改
                 else
-                {
-                    DirTagMapper.EditOne(new DirTagBean()
-                    {
-                        Id = uint.Parse(editedGridUid),
-                        Path = editedPath,
-                    });
-                }
+                    DirTagMapper.EditOneById(uint.Parse(editedGridUid), editedPath);
             }
             TagSupport.SetTagSort();
             int index = pathList.SelectedIndex;

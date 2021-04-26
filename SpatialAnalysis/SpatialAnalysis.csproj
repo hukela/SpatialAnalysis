@@ -96,7 +96,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Dictionary\TagDictionary.cs" />
+    <Compile Include="Dictionary\TagDictionary.xaml.cs" />
     <Compile Include="Entity\ComparisonInfo.cs" />
     <Compile Include="Entity\DirIndexBean.cs" />
     <Compile Include="Entity\DirNode.cs" />
@@ -107,6 +107,7 @@
     <Compile Include="Entity\RecordExCode.cs" />
     <Compile Include="Entity\ServerState.cs" />
     <Compile Include="Entity\TagBean.cs" />
+    <Compile Include="Entity\TagNode.cs" />
     <Compile Include="IO\Cmd.cs" />
     <Compile Include="IO\InstallAndUninstallMySql.cs" />
     <Compile Include="IO\MftReader.cs" />

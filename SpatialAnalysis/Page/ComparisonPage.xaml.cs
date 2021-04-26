@@ -1,6 +1,6 @@
 ﻿using SpatialAnalysis.Entity;
-using SpatialAnalysis.MyWindow;
 using SpatialAnalysis.Service;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace SpatialAnalysis.MyPage
@@ -14,6 +14,9 @@ namespace SpatialAnalysis.MyPage
         {
             InitializeComponent();
         }
+        //被选中树节点
+        TreeViewItem selectedItem;
+        //绑定事件选择数据
         private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             int index = oldIncident.SelectedIndex;
@@ -43,8 +46,8 @@ namespace SpatialAnalysis.MyPage
         //展开节点事件
         private void TreeViewItem_Expanded(object sender, System.Windows.RoutedEventArgs e)
         {
-            TreeViewItem item = sender as TreeViewItem;
-            DirNode dirNode = item.DataContext as DirNode;
+            selectedItem = sender as TreeViewItem;
+            DirNode dirNode = selectedItem.DataContext as DirNode;
             ComparisonService.BuiledNodeChildren(ref dirNode);
         }
         //选中文件夹的事件
@@ -56,11 +59,18 @@ namespace SpatialAnalysis.MyPage
             info.NewTime = (newIncident.SelectedItem as IncidentBean).TimeFormat;
             comparisonGrid.DataContext = info;
         }
-        //为所选目录添加点击事件
+        //为所选目录添加标签
         private void AddTag_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            SelectTagWindow window = new SelectTagWindow();
-            window.ShowDialog();
+            if (!(dirTree.SelectedItem is DirNode dirNode))
+            {
+                MessageBox.Show("未选中文件夹", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+            ComparisonService.AllOrEditTag(dirNode.Path, dirNode.Tag.Id == 0);
+            //刷新页面数据
+            ComparisonService.RefreshNode(ref dirNode);
+            TreeViewItem_Expanded(selectedItem, null);
         }
     }
 }

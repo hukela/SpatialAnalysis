@@ -39,16 +39,30 @@ namespace SpatialAnalysis.Mapper
             return beans;
         }
         /// <summary>
-        /// 修改一行数据
+        /// 通过id设定标签标注的路径
         /// </summary>
         /// <param name="bean">对应的数据实体</param>
-        public static void EditOne(DirTagBean bean)
+        public static void EditOneById(uint id, string path)
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText = "UPDATE `dir_tag` SET `path`=@path WHERE id=@id";
-                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = bean.Id;
-                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = bean.Path;
+                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = id;
+                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
+                MySqlAction.Write(cmd);
+            }
+        }
+        /// <summary>
+        /// 通过path修改标注的标签
+        /// </summary>
+        /// <param name="bean">对应的数据实体</param>
+        public static void EditOneByPath(string path, uint tagId)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "UPDATE `dir_tag` SET `tag_id`=@tag_id WHERE `path`=@path";
+                cmd.Parameters.Add("tag_id", MySqlDbType.UInt32).Value = tagId;
+                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
                 MySqlAction.Write(cmd);
             }
         }
@@ -62,6 +76,19 @@ namespace SpatialAnalysis.Mapper
             {
                 cmd.CommandText = "DELETE FROM `dir_tag` WHERE `id`=@id;";
                 cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = id;
+                MySqlAction.Write(cmd);
+            }
+        }
+        /// <summary>
+        /// 删除一行数据
+        /// </summary>
+        /// <param name="id">对应的数据path</param>
+        public static void DeleteOneByPath(string path)
+        {
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                cmd.CommandText = "DELETE FROM `dir_tag` WHERE `path`=@path;";
+                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
                 MySqlAction.Write(cmd);
             }
         }

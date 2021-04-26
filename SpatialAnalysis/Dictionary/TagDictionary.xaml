@@ -30,10 +30,10 @@
         <Setter Property="Grid.Column" Value="1"/>
     </Style>
     <!-- 标签和地址列表 -->
-    <Style TargetType="ListView">
+    <Style TargetType="ListBox">
         <Setter Property="BorderThickness" Value="0,0,0,0"/>
     </Style>
-    <Style x:Key="path-item" TargetType="ListViewItem">
+    <Style x:Key="path-item" TargetType="ListBoxItem">
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     </Style>
     <!-- 右键菜单 -->
@@ -45,7 +45,7 @@
         <MenuItem Name="NewTag" Click="NewTag_Click" Header="添加标签"/>
     </ContextMenu>
     <!-- 通过style将右键菜单添加到list子项 -->
-    <Style x:Key="tag-item" TargetType="ListViewItem">
+    <Style x:Key="tag-item" TargetType="ListBoxItem">
         <Setter Property="Margin" Value="0,0,20,0"/>
         <Setter Property="ContextMenu" Value="{StaticResource tag-item-menu}"/>
     </Style>
