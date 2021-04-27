@@ -124,6 +124,9 @@
     <Compile Include="Page\MySqlPage.xaml.cs">
       <DependentUpon>MySqlPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Page\SeeRecordPage.xaml.cs">
+      <DependentUpon>SeeRecordPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Page\TagPage.xaml.cs">
       <DependentUpon>TagPage.xaml</DependentUpon>
     </Compile>
@@ -161,6 +164,10 @@
       <DependentUpon>TextWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Dictionary\AddRecordDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dictionary\SeeRecordDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -212,6 +219,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Page\MySqlPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Page\SeeRecordPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

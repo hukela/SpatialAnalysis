@@ -32,6 +32,7 @@ namespace SpatialAnalysis
         public ComparisonPage comparisonPage = new ComparisonPage();
         public TagPage tagPage = new TagPage();
         public MySqlPage mySqlPage = new MySqlPage();
+        public SeeRecordPage seeRecordPage = new SeeRecordPage();
         //若数据库不可用，则关闭相关功能
         public void IsCanUse()
         {
@@ -83,6 +84,11 @@ namespace SpatialAnalysis
         {
             pageFrame.Content = mySqlPage;
             CloseButton(toMySqlPage);
+        }
+        private void ToIncidentPage_Click(object sender, RoutedEventArgs e)
+        {
+            pageFrame.Content = seeRecordPage;
+            CloseButton(toIncidentPage);
         }
     }
 }
