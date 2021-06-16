@@ -2,6 +2,7 @@
 
 namespace SpatialAnalysis.Entity
 {
+    //事件表数据实体
     class IncidentBean
     {
         public uint Id { get; set; }

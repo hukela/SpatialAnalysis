@@ -1,5 +1,6 @@
 ﻿namespace SpatialAnalysis.Entity
 {
+    //文件夹标签标注表的数据实体
     class DirTagBean
     {
         public uint Id { get; set; }

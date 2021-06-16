@@ -139,7 +139,7 @@ namespace SpatialAnalysis.IO
         }
         
         //尝试直接打开MFT文件
-        public static void openMft()
+        public static void OpenMft()
         {
             GetRootPointer(@"C:\$MFT");
             //抱歉，权限不足，拒绝访问

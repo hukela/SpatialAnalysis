@@ -3,6 +3,7 @@ using System.Numerics;
 
 namespace SpatialAnalysis.Entity
 {
+    //记录表数据实体
     class RecordBean
     {
         public ulong Id { get; set; }
@@ -17,9 +18,12 @@ namespace SpatialAnalysis.Entity
         public DateTime ModifyTime { get; set; }
         public DateTime VisitTime { get; set; }
         public string Owner { get; set; }
-        public sbyte ExceptionCode { get; set; }
+        //错误编码，对应错误类型在RecordExCode枚举类中
+        public int ExceptionCode { get; set; }
         public uint FileCount { get; set; }
         public uint DirCount { get; set; }
+        //是否是文件夹
+        public bool IsFile { get; set; }
         //当前bean是否被改变
         public bool IsChange { get; set; }
         //获取文件夹的名称
@@ -61,6 +65,9 @@ namespace SpatialAnalysis.Entity
             DirCount += bean.DirCount;
             //继承是否被改变
             IsChange = IsChange || bean.IsChange;
+            //继承子一级文件的异常码
+            if (bean.IsFile)
+                ExceptionCode = bean.ExceptionCode | ExceptionCode;
             //继承最新的修改和访问时间
             if (ModifyTime == null)
                 ModifyTime = bean.ModifyTime;

@@ -54,6 +54,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 long count = RecordMapper.Count(incidentId);
                 IncidentMapper.SetStateById(incidentId, 0);
                 if (isFirst)
+                    //删除以前记录失败的作废表格
                     Extend.DeleteErrorTable(incidentId);
                 TimeSpan consumption = DateTime.Now - startTime;
                 Log.Info(string.Concat("数据记录完成, 记录：", count, "(", beanCount, ")，耗时：", consumption));
@@ -114,14 +115,16 @@ namespace SpatialAnalysis.Service.AddRecordExtend
             }
             catch (UnauthorizedAccessException e)
             {
-                Log.Warn("没有权限。" + e.Message);
-                bean.ExceptionCode = 1;
+                bean.ExceptionCode = (int)RecordExCode.UnauthorizedAccess | bean.ExceptionCode;
+                Log.Warn(string.Format("没有权限。{0}, [error code: {1}]",
+                                       e.Message, RecordExCode.UnauthorizedAccess));
                 return bean;
             }
             catch (IOException e)
             {
-                Log.Warn(baseDir.FullName + ": " + e.Message);
-                bean.ExceptionCode = 1;
+                bean.ExceptionCode = (int)RecordExCode.IOExceptionForGetFile | bean.ExceptionCode;
+                Log.Warn(string.Format("{0}: {1}, [error code: {2}]",
+                    baseDir.FullName, e.Message, RecordExCode.IOExceptionForGetFile));
                 return bean;
             }
             //用于记录子节点的bean

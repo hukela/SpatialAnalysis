@@ -1,5 +1,6 @@
 ﻿namespace SpatialAnalysis.Entity
 {
+    //数据库链接
     class MySqlBean
     {
         //添加访问器，这样才可以将数据绑定到页面上

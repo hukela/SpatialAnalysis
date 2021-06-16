@@ -179,6 +179,7 @@ namespace SpatialAnalysis.MyPage
                     if (element.Visibility == Visibility.Collapsed)
                     {
                         element.Visibility = Visibility.Visible;
+                        //顺便找到输入框控件，后面对其设置聚焦
                         if (element is TextBox)
                             textBox = element as TextBox;
                     }
@@ -199,7 +200,7 @@ namespace SpatialAnalysis.MyPage
                 tagName.MouseLeftButtonDown += EditedItem_MouseDown;
                 pathGrid.MouseLeftButtonDown += EditedItem_MouseDown;
                 //设置textBox为聚焦
-                //因为在设置后聚焦会聚焦会瞬间被ListViewItem抢去所以这里异步设置
+                //因为在设置聚焦后会瞬间被ListViewItem抢去所以这里异步设置
                 DispatcherTimer setFocus = new DispatcherTimer()
                 {
                     //一微秒后设置聚焦
@@ -210,6 +211,7 @@ namespace SpatialAnalysis.MyPage
             }
             else
             {
+                //用于模拟双击事件的
                 isClick = true;
                 timer = new Timer()
                 {

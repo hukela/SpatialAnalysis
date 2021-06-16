@@ -1,5 +1,6 @@
 ﻿namespace SpatialAnalysis.Entity
 {
+    //节点对比信息，用于绑定页面
     class ComparisonInfo
     {
         public string Title { get; set; }

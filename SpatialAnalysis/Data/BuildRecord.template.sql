@@ -33,7 +33,7 @@ CREATE TABLE `record_[id]` (
   `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
   `visit_time` datetime DEFAULT NULL COMMENT '访问时间',
   `owner` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '所有者',
-  `exception_code` tinyint DEFAULT '0' COMMENT '异常码',
+  `exception_code` int DEFAULT '0' COMMENT '异常码',
   `file_count` int unsigned DEFAULT '0' COMMENT '文件总数',
   `dir_count` int unsigned DEFAULT '0' COMMENT '文件夹总数',
   PRIMARY KEY (`id`),
