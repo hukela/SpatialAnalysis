@@ -1,8 +1,5 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
-using SpatialAnalysis.Utils;
-using System.Collections.Generic;
-using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

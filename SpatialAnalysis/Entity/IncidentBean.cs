@@ -9,8 +9,8 @@ namespace SpatialAnalysis.Entity
         public DateTime CreateTime { get; set; }
         public string Title { get; set; }
         public string Explain { get; set; }
-        public sbyte IncidentState { get; set; }
-        public string TimeFormat
+        public sbyte State { get; set; }
+        public string CreateTimeFormat
         {
             get
             {

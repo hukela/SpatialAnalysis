@@ -28,7 +28,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
             {
                 //处理事件
                 bean.CreateTime = DateTime.Now;
-                bean.IncidentState = 1;
+                bean.State = 1;
                 incidentId = IncidentMapper.AddOne(bean);
                 isFirst = IncidentMapper.IsFirstRecord();
                 //第一次记录必须保证索引表为空
@@ -67,7 +67,8 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 Log.Add(e);
                 programWindow.WriteLine("错误：");
                 programWindow.WriteLine(e.Message);
-                throw e;
+                programWindow.RunOver();
+                //throw e;
             }
         }
         //用于告知当前进度的
@@ -105,7 +106,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
             RecordBean bean = BeanFactory.GetDirBean(baseDir, plies);
             //C盘有传送门，两个路径可以同时访问一个文件，所以这里放弃其中一个路径
             if (bean.Path == @"C:\Users\All Users") return bean;
-            //获取文件和文件夹列表
+            //获取子文件和子文件夹列表
             DirectoryInfo[] dirs;
             FileInfo[] files;
             try
@@ -128,76 +129,83 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 return bean;
             }
             //用于记录子节点的bean
-            RecordBean[] dirBeans = new RecordBean[dirs.Length]; ;
-            //遍历整个文件夹
+            RecordBean[] childDirBeans = new RecordBean[dirs.Length]; ;
+            //遍历并获取子文件夹
             for (int i = 0; i < dirs.Length; i++)
             {
                 RecordBean dirBean = SeeDirectory(dirs[i], plies + 1);
                 bean.Add(dirBean);
-                dirBeans[i] = dirBean;
+                childDirBeans[i] = dirBean;
             }
-            //遍历整个文件
+            //遍历并获取子文件
             foreach (FileInfo file in files)
             {
                 RecordBean fileBean = BeanFactory.GetFileBean(file, plies);
                 bean.Add(fileBean);
             }
+            // 存储记录结果
             if (isFirst)
+                SaveBeanForFirstRecord(bean, childDirBeans);
+            else
+                SaveBeanForOtherRecord(bean, childDirBeans);
+            return bean;
+        }
+        // 第一次记录
+        private void SaveBeanForFirstRecord(RecordBean bean, RecordBean[] childDirBeans)
+        {
+            //记录并获取当前id
+            bean.Id = RecordMapper.AddOne(bean, incidentId, true);
+            //记录索引
+            DirIndexMapper.AddOne(new DirIndexBean()
             {
-                //记录并获取当前id
-                bean.Id = RecordMapper.AddOne(bean, incidentId, true);
-                //记录索引
-                DirIndexMapper.AddOne(new DirIndexBean()
+                Path = bean.Path,
+                IncidentId = incidentId,
+                TargectId = bean.Id,
+            });
+            beanCount++;
+            //设置子一级的父id
+            foreach (RecordBean dirBean in childDirBeans)
+                RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
+        }
+        // 后续记录需要过滤掉未变化的重复项
+        private void SaveBeanForOtherRecord(RecordBean bean, RecordBean[] childDirBeans)
+        {
+            RecordBean targetBean = Extend.GetLastBean(bean.Path);
+            if (targetBean == null)
+                bean.IsChange = true;
+            else
+                bean.IsChange = bean.IsChange || !bean.Equals(targetBean);
+            //如果该bean没有变化，则不再记录
+            if (bean.IsChange)
+            {
+                bean.Id = RecordMapper.AddOne(bean, incidentId, false);
+                beanCount++;
+                //刷新索引
+                DirIndexMapper.RefreshIndex(new DirIndexBean()
                 {
                     Path = bean.Path,
                     IncidentId = incidentId,
                     TargectId = bean.Id,
                 });
-                beanCount++;
-                //设置子一级的父id
-                foreach (RecordBean dirBean in dirBeans)
-                    RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
+                foreach (RecordBean dirBean in childDirBeans)
+                {
+                    if (dirBean.IsChange)
+                        RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
+                    else
+                    {
+                        //将未改变的bena也记录下来
+                        dirBean.ParentId = bean.Id;
+                        RecordMapper.AddOne(dirBean, incidentId, false);
+                        beanCount++;
+                    }
+                }
             }
             else
             {
-                RecordBean targetBean = Extend.GetLastBean(bean.Path);
-                if (targetBean == null)
-                    bean.IsChange = true;
-                else
-                    bean.IsChange = bean.IsChange || !bean.Equals(targetBean);
-                //如果该bean没有变化，则不再记录
-                if (bean.IsChange)
-                {
-                    bean.Id = RecordMapper.AddOne(bean, incidentId, false);
-                    beanCount++;
-                    //刷新索引
-                    DirIndexMapper.RefreshIndex(new DirIndexBean()
-                    {
-                        Path = bean.Path,
-                        IncidentId = incidentId,
-                        TargectId = bean.Id,
-                    });
-                    foreach (RecordBean dirBean in dirBeans)
-                    {
-                        if (dirBean.IsChange)
-                            RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
-                        else
-                        {
-                            //将未改变的bena也记录下来
-                            dirBean.ParentId = bean.Id;
-                            RecordMapper.AddOne(dirBean, incidentId, false);
-                            beanCount++;
-                        }
-                    }
-                }
-                else
-                {
-                    //为未改变节点添加索引
-                    bean.IncidentId = targetBean.IncidentId;
-                    bean.TargetId = targetBean.Id;
-                }
+                //为未改变节点添加索引
+                bean.IncidentId = targetBean.IncidentId;
+                bean.TargetId = targetBean.Id;
             }
-            return bean;
         }
     }
 }
