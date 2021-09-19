@@ -1,8 +1,8 @@
-﻿using MySql.Data.MySqlClient;
-using SpatialAnalysis.Entity;
+﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
 using System;
 using System.Data;
+using System.Data.SQLite;
 
 namespace SpatialAnalysis.Mapper
 {
@@ -14,14 +14,14 @@ namespace SpatialAnalysis.Mapper
         /// <param name="bean">对应的数据实体</param>
         public static void AddOne(TagBean bean)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "INSERT INTO `tag` (`parent_id`, `name`, `color`) VALUE (@parent_id, @name, @color);";
+                cmd.CommandText = "INSERT INTO [tag] ([parent_id], [name], [color]) VALUES (@parent_id, @name, @color);";
                 object pid = bean.ParentId == 0 ? null : (object)bean.ParentId;
-                cmd.Parameters.Add("parent_id", MySqlDbType.UInt32).Value = pid;
-                cmd.Parameters.Add("name", MySqlDbType.VarChar, 30).Value = bean.Name;
-                cmd.Parameters.Add("color", MySqlDbType.String, 7).Value = bean.Color;
-                MySqlAction.Write(cmd);
+                cmd.Parameters.Add("parent_id", DbType.UInt32).Value = pid;
+                cmd.Parameters.Add("name", DbType.String).Value = bean.Name;
+                cmd.Parameters.Add("color", DbType.String).Value = bean.Color;
+                SQLiteClient.Write(cmd);
             }
         }
         //将表格转换为bean
@@ -47,10 +47,10 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         public static TagBean[] GetRootTag()
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "SELECT * FROM `tag` WHERE `parent_id` IS NULL;";
-                return GetBeanListByTable(MySqlAction.Read(cmd));
+                cmd.CommandText = "SELECT * FROM [tag] WHERE [parent_id] IS NULL;";
+                return GetBeanListByTable(SQLiteClient.Read(cmd));
             }
         }
         /// <summary>
@@ -59,11 +59,11 @@ namespace SpatialAnalysis.Mapper
         /// <param name="ParentId">父级标签id</param>
         public static TagBean[] GetChildTag(uint ParentId)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "SELECT * FROM `tag` WHERE `parent_id` = @parent_id;";
-                cmd.Parameters.Add("parent_id", MySqlDbType.UInt32).Value = ParentId;
-                return GetBeanListByTable(MySqlAction.Read(cmd));
+                cmd.CommandText = "SELECT * FROM [tag] WHERE [parent_id] = @parent_id;";
+                cmd.Parameters.Add("parent_id", DbType.UInt32).Value = ParentId;
+                return GetBeanListByTable(SQLiteClient.Read(cmd));
             }
         }
         /// <summary>
@@ -71,11 +71,11 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         public static TagBean GetOneById(uint tagId)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "SELECT * FROM `tag` WHERE `id` = @id;";
-                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = tagId;
-                return GetBeanListByTable(MySqlAction.Read(cmd))[0];
+                cmd.CommandText = "SELECT * FROM [tag] WHERE [id] = @id;";
+                cmd.Parameters.Add("id", DbType.UInt32).Value = tagId;
+                return GetBeanListByTable(SQLiteClient.Read(cmd))[0];
             }
         }
         /// <summary>
@@ -84,13 +84,13 @@ namespace SpatialAnalysis.Mapper
         /// <param name="bean">对应的数据实体</param>
         public static void UpdataOne(TagBean bean)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "UPDATE `tag` SET `name`=@name, `color`=@color WHERE `id`=@id;";
-                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = bean.Id;
-                cmd.Parameters.Add("name", MySqlDbType.VarChar, 30).Value = bean.Name;
-                cmd.Parameters.Add("color", MySqlDbType.String, 7).Value = bean.Color;
-                MySqlAction.Write(cmd);
+                cmd.CommandText = "UPDATE [tag] SET [name]=@name, [color]=@color WHERE [id]=@id;";
+                cmd.Parameters.Add("id", DbType.UInt32).Value = bean.Id;
+                cmd.Parameters.Add("name", DbType.String).Value = bean.Name;
+                cmd.Parameters.Add("color", DbType.String).Value = bean.Color;
+                SQLiteClient.Write(cmd);
             }
         }
         /// <summary>
@@ -98,11 +98,11 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         public static void DeleteOne(uint tagId)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "DELETE FROM `tag` WHERE `id`=@id;";
-                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = tagId;
-                MySqlAction.Write(cmd);
+                cmd.CommandText = "DELETE FROM [tag] WHERE [id]=@id;";
+                cmd.Parameters.Add("id", DbType.UInt32).Value = tagId;
+                SQLiteClient.Write(cmd);
             }
         }
     }

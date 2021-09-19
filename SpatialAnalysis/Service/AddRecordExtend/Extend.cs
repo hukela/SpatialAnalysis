@@ -1,7 +1,6 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
 using SpatialAnalysis.Mapper;
-using System.IO;
 using System.Text;
 
 namespace SpatialAnalysis.Service.AddRecordExtend
@@ -11,27 +10,24 @@ namespace SpatialAnalysis.Service.AddRecordExtend
         //建立表格
         public static void BuildTable(uint incidentId, bool isFiest)
         {
-            string templatePath = Base.locolPath + @"\Data\BuildRecord.template.sql";
-            string path = Base.locolPath + @"\Data\BuildRecord.sql";
-            string sql = TextFile.ReadAll(templatePath, Encoding.UTF8);
-            sql = sql.Replace("[id]", incidentId.ToString());
+            string path = Base.locolPath + @"\Data\record.sql";
+            string sql = TextFile.ReadAll(path, Encoding.UTF8);
+            sql = sql.Replace("{incidentId}", incidentId.ToString());
             if (isFiest)
             {
-                while (sql.IndexOf("[isFirstRecord]") != -1)
+                while (sql.IndexOf("{isNotFirst}") != -1)
                 {
-                    int startIndex = sql.IndexOf("[isFirstRecord]");
-                    int endIndex = sql.IndexOf("[/isFirstRecord]");
-                    sql = sql.Remove(startIndex, endIndex - startIndex + 16);
+                    int startIndex = sql.IndexOf("{isNotFirst}");
+                    int endIndex = sql.IndexOf("{/isNotFirst}");
+                    sql = sql.Remove(startIndex, endIndex - startIndex + 13);
                 }
             }
             else
             {
-                sql = sql.Replace("[isFirstRecord]", "");
-                sql = sql.Replace("[/isFirstRecord]", "");
+                sql = sql.Replace("{isNotFirst}", "");
+                sql = sql.Replace("{/isNotFirst}", "");
             }
-            TextFile.WriteAll(path, Encoding.UTF8, sql);
-            MySqlAction.ExecuteSqlFile(path);
-            File.Delete(path);
+            SQLiteClient.ExecuteSql(sql);
         }
         //删除作废表格
         public static void DeleteErrorTable(uint incidentId)

@@ -104,6 +104,7 @@ namespace SpatialAnalysis.Service.ComparisonExtend
                 node.OldId = bean.Id;
             }
         }
+        //作用同上，调整新记录的指针
         private static void SetNewId(ref DirNode node, RecordBean bean, uint incidentId)
         {
             if (bean.IncidentId != 0)

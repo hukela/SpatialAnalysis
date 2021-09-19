@@ -33,7 +33,6 @@
             <Button x:Name="toIncidentPage" Content="查看事件" Click="ToIncidentPage_Click"/>
             <Button x:Name="toComparisonPage" Content="对比模式" Click="ToComparisonPage_Click"/>
             <Button x:Name="toTagPage" Content="编辑标签" Click="ToTagPage_Click"/>
-            <Button x:Name="toMySqlPage" Content="MySql" Click="ToMySql_Click"/>
         </WrapPanel>
         <!-- 页面容器 -->
         <Frame x:Name="pageFrame" Grid.Row="1" Grid.Column="2" NavigationUIVisibility="Hidden"/>

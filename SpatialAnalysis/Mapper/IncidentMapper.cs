@@ -1,8 +1,8 @@
-﻿using MySql.Data.MySqlClient;
-using SpatialAnalysis.Entity;
+﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
 using System;
 using System.Data;
+using System.Data.SQLite;
 
 namespace SpatialAnalysis.Mapper
 {
@@ -15,22 +15,22 @@ namespace SpatialAnalysis.Mapper
         /// <returns>该行的id</returns>
         public static uint AddOne(IncidentBean bean)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
                 cmd.CommandText = "INSERT INTO " +
-                "`incident` (`create_time`,`title`,`explain`,`incident_state`) " +
-                "VALUE (@create_time,@title,@explain,@incident_state);";
-                cmd.Parameters.Add("create_time", MySqlDbType.DateTime).Value = bean.CreateTime.ToString();
-                cmd.Parameters.Add("title", MySqlDbType.VarChar, 20).Value = bean.Title;
-                cmd.Parameters.Add("explain", MySqlDbType.VarChar, 500).Value = bean.Explain;
-                cmd.Parameters.Add("incident_state", MySqlDbType.Byte).Value = bean.IncidentState;
-                MySqlAction.Write(cmd);
+                "[incident] ([create_time],[title],[explain],[state]) " +
+                "VALUES (@create_time,@title,@explain,@state);";
+                cmd.Parameters.Add("create_time", DbType.DateTime).Value = bean.CreateTime;
+                cmd.Parameters.Add("title", DbType.String).Value = bean.Title;
+                cmd.Parameters.Add("explain", DbType.String).Value = bean.Explain;
+                cmd.Parameters.Add("state", DbType.SByte).Value = bean.State;
+                SQLiteClient.Write(cmd);
             }
             uint id;
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "SELECT LAST_INSERT_ID();";
-                DataTable table = MySqlAction.Read(cmd);
+                cmd.CommandText = "SELECT LAST_INSERT_ROWID();";
+                DataTable table = SQLiteClient.Read(cmd);
                 //查询id默认类型为ulong
                 id = Convert.ToUInt32(table.Rows[0][0]);
             }
@@ -49,7 +49,7 @@ namespace SpatialAnalysis.Mapper
                     CreateTime = (DateTime)table.Rows[i]["create_time"],
                     Title = table.Rows[i]["title"] as string,
                     Explain = table.Rows[i]["explain"] as string,
-                    IncidentState = (sbyte)table.Rows[i]["incident_state"],
+                    State = (sbyte)table.Rows[i]["state"],
                 };
             }
             return beans;
@@ -59,11 +59,11 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         public static IncidentBean GetLastBean()
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "SELECT * FROM `incident` " +
-                    "WHERE `incident_state` = 0 ORDER BY `create_time` DESC LIMIT 1;";
-                DataTable table = MySqlAction.Read(cmd);
+                cmd.CommandText = "SELECT * FROM [incident] " +
+                    "WHERE [state] = 0 ORDER BY [create_time] DESC LIMIT 1;";
+                DataTable table = SQLiteClient.Read(cmd);
                 if (table.Rows.Count == 0)
                     return null;
                 else
@@ -75,10 +75,10 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         public static IncidentBean[] GetSuccessIncident()
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "SELECT * FROM `incident` WHERE `incident_state` = 0;";
-                return GetBeanByTable(MySqlAction.Read(cmd));
+                cmd.CommandText = "SELECT * FROM [incident] WHERE [state] = 0;";
+                return GetBeanByTable(SQLiteClient.Read(cmd));
             }
         }
         /// <summary>
@@ -86,10 +86,10 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         public static bool IsFirstRecord()
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "SELECT `id` FROM `incident` WHERE `incident_state` = 0";
-                DataTable table = MySqlAction.Read(cmd);
+                cmd.CommandText = "SELECT [id] FROM [incident] WHERE [state] = 0";
+                DataTable table = SQLiteClient.Read(cmd);
                 if (table.Rows.Count == 0)
                     return true;
                 else
@@ -103,12 +103,12 @@ namespace SpatialAnalysis.Mapper
         /// <param name="state">状态</param>
         public static void SetStateById(uint id, sbyte state)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "UPDATE `incident` SET `incident_state` = @incident_state WHERE `id` = @id;";
-                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = id;
-                cmd.Parameters.Add("incident_state", MySqlDbType.Byte).Value = state;
-                MySqlAction.Write(cmd);
+                cmd.CommandText = "UPDATE [incident] SET [state] = @state WHERE [id] = @id;";
+                cmd.Parameters.Add("id", DbType.UInt32).Value = id;
+                cmd.Parameters.Add("state", DbType.SByte).Value = state;
+                SQLiteClient.Write(cmd);
             }
         }
     }

@@ -1,7 +1,7 @@
-﻿using MySql.Data.MySqlClient;
-using SpatialAnalysis.Entity;
+﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
 using System.Data;
+using System.Data.SQLite;
 
 namespace SpatialAnalysis.Mapper
 {
@@ -13,12 +13,12 @@ namespace SpatialAnalysis.Mapper
         /// <param name="bean">对应的数据实体</param>
         public static void AddOne(DirTagBean bean)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "INSERT INTO `dir_tag` (`tag_id`, `path`) VALUE (@tag_id, @path);";
-                cmd.Parameters.Add("tag_id", MySqlDbType.UInt32).Value = bean.TagId;
-                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = bean.Path;
-                MySqlAction.Write(cmd);
+                cmd.CommandText = "INSERT INTO [dir_tag] ([tag_id], [path]) VALUES (@tag_id, @path);";
+                cmd.Parameters.Add("tag_id", DbType.UInt32).Value = bean.TagId;
+                cmd.Parameters.Add("path", DbType.String).Value = bean.Path;
+                SQLiteClient.Write(cmd);
             }
         }
         //将表格数据转换为bean数据
@@ -44,12 +44,12 @@ namespace SpatialAnalysis.Mapper
         /// <param name="bean">对应的数据实体</param>
         public static void EditOneById(uint id, string path)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "UPDATE `dir_tag` SET `path`=@path WHERE id=@id";
-                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = id;
-                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
-                MySqlAction.Write(cmd);
+                cmd.CommandText = "UPDATE [dir_tag] SET [path]=@path WHERE id=@id";
+                cmd.Parameters.Add("id", DbType.UInt32).Value = id;
+                cmd.Parameters.Add("path", DbType.String).Value = path;
+                SQLiteClient.Write(cmd);
             }
         }
         /// <summary>
@@ -58,12 +58,12 @@ namespace SpatialAnalysis.Mapper
         /// <param name="bean">对应的数据实体</param>
         public static void EditOneByPath(string path, uint tagId)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "UPDATE `dir_tag` SET `tag_id`=@tag_id WHERE `path`=@path";
-                cmd.Parameters.Add("tag_id", MySqlDbType.UInt32).Value = tagId;
-                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
-                MySqlAction.Write(cmd);
+                cmd.CommandText = "UPDATE [dir_tag] SET [tag_id]=@tag_id WHERE [path]=@path";
+                cmd.Parameters.Add("tag_id", DbType.UInt32).Value = tagId;
+                cmd.Parameters.Add("path", DbType.String, 255).Value = path;
+                SQLiteClient.Write(cmd);
             }
         }
         /// <summary>
@@ -72,11 +72,11 @@ namespace SpatialAnalysis.Mapper
         /// <param name="id">对应的数据id</param>
         public static void DeleteOneById(uint id)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "DELETE FROM `dir_tag` WHERE `id`=@id;";
-                cmd.Parameters.Add("id", MySqlDbType.UInt32).Value = id;
-                MySqlAction.Write(cmd);
+                cmd.CommandText = "DELETE FROM [dir_tag] WHERE [id]=@id;";
+                cmd.Parameters.Add("id", DbType.UInt32).Value = id;
+                SQLiteClient.Write(cmd);
             }
         }
         /// <summary>
@@ -85,11 +85,11 @@ namespace SpatialAnalysis.Mapper
         /// <param name="id">对应的数据path</param>
         public static void DeleteOneByPath(string path)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "DELETE FROM `dir_tag` WHERE `path`=@path;";
-                cmd.Parameters.Add("path", MySqlDbType.VarChar, 255).Value = path;
-                MySqlAction.Write(cmd);
+                cmd.CommandText = "DELETE FROM [dir_tag] WHERE [path]=@path;";
+                cmd.Parameters.Add("path", DbType.String).Value = path;
+                SQLiteClient.Write(cmd);
             }
         }
         /// <summary>
@@ -98,11 +98,11 @@ namespace SpatialAnalysis.Mapper
         /// <param name="tagId">标签id</param>
         public static void DeleteByTagId(uint tagId)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "DELETE FROM `dir_tag` WHERE `tag_id`=@tag_id;";
-                cmd.Parameters.Add("tag_id", MySqlDbType.UInt32).Value = tagId;
-                MySqlAction.Write(cmd);
+                cmd.CommandText = "DELETE FROM [dir_tag] WHERE [tag_id]=@tag_id;";
+                cmd.Parameters.Add("tag_id", DbType.UInt32).Value = tagId;
+                SQLiteClient.Write(cmd);
             }
         }
         /// <summary>
@@ -111,10 +111,10 @@ namespace SpatialAnalysis.Mapper
         /// <returns></returns>
         public static DirTagBean[] GetAll()
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "SELECT * FROM `dir_tag`;";
-                return GetBeanByTable(MySqlAction.Read(cmd));
+                cmd.CommandText = "SELECT * FROM [dir_tag];";
+                return GetBeanByTable(SQLiteClient.Read(cmd));
             }
         }
         /// <summary>
@@ -122,11 +122,11 @@ namespace SpatialAnalysis.Mapper
         /// </summary>
         public static DirTagBean[] GetAllByTag(uint tagId)
         {
-            using (MySqlCommand cmd = new MySqlCommand())
+            using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "SELECT * FROM `dir_tag` WHERE `tag_id` = @tag_id;";
-                cmd.Parameters.Add("tag_id", MySqlDbType.UInt32).Value = tagId;
-                return GetBeanByTable(MySqlAction.Read(cmd));
+                cmd.CommandText = "SELECT * FROM [dir_tag] WHERE [tag_id] = @tag_id;";
+                cmd.Parameters.Add("tag_id", DbType.UInt32).Value = tagId;
+                return GetBeanByTable(SQLiteClient.Read(cmd));
             }
         }
     }

@@ -21,7 +21,6 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
-            Console.WriteLine((int)RecordExCode.UnauthorizedAccess);
         }
     }
 }

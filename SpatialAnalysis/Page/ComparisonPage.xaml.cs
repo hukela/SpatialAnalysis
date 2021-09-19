@@ -55,8 +55,8 @@ namespace SpatialAnalysis.MyPage
         {
             ComparisonInfo info = ComparisonService.GetInfoByNode(dirTree.SelectedItem as DirNode);
             //将页面上已经存在的数据放入，减少与数据库的交互和重复的计算
-            info.OldTime = (oldIncident.SelectedItem as IncidentBean).TimeFormat;
-            info.NewTime = (newIncident.SelectedItem as IncidentBean).TimeFormat;
+            info.OldTime = (oldIncident.SelectedItem as IncidentBean).CreateTimeFormat;
+            info.NewTime = (newIncident.SelectedItem as IncidentBean).CreateTimeFormat;
             comparisonGrid.DataContext = info;
         }
         //为所选目录添加标签

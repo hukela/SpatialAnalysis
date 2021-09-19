@@ -14,11 +14,7 @@ namespace SpatialAnalysis.IO.Xml
         public enum Params
         {
             //标签颜色
-            tagColor,
-            //MySql配置
-            isAutoStartServer, isAutoConnent,
-            //数据库相关参数
-            server, port, user, password, database,
+            tagColor
         }
         /// <summary>
         /// 通过key读取value

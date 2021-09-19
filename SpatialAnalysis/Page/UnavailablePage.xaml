@@ -17,6 +17,6 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <TextBlock Text="数据库没有连接"/>
+        <TextBlock Text="SQLite数据库异常"/>
     </Grid>
 </Page>
