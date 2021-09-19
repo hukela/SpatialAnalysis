@@ -47,6 +47,7 @@ namespace SpatialAnalysis.Service
                 InstallAndUninstallMySql.BuildCmd();
                 program.WriteLine("初始化数据库...");
                 initialize = InstallAndUninstallMySql.Initialize();
+                //获取自动生成的随机密码
                 string password = GetPasswd(initialize[1]);
                 program.WriteLine("安装数据库服务...");
                 install = InstallAndUninstallMySql.Install();

@@ -69,26 +69,6 @@ CREATE TABLE `tag` (
 
 insert  into `tag`(`id`,`parent_id`,`name`,`color`) values (1,NULL,'系统文件','#FFFFFF'),(2,NULL,'用户文件','#FFFFFF'),(3,NULL,'软件','#FFFFFF');
 
-/*Table structure for table `tag_view` */
-
-DROP TABLE IF EXISTS `tag_view`;
-
-/*!50001 DROP VIEW IF EXISTS `tag_view` */;
-/*!50001 DROP TABLE IF EXISTS `tag_view` */;
-
-/*!50001 CREATE TABLE  `tag_view`(
- `id` int unsigned ,
- `name` varchar(10) ,
- `path` varchar(255) 
-)*/;
-
-/*View structure for view tag_view */
-
-/*!50001 DROP TABLE IF EXISTS `tag_view` */;
-/*!50001 DROP VIEW IF EXISTS `tag_view` */;
-
-/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tag_view` AS select `tag`.`id` AS `id`,`tag`.`name` AS `name`,`dir_tag`.`path` AS `path` from (`tag` join `dir_tag` on((`tag`.`id` = `dir_tag`.`tag_id`))) */;
-
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
