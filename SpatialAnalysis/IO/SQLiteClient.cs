@@ -6,7 +6,7 @@ namespace SpatialAnalysis.IO
     /// <summary>
     /// 针对SQLite数据库的各种操作
     /// </summary>
-    static class SQLiteClient
+    static internal class SQLiteClient
     {
         /// <summary>
         /// 建立数据库链接

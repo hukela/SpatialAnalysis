@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace SpatialAnalysis.Service
 {
-    class TagService
+    internal class TagService
     {
         /// <summary>
         /// 获得标签列表

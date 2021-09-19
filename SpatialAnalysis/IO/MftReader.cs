@@ -8,7 +8,7 @@ namespace SpatialAnalysis.IO
     /// <summary>
     /// 用于获取NTFS下的MFT文件内容的底层代码
     /// </summary>
-    class MftReader
+    internal class MftReader
     {
         #region 相关API以及常量
 

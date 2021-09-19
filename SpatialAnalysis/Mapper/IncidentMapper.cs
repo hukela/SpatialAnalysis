@@ -6,7 +6,7 @@ using System.Data.SQLite;
 
 namespace SpatialAnalysis.Mapper
 {
-    static class IncidentMapper
+    static internal class IncidentMapper
     {
         /// <summary>
         /// 添加一行数据

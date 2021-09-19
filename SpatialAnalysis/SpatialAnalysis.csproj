@@ -121,6 +121,7 @@
     <Compile Include="Entity\TagNode.cs" />
     <Compile Include="IO\Cmd.cs" />
     <Compile Include="IO\MftReader.cs" />
+    <Compile Include="IO\SpaceUsage.cs" />
     <Compile Include="IO\SQLiteClient.cs" />
     <Compile Include="IO\TextFile.cs" />
     <Compile Include="Mapper\DirIndexMapper.cs" />
@@ -305,6 +306,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\index.sql" />
     <Content Include="Data\main.sql" />
     <Content Include="Data\sqlite3.dll" />
     <Content Include="Data\sqlite3.exe" />

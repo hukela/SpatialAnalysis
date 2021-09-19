@@ -5,7 +5,7 @@ namespace SpatialAnalysis.Utils
     /// <summary>
     /// 内部存储
     /// </summary>
-    class InternalStorage
+    internal class InternalStorage
     {
         //用于临时存储数据
         private static Dictionary<Domain, Dictionary<string, object>> dict = new Dictionary<Domain, Dictionary<string, object>>();

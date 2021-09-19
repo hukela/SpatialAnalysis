@@ -8,7 +8,7 @@ using System.Numerics;
 
 namespace SpatialAnalysis.Service
 {
-    class ComparisonService
+    internal class ComparisonService
     {
         /// <summary>
         /// 获取事件选择列表

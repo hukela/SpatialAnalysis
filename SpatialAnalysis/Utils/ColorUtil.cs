@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpatialAnalysis.Utils
 {
-    class ColorUtil
+    internal class ColorUtil
     {
         /// <summary>
         /// 将RGB字符串转换为byte数组

@@ -3,7 +3,7 @@
 namespace SpatialAnalysis.Entity
 {
     //事件表数据实体
-    class IncidentBean
+    internal class IncidentBean
     {
         public uint Id { get; set; }
         public DateTime CreateTime { get; set; }

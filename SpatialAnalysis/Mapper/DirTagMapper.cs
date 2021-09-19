@@ -5,7 +5,7 @@ using System.Data.SQLite;
 
 namespace SpatialAnalysis.Mapper
 {
-    class DirTagMapper
+    internal class DirTagMapper
     {
         /// <summary>
         /// 添加一行数据

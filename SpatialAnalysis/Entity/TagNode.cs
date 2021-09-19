@@ -1,6 +1,6 @@
 ﻿namespace SpatialAnalysis.Entity
 {
-    class TagNode
+    internal class TagNode
     {
         public TagBean Tag { get; set; }
         public TagNode[] Children { get; set; }

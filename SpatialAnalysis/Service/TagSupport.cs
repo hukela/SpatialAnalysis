@@ -6,7 +6,7 @@ using System.Threading;
 namespace SpatialAnalysis.Service
 {
     //提供标签支持
-    class TagSupport
+    internal class TagSupport
     {
         /// <summary>
         /// 设置或刷新标签标注的数据

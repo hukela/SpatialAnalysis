@@ -5,7 +5,7 @@ namespace SpatialAnalysis.IO
     /// <summary>
     /// 用来执行命令提示符和批处理文件
     /// </summary>
-    class Cmd
+    internal class Cmd
     {
         public Cmd()
         {

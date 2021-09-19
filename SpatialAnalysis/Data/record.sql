@@ -9,7 +9,7 @@ CREATE TABLE [record_{incidentId}]
   [incident_id] uint32 default 0 NOT NULL, -- 指向的事件id,
   [target_id] uint64 default 0 NOT NULL, -- 指向的记录id,
   {/isNotFirst}
-  [path] string NOT NULL, -- 路径,
+  [path] string unique NOT NULL, -- 路径,
   [plies] uint32 NOT NULL, -- 层数：上面有多少个文件夹
   [size] String default '0' NOT NULL, -- 大小(字节)
   [space_usage] String default '0' NOT NULL, -- 占用空间(字节)

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SpatialAnalysis.Service.ComparisonExtend
 {
-    class BuildNodeTree
+    internal class BuildNodeTree
     {
 
         /// <summary>

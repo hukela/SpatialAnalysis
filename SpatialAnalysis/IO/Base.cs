@@ -2,10 +2,10 @@
 
 namespace SpatialAnalysis.IO
 {
-    class Base
+    internal class Base
     {
         public static readonly string locolPath;
-        //静态的构造函数
+        //静态构造函数
         static Base()
         {
             string path = System.Environment.CurrentDirectory;

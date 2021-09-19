@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace SpatialAnalysis.IO.Xml
 {
-    class XML : Base
+    internal class XML : Base
     {
         //存储文件位置
         private static readonly string filePath = locolPath + @"\Data\Core.xml";

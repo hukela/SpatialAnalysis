@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SpatialAnalysis.IO
 {
-    class TextFile
+    internal class TextFile
     {
         /// <summary>
         /// 读取文件内所有内容。

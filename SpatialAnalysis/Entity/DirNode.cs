@@ -9,7 +9,7 @@
         Deleted,
     }
     //对比页面的文件夹节点
-    class DirNode
+    internal class DirNode
     {
         public uint OldIncidentId { get; set; }
         public ulong OldId { get; set; }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SpatialAnalysis.Service.AddRecordExtend
 {
-    class Extend
+    internal class Extend
     {
         //建立表格
         public static void BuildTable(uint incidentId, bool isFiest)

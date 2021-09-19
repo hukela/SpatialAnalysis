@@ -6,7 +6,7 @@ using System.Windows.Media;
 namespace SpatialAnalysis.Dictionary
 {
     //字典中的事件类
-    partial class TagDictionary : ResourceDictionary
+    public partial class TagDictionary : ResourceDictionary
     {
         //新建标签
         private void NewTag_Click(object sender, RoutedEventArgs e)

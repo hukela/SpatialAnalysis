@@ -9,7 +9,7 @@ using System.Security.Principal;
 
 namespace SpatialAnalysis.Service.AddRecordExtend
 {
-    class BeanFactory
+    internal class BeanFactory
     {
         /// <summary>
         /// 获取文件相关信息

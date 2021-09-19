@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace SpatialAnalysis.Mapper
 {
-    class RecordMapper
+    internal class RecordMapper
     {
         /// <summary>
         /// 添加一行数据

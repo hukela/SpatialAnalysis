@@ -6,7 +6,7 @@ namespace SpatialAnalysis.Utils
     /// <summary>
     /// 存储单位的换算
     /// </summary>
-    class ConversionUtil
+    internal class ConversionUtil
     {
         /// <summary>
         /// 将存数据换算成合适的单位

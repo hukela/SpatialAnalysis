@@ -4,7 +4,7 @@ using System.Numerics;
 namespace SpatialAnalysis.Entity
 {
     //记录表数据实体
-    class RecordBean
+    internal class RecordBean
     {
         public ulong Id { get; set; }
         public ulong ParentId { get; set; }
