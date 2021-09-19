@@ -13,8 +13,8 @@ namespace SpatialAnalysis.IO
         /// </summary>
         static SQLiteClient()
         {
-            string conString = string.Concat("Data Source=",
-                Base.locolPath, @"\Data\main.db;Max Pool Size=10");
+            string conString = string.Concat("Data Source=", Base.locolPath,
+                @"\Data\main.db;Max Pool Size=10;Journal Mode=Off");
             con = new SQLiteConnection(conString);
         }
         private static readonly SQLiteConnection con;
