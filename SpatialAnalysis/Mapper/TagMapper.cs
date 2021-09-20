@@ -30,10 +30,10 @@ namespace SpatialAnalysis.Mapper
             TagBean[] list = new TagBean[table.Rows.Count];
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                uint parentId = table.Rows[i]["parent_id"] is DBNull ? 0 : (uint)table.Rows[i]["parent_id"];
+                uint parentId = table.Rows[i]["parent_id"] is DBNull ? 0 : Convert.ToUInt32(table.Rows[i]["parent_id"]);
                 TagBean bean = new TagBean()
                 {
-                    Id = (uint)table.Rows[i]["id"],
+                    Id = Convert.ToUInt32(table.Rows[i]["id"]),
                     ParentId = parentId,
                     Name = table.Rows[i]["name"] as string,
                     Color = table.Rows[i]["color"] as string,

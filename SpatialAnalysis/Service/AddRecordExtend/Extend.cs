@@ -29,6 +29,14 @@ namespace SpatialAnalysis.Service.AddRecordExtend
             }
             SQLiteClient.ExecuteSql(sql);
         }
+        //建立索引
+        public static void BuildIndex(uint incidentId)
+        {
+            string path = Base.locolPath + @"\Data\index.sql";
+            string sql = TextFile.ReadAll(path, Encoding.UTF8);
+            sql = sql.Replace("{incidentId}", incidentId.ToString());
+            SQLiteClient.ExecuteSql(sql);
+        }
         //删除作废表格
         public static void DeleteErrorTable(uint incidentId)
         {

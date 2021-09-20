@@ -97,7 +97,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.114.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -155,6 +155,7 @@
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Utils\ForTest.cs" />
     <Compile Include="Utils\InternalStorage.cs" />
+    <Compile Include="Utils\LocalCache.cs" />
     <Compile Include="Utils\SortUtil.cs" />
     <Compile Include="Window\CloseButton.cs" />
     <Compile Include="Window\ProgramWindow.xaml.cs">

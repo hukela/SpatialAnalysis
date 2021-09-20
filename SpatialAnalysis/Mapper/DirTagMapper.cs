@@ -1,5 +1,6 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
+using System;
 using System.Data;
 using System.Data.SQLite;
 
@@ -30,8 +31,8 @@ namespace SpatialAnalysis.Mapper
             {
                 DirTagBean bean = new DirTagBean()
                 {
-                    Id = (uint)table.Rows[i]["id"],
-                    TagId = (uint)table.Rows[i]["tag_id"],
+                    Id = Convert.ToUInt32(table.Rows[i]["id"]),
+                    TagId = Convert.ToUInt32(table.Rows[i]["tag_id"]),
                     Path = table.Rows[i]["path"] as string,
                 };
                 beans[i] = bean;

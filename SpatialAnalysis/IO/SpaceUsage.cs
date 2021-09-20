@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SpatialAnalysis.Utils;
+using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpatialAnalysis.IO
 {
     internal class SpaceUsage
     {
         //获取文件占用空间
-        private static ulong GetSpaceUsage(string fullName)
+        public static ulong Get(string fullName)
         {
             string rootPath = fullName.Substring(0, 3);
             uint tall = 0;
@@ -19,7 +16,7 @@ namespace SpatialAnalysis.IO
             if (low == uint.MaxValue)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             ulong result = ((ulong)tall << 32) + low;
-            uint size = GetClusterSize(rootPath);
+            uint size = clusterCache.Get(rootPath);
             if (result % size != 0)
             {
                 decimal res = result / size;
@@ -28,6 +25,8 @@ namespace SpatialAnalysis.IO
             }
             return result;
         }
+        //本地缓存
+        private static readonly LocalCache<uint, string> clusterCache = new LocalCache<uint, string> (30, GetClusterSize);
         //获取每簇的字节数
         private static uint GetClusterSize(string rootPath)
         {
@@ -42,6 +41,5 @@ namespace SpatialAnalysis.IO
         //用于获取盘信息的api
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         private static extern bool GetDiskFreeSpace([MarshalAs(UnmanagedType.LPTStr)]string rootPathName, ref uint sectorsPerCluster, ref uint bytesPerSector, ref uint numberOfFreeClusters, ref uint totalNumbeOfClusters);
-
     }
 }

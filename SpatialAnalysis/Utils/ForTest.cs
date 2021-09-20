@@ -21,6 +21,13 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
+            LocalCache<int, int> cache =
+                new LocalCache<int, int>(10, delegate (int a) { return a + 1; });
+            Console.WriteLine(cache.Get(10));
+            Console.WriteLine(cache.Get(11));
+            Thread.Sleep(1000);
+            Console.WriteLine(cache.Get(13));
+            Console.WriteLine(cache.Get(11));
         }
     }
 }

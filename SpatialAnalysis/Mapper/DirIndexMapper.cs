@@ -1,5 +1,6 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
+using System;
 using System.Data;
 using System.Data.SQLite;
 
@@ -15,10 +16,10 @@ namespace SpatialAnalysis.Mapper
         {
             using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "INSERT INTO [dir_index] VALUES (@path, @incident_id, @targect_id);";
+                cmd.CommandText = "INSERT INTO [dir_index] VALUES (@path, @incident_id, @target_id);";
                 cmd.Parameters.Add("path", DbType.String).Value = bean.Path;
                 cmd.Parameters.Add("incident_id", DbType.UInt32).Value = bean.IncidentId;
-                cmd.Parameters.Add("targect_id", DbType.UInt64).Value = bean.TargectId;
+                cmd.Parameters.Add("target_id", DbType.UInt64).Value = bean.TargectId;
                 SQLiteClient.Write(cmd);
             }
         }
@@ -28,8 +29,8 @@ namespace SpatialAnalysis.Mapper
             return new DirIndexBean()
             {
                 Path = (string)row["path"],
-                IncidentId = (uint)row["incident_id"],
-                TargectId = (ulong)row["targect_id"],
+                IncidentId = Convert.ToUInt32(row["incident_id"]),
+                TargectId = Convert.ToUInt64(row["target_id"]),
             };
         }
         /// <summary>
@@ -59,10 +60,10 @@ namespace SpatialAnalysis.Mapper
             int n;
             using (SQLiteCommand cmd = new SQLiteCommand())
             {
-                cmd.CommandText = "UPDATE [dir_index] SET [incident_id] = @incident_id, [targect_id] = @targect_id WHERE [path] = @path;";
+                cmd.CommandText = "UPDATE [dir_index] SET [incident_id] = @incident_id, [target_id] = @target_id WHERE [path] = @path;";
                 cmd.Parameters.Add("path", DbType.String).Value = bean.Path;
                 cmd.Parameters.Add("incident_id", DbType.UInt32).Value = bean.IncidentId;
-                cmd.Parameters.Add("targect_id", DbType.UInt64).Value = bean.TargectId;
+                cmd.Parameters.Add("target_id", DbType.UInt64).Value = bean.TargectId;
                 n = SQLiteClient.Write(cmd);
             }
             if (n == 0)

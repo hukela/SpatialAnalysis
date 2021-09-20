@@ -45,11 +45,11 @@ namespace SpatialAnalysis.Mapper
             {
                 beans[i] = new IncidentBean()
                 {
-                    Id = (uint)table.Rows[i]["id"],
+                    Id = Convert.ToUInt32(table.Rows[i]["id"]),
                     CreateTime = (DateTime)table.Rows[i]["create_time"],
                     Title = table.Rows[i]["title"] as string,
                     Explain = table.Rows[i]["explain"] as string,
-                    State = (sbyte)table.Rows[i]["state"],
+                    State = Convert.ToSByte(table.Rows[i]["state"]),
                 };
             }
             return beans;

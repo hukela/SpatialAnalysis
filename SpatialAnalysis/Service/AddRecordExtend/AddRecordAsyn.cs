@@ -50,6 +50,8 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                     SeeDirectory(rootDir, 0);
                 }
                 isRunning = false;
+                programWindow.WriteAll("记录完成，建立索引...\n");
+                Extend.BuildIndex(incidentId);
                 //收尾工作
                 long count = RecordMapper.Count(incidentId);
                 IncidentMapper.SetStateById(incidentId, 0);
@@ -57,15 +59,16 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                     //删除以前记录失败的作废表格
                     Extend.DeleteErrorTable(incidentId);
                 TimeSpan consumption = DateTime.Now - startTime;
-                Log.Info(string.Concat("数据记录完成, 记录：", count, "(", beanCount, ")，耗时：", consumption));
-                programWindow.WriteAll("数据记录完成，耗时：" +
-                    string.Concat(consumption.Days * 24 + consumption.Hours, "小时", consumption.Minutes, "分"));
+                Log.Info(string.Format("数据记录完成, 记录：{0}({1}), 耗时：{2}", count, beanCount, consumption));
+                programWindow.WriteLine(string.Format("数据记录完成，耗时：{0}小时{1}分。",
+                    consumption.Days * 24 + consumption.Hours, consumption.Minutes));
                 programWindow.RunOver();
             }
             catch (Exception e)
             {
                 Log.Add(e);
-                programWindow.WriteLine("错误：");
+                isRunning = false;
+                programWindow.WriteLine("\n错误：");
                 programWindow.WriteLine(e.Message);
                 programWindow.RunOver();
                 //throw e;
@@ -74,7 +77,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
         //用于告知当前进度的
         private ulong beanCount = 0;
         private string plies2Path = "";
-        private bool isRunning;
+        private volatile bool isRunning;
         private void ShowProgress(object obj)
         {
             ProgramWindow window = (ProgramWindow)obj;

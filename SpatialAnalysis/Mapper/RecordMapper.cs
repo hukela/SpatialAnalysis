@@ -97,26 +97,26 @@ namespace SpatialAnalysis.Mapper
                 ulong targetId = 0;
                 if (table.Columns.Contains("incident_id"))
                 {
-                    incidentId = (uint)row["incident_id"];
-                    targetId = (ulong)row["target_id"];
+                    incidentId = Convert.ToUInt32(row["incident_id"]);
+                    targetId = Convert.ToUInt64(row["target_id"]);
                 }
                 RecordBean bean = new RecordBean()
                 {
-                    Id = (ulong)row["id"],
-                    ParentId = (ulong)row["parent_id"],
+                    Id = Convert.ToUInt64(row["id"]),
+                    ParentId = Convert.ToUInt64(row["parent_id"]),
                     IncidentId = incidentId,
                     TargetId = targetId,
                     Path = (string)row["path"],
-                    Plies = (uint)row["plies"],
+                    Plies = Convert.ToUInt32(row["plies"]),
                     Size = BigInteger.Parse(row["size"] as string),
                     SpaceUsage = BigInteger.Parse(row["space_usage"] as string),
                     CerateTime = (DateTime)row["create_time"],
                     ModifyTime = (DateTime)row["modify_time"],
                     VisitTime = (DateTime)row["visit_time"],
                     Owner = row["owner"] as string,
-                    ExceptionCode = (int)row["exception_code"],
-                    FileCount = (uint)row["file_count"],
-                    DirCount = (uint)row["dir_count"],
+                    ExceptionCode = Convert.ToInt32(row["exception_code"]),
+                    FileCount = Convert.ToUInt32(row["file_count"]),
+                    DirCount = Convert.ToUInt32(row["dir_count"]),
                 };
                 beans[i] = bean;
             }
