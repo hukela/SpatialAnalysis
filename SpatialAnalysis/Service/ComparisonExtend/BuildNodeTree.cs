@@ -1,57 +1,52 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SpatialAnalysis.Service.ComparisonExtend
 {
     internal class BuildNodeTree
     {
-
+        public static DirNode[] RootChildrenNodes()
+        {
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            return null;
+        }
         /// <summary>
         /// 建立该节点的子节点
         /// </summary>
         /// <param name="node">文件夹节点</param>
-        public static DirNode[] GetChildrenNodes(DirNode node)
+        public static DirNode[] BuildChildrenNodes(DirNode node)
         {
             //获取对应节点下的文件夹列表
             RecordBean[] oldBeans;
-            if (node.OldIncidentId == 0)
+            if (node.OldBean.IncidentId == 0)
                 oldBeans = new RecordBean[0];
             else
-                oldBeans = RecordMapper.GetBeansByPid(node.OldId, node.OldIncidentId);
+                oldBeans = RecordMapper.GetBeansByPid(node.OldBean.Id, node.OldBean.IncidentId);
             RecordBean[] newBeans;
-            if (node.NewIncidentId == 0)
+            if (node.NewBean.IncidentId == 0)
                 newBeans = new RecordBean[0];
             else
-                newBeans = RecordMapper.GetBeansByPid(node.NewId, node.NewIncidentId);
+                newBeans = RecordMapper.GetBeansByPid(node.NewBean.Id, node.NewBean.IncidentId);
             List<DirNode> dirNodes = new List<DirNode>();
-            //遍历两个文件夹列表
+            //基于oldBeans建立节点
             foreach (RecordBean oldBean in oldBeans)
             {
-                RecordBean newBean = null;
-                //去除重复项
-                for (int i = 0; i < newBeans.Length; i++)
-                {
-                    if (newBeans[i] == null)
-                        continue;
-                    if (oldBean.Path == newBeans[i].Path)
-                    {
-                        newBean = newBeans[i];
-                        newBeans[i] = null;
-                    }
-                }
-                //建立node
+                RecordBean newBean = GetOneByPath(oldBean.Path, newBeans);
+                RecordBean tOldBean = GetTargectBean(oldBean);
+                RecordBean tNewBean = GetTargectBean(newBean);
                 DirNode dirNode = new DirNode()
                 {
-                    Name = oldBean.Name,
-                    Path = oldBean.Path,
+                    Name = tOldBean.Name,
+                    Path = tOldBean.Path,
+                    OldBean = tOldBean,
                 };
-                SetOldId(ref dirNode, oldBean, node.OldIncidentId);
                 //设置类型
-                if (newBean != null)
+                if (tNewBean != null)
                 {
-                    SetNewId(ref dirNode, newBean, node.NewIncidentId);
-                    if (oldBean.Equals(newBean))
+                    dirNode.NewBean = tNewBean;
+                    if (tOldBean.Equals(tNewBean))
                         dirNode.Type = DirNodeType.Unchanged;
                     else
                         dirNode.Type = DirNodeType.Changed;
@@ -65,14 +60,14 @@ namespace SpatialAnalysis.Service.ComparisonExtend
             {
                 if (newBean == null)
                     continue;
+                RecordBean tNewBean = GetTargectBean(newBean);
                 DirNode dirNode = new DirNode()
                 {
-                    Name = newBean.Name,
-                    Path = newBean.Path,
-                    //新增的节点
+                    Name = tNewBean.Name,
+                    Path = tNewBean.Path,
+                    NewBean = tNewBean,
                     Type = DirNodeType.Added,
                 };
-                SetNewId(ref dirNode, newBean, node.NewIncidentId);
                 dirNodes.Add(dirNode);
             }
             //添加标签
@@ -90,33 +85,44 @@ namespace SpatialAnalysis.Service.ComparisonExtend
             }
             return dirNodes.ToArray();
         }
-        //若有指针的话，则调整node的基础节点为指针所在的节点
-        private static void SetOldId(ref DirNode node, RecordBean bean, uint incidentId)
+        //基于oldBean筛选newBenan
+        private static RecordBean GetOneByPath(string path, RecordBean[] beans)
         {
-            if (bean.IncidentId != 0)
+            RecordBean newBean = null;
+            for (int i = 0; i < beans.Length; i++)
             {
-                node.OldIncidentId = bean.IncidentId;
-                node.OldId = bean.TargetId;
+                if (beans[i] == null)
+                    continue;
+                if (path == beans[i].Path)
+                {
+                    newBean = beans[i];
+                    beans[i] = null;
+                }
             }
-            else
-            {
-                node.OldIncidentId = incidentId;
-                node.OldId = bean.Id;
-            }
+            return newBean;
         }
-        //作用同上，调整新记录的指针
-        private static void SetNewId(ref DirNode node, RecordBean bean, uint incidentId)
+        enum BeanType {Old, New}
+        private static DirNode BuildNode(RecordBean bean, BeanType beanType)
         {
             if (bean.IncidentId != 0)
+                bean = RecordMapper.GetOneById(bean.TargetId, bean.IncidentId);
+            DirNode node = new DirNode()
             {
-                node.NewIncidentId = bean.IncidentId;
-                node.NewId = bean.TargetId;
-            }
-            else
+                Name = bean.Name,
+                Path = bean.Path
+            };
+            switch (beanType)
             {
-                node.NewIncidentId = incidentId;
-                node.NewId = bean.Id;
+                case BeanType.Old: node.OldBean = bean; break;
+                case BeanType.New: node.NewBean = bean; break;
             }
+            return node;
+        }
+        private static RecordBean GetTargectBean(RecordBean bean)
+        {
+            if (bean.IncidentId != 0)
+                bean = RecordMapper.GetOneById(bean.TargetId, bean.IncidentId);
+            return bean;
         }
     }
 }

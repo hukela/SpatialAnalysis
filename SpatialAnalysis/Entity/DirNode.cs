@@ -11,10 +11,8 @@
     //对比页面的文件夹节点
     internal class DirNode
     {
-        public uint OldIncidentId { get; set; }
-        public ulong OldId { get; set; }
-        public uint NewIncidentId { get; set; }
-        public ulong NewId { get; set; }
+        public RecordBean OldBean { get; set; }
+        public RecordBean NewBean { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
         public DirNodeType Type {get;set;}

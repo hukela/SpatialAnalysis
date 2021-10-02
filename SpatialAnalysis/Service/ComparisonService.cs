@@ -40,9 +40,9 @@ namespace SpatialAnalysis.Service
                 NewIncidentId = newIncidentId,
                 NewId = 0,
             };
-            DirNode[] nodes = BuildNodeTree.GetChildrenNodes(baseNode);
+            DirNode[] nodes = BuildNodeTree.BuildChildrenNodes(baseNode);
             foreach (DirNode node in nodes)
-                node.Children = BuildNodeTree.GetChildrenNodes(node);
+                node.Children = BuildNodeTree.BuildChildrenNodes(node);
             return nodes;
         }
         /// <summary>
@@ -56,7 +56,7 @@ namespace SpatialAnalysis.Service
                 if (dirNode.Children != null)
                     continue;
                 else
-                    dirNode.Children = BuildNodeTree.GetChildrenNodes(dirNode);
+                    dirNode.Children = BuildNodeTree.BuildChildrenNodes(dirNode);
             }
         }
         public static void RefreshNode(ref DirNode dirNode)
@@ -68,7 +68,7 @@ namespace SpatialAnalysis.Service
             dirNode.IsRootTag = isThis;
             dirNode.Tag = tagBean;
             //刷新子节点
-            dirNode.Children = BuildNodeTree.GetChildrenNodes(dirNode);
+            dirNode.Children = BuildNodeTree.BuildChildrenNodes(dirNode);
         }
         /// <summary>
         /// 通过节点获取文件夹的比较信息
