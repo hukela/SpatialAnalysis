@@ -150,7 +150,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
             if (isFirst)
                 SaveBeanForFirstRecord(bean, childDirBeans);
             else
-                bean = SaveBeanForOtherRecord(bean, childDirBeans);
+                SaveBeanForOtherRecord(bean, childDirBeans);
             return bean;
         }
         // 第一次记录
@@ -171,14 +171,14 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
         }
         // 后续记录需要过滤掉未变化的重复项
-        private RecordBean SaveBeanForOtherRecord(RecordBean bean, RecordBean[] childDirBeans)
+        private void SaveBeanForOtherRecord(RecordBean bean, RecordBean[] childDirBeans)
         {
             RecordBean targetBean = Extend.GetLastBean(bean.Path);
             if (targetBean == null)
                 bean.IsChange = true;
             else
                 bean.IsChange = bean.IsChange || !bean.Equals(targetBean);
-            //如果该bean没有变化，则不再记录(对于根节点例外)
+            //如果该bean没有变化，则不再记录
             if (bean.IsChange)
             {
                 bean.Id = RecordMapper.AddOne(bean, incidentId, false);
@@ -191,6 +191,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                     TargectId = bean.Id,
                 });
                 foreach (RecordBean dirBean in childDirBeans)
+                {
                     if (dirBean.IsChange)
                         RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
                     else
@@ -200,20 +201,14 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                         RecordMapper.AddOne(dirBean, incidentId, false);
                         beanCount++;
                     }
+                }
             }
             else
             {
-                uint plies = bean.Plies;
-                //为未改变节点添加索引并舍弃其他数据
-                bean = new RecordBean()
-                {
-                    IncidentId = targetBean.IncidentId,
-                    TargetId = targetBean.Id,
-                };
-                if (plies == 0)
-                    RecordMapper.AddOne(bean, incidentId, false);
+                //为未改变节点添加索引
+                bean.IncidentId = targetBean.IncidentId;
+                bean.TargetId = targetBean.Id;
             }
-            return bean;
         }
     }
 }
