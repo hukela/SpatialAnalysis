@@ -1,9 +1,11 @@
 ﻿using SpatialAnalysis.Entity;
+using SpatialAnalysis.IO;
 using SpatialAnalysis.IO.Log;
 using SpatialAnalysis.Mapper;
 using SpatialAnalysis.MyWindow;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace SpatialAnalysis.Service.AddRecordExtend
@@ -209,6 +211,61 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 bean.IncidentId = targetBean.IncidentId;
                 bean.TargetId = targetBean.Id;
             }
+        }
+    }
+
+    internal class Extend
+    {
+        //建立表格
+        internal static void BuildTable(uint incidentId, bool isFiest)
+        {
+            string path = Base.locolPath + @"\Data\record.sql";
+            string sql = TextFile.ReadAll(path, Encoding.UTF8);
+            sql = sql.Replace("{incidentId}", incidentId.ToString());
+            if (isFiest)
+            {
+                while (sql.IndexOf("{isNotFirst}") != -1)
+                {
+                    int startIndex = sql.IndexOf("{isNotFirst}");
+                    int endIndex = sql.IndexOf("{/isNotFirst}");
+                    sql = sql.Remove(startIndex, endIndex - startIndex + 13);
+                }
+            }
+            else
+            {
+                sql = sql.Replace("{isNotFirst}", "");
+                sql = sql.Replace("{/isNotFirst}", "");
+            }
+            SQLiteClient.ExecuteSql(sql);
+        }
+        //建立索引
+        internal static void BuildIndex(uint incidentId)
+        {
+            string path = Base.locolPath + @"\Data\index.sql";
+            string sql = TextFile.ReadAll(path, Encoding.UTF8);
+            sql = sql.Replace("{incidentId}", incidentId.ToString());
+            SQLiteClient.ExecuteSql(sql);
+        }
+        //删除作废表格
+        internal static void DeleteErrorTable(uint incidentId)
+        {
+            if (incidentId == 1)
+                return;
+            for (uint i = 1; i < incidentId; i++)
+                RecordMapper.DeleteTable(i);
+        }
+        //通过路径获取最新的记录节点
+        internal static RecordBean GetLastBean(string path)
+        {
+            DirIndexBean dirIndex = DirIndexMapper.GetOneByPath(path);
+            if (dirIndex == null)
+                return null;
+            RecordBean bean = RecordMapper.GetOneById(dirIndex.TargectId, dirIndex.IncidentId);
+            if (bean == null)
+                return null;
+            //告知该bean是属于哪一个事件的
+            bean.IncidentId = dirIndex.IncidentId;
+            return bean;
         }
     }
 }

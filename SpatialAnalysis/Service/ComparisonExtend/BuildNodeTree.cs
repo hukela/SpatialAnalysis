@@ -11,7 +11,7 @@ namespace SpatialAnalysis.Service.ComparisonExtend
         /// 建立该节点的子节点
         /// </summary>
         /// <param name="node">文件夹节点</param>
-        public static DirNode[] GetChildrenNodes(DirNode node)
+        public static void BuildChildrenNodes(DirNode node)
         {
             //获取对应节点下的文件夹列表
             RecordBean[] oldBeans;
@@ -45,6 +45,8 @@ namespace SpatialAnalysis.Service.ComparisonExtend
                 {
                     Name = oldBean.Name,
                     Path = oldBean.Path,
+                    // 放入一个空数组，告知页面该节点可以展开
+                    Children = oldBean.DirCount > 0 ? new DirNode[1] : null,
                 };
                 SetOldId(ref dirNode, oldBean, node.OldIncidentId);
                 //设置类型
@@ -69,6 +71,7 @@ namespace SpatialAnalysis.Service.ComparisonExtend
                 {
                     Name = newBean.Name,
                     Path = newBean.Path,
+                    Children = newBean.DirCount > 0 ? new DirNode[1] : null,
                     //新增的节点
                     Type = DirNodeType.Added,
                 };
@@ -88,7 +91,7 @@ namespace SpatialAnalysis.Service.ComparisonExtend
                 dirNode.IsRootTag = isThis;
                 dirNode.Tag = tagBean;
             }
-            return dirNodes.ToArray();
+            node.Children = dirNodes.ToArray();
         }
         //若有指针的话，则调整node的基础节点为指针所在的节点
         private static void SetOldId(ref DirNode node, RecordBean bean, uint incidentId)

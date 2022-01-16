@@ -17,7 +17,7 @@ namespace SpatialAnalysis.MyPage
         //被选中树节点
         TreeViewItem selectedItem;
         //绑定事件选择数据
-        private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             int index = oldIncident.SelectedIndex;
             oldIncident.ItemsSource = ComparisonService.GetComboBoxResource();
@@ -44,14 +44,16 @@ namespace SpatialAnalysis.MyPage
             dirTree.ItemsSource = ComparisonService.GetRootNodes(oldIncidentId, newIncidentId);
         }
         //展开节点事件
-        private void TreeViewItem_Expanded(object sender, System.Windows.RoutedEventArgs e)
+        private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
             selectedItem = sender as TreeViewItem;
             DirNode dirNode = selectedItem.DataContext as DirNode;
-            ComparisonService.BuiledNodeChildren(ref dirNode);
+            bool needUpdate = ComparisonService.BuiledNodeChildren(dirNode);
+            if (needUpdate)
+                selectedItem.ItemsSource = dirNode.Children;
         }
         //选中文件夹的事件
-        private void DirTree_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        private void DirTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             ComparisonInfo info = ComparisonService.GetInfoByNode(dirTree.SelectedItem as DirNode);
             //将页面上已经存在的数据放入，减少与数据库的交互和重复的计算
@@ -60,7 +62,7 @@ namespace SpatialAnalysis.MyPage
             comparisonGrid.DataContext = info;
         }
         //为所选目录添加标签
-        private void AddTag_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void AddTag_Click(object sender, RoutedEventArgs e)
         {
             if (!(dirTree.SelectedItem is DirNode dirNode))
             {

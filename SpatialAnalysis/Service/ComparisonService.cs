@@ -40,24 +40,20 @@ namespace SpatialAnalysis.Service
                 NewIncidentId = newIncidentId,
                 NewId = 0,
             };
-            DirNode[] nodes = BuildNodeTree.GetChildrenNodes(baseNode);
-            foreach (DirNode node in nodes)
-                node.Children = BuildNodeTree.GetChildrenNodes(node);
-            return nodes;
+            BuildNodeTree.BuildChildrenNodes(baseNode);
+            return baseNode.Children;
         }
         /// <summary>
         /// 建立该节点中子节点的子节点
         /// </summary>
-        public static void BuiledNodeChildren(ref DirNode baseNode)
+        /// <returns>该节点数据是否被刷新</returns>
+        public static bool BuiledNodeChildren(DirNode dirNode)
         {
-            foreach (DirNode dirNode in baseNode.Children)
-            {
-                //防止重复计算
-                if (dirNode.Children != null)
-                    continue;
-                else
-                    dirNode.Children = BuildNodeTree.GetChildrenNodes(dirNode);
-            }
+            bool update = dirNode.Children.Length != 0 && dirNode.Children[0] == null;
+            //防止重复计算
+            if (update)
+                BuildNodeTree.BuildChildrenNodes(dirNode);
+            return update;
         }
         public static void RefreshNode(ref DirNode dirNode)
         {
@@ -68,7 +64,7 @@ namespace SpatialAnalysis.Service
             dirNode.IsRootTag = isThis;
             dirNode.Tag = tagBean;
             //刷新子节点
-            dirNode.Children = BuildNodeTree.GetChildrenNodes(dirNode);
+            BuildNodeTree.BuildChildrenNodes(dirNode);
         }
         /// <summary>
         /// 通过节点获取文件夹的比较信息

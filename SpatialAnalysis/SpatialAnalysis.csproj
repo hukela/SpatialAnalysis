@@ -71,7 +71,7 @@
     <ManifestKeyFile>SpatialAnalysis_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -143,7 +143,6 @@
     </Compile>
     <Compile Include="Service\AddRecordExtend\AddRecordAsyn.cs" />
     <Compile Include="Service\AddRecordExtend\BeanFactory.cs" />
-    <Compile Include="Service\AddRecordExtend\Extend.cs" />
     <Compile Include="Service\AddRecordService.cs" />
     <Compile Include="Service\ComparisonExtend\BuildNodeTree.cs" />
     <Compile Include="Service\ComparisonService.cs" />
@@ -280,7 +279,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="SpatialAnalysis_TemporaryKey.pfx" />
     <None Include="Data\main - 备份.db" />
     <None Include="Data\main.db" />
   </ItemGroup>

@@ -23,7 +23,7 @@
                     <Grid>
                         <TextBlock Text="{Binding Path=Title}"
                                    Style="{StaticResource incident-title}"/>
-                        <TextBlock Text="{Binding Path=TimeFormat}"
+                        <TextBlock Text="{Binding Path=CreateTimeFormat}"
                                    Style="{StaticResource incident-time}">
                         </TextBlock>
                     </Grid>
@@ -36,7 +36,7 @@
                     <Grid>
                         <TextBlock Text="{Binding Path=Title}"
                                    Style="{StaticResource incident-title}"/>
-                        <TextBlock Text="{Binding Path=TimeFormat}"
+                        <TextBlock Text="{Binding Path=CreateTimeFormat}"
                                    Style="{StaticResource incident-time}"/>
                     </Grid>
                 </HierarchicalDataTemplate>
@@ -52,18 +52,12 @@
                 <TreeView.Resources>
                     <HierarchicalDataTemplate
                         DataType="{x:Type local:DirNode}"
-                        ItemsSource="{Binding Path=Children,
-                        Mode=TwoWay,
-                        UpdateSourceTrigger=PropertyChanged}">
+                        ItemsSource="{Binding Path=Children, UpdateSourceTrigger=PropertyChanged}">
                         <WrapPanel MinWidth="60" Background="{Binding Path=Color}">
                             <Border Background="{Binding Path=Tag.Color}"
                                     Style="{StaticResource node-tag-color}"/>
-                            <TextBlock Text="{Binding Path=Name,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged}"
-                                ToolTip="{Binding Path=Name,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged}"
+                            <TextBlock Text="{Binding Path=Name}"
+                                ToolTip="{Binding Path=Name}"
                                 Style="{StaticResource node-name}"/>
                             <TextBlock Text="{Binding Path=RootTagName}"
                                        Style="{StaticResource node-name}"/>
