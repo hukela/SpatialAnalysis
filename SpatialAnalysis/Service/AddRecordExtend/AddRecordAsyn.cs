@@ -134,7 +134,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 return bean;
             }
             //用于记录子节点的bean
-            RecordBean[] childDirBeans = new RecordBean[dirs.Length]; ;
+            RecordBean[] childDirBeans = new RecordBean[dirs.Length];
             //遍历并获取子文件夹
             for (int i = 0; i < dirs.Length; i++)
             {

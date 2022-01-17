@@ -105,7 +105,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                 CerateTime = dir.CreationTime,
                 Owner = owner,
                 ExceptionCode = (int)errorCode,
-                DirCount = 1,
+                DirCount = 0,
                 IsFile = false,
                 IsChange = false,
             };

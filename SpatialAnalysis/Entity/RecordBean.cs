@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace SpatialAnalysis.Entity
+namespace SpatialAnalysis.Entity 
 {
     //记录表数据实体
     internal class RecordBean
@@ -62,13 +62,14 @@ namespace SpatialAnalysis.Entity
                 SpaceUsage = new BigInteger(0);
             SpaceUsage += bean.SpaceUsage;
             FileCount += bean.FileCount;
-            DirCount += bean.DirCount;
-            //继承是否被改变
+            // 继承是否被改变
             IsChange = IsChange || bean.IsChange;
-            //继承子一级文件的异常码
+            // 若是文件，则继承子一级文件的异常码；
             if (bean.IsFile)
                 ExceptionCode = bean.ExceptionCode | ExceptionCode;
-            //继承最新的修改和访问时间
+            else
+                DirCount += bean.DirCount + 1;
+            // 继承最新的修改和访问时间
             if (ModifyTime == null)
                 ModifyTime = bean.ModifyTime;
             else
