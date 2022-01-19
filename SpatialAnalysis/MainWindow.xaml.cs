@@ -50,7 +50,7 @@ namespace SpatialAnalysis
             }
         }
         //上一个跳转按键
-        Button lastButton;
+        private Button lastButton;
         //关闭当前按键，并打开上一个按键
         private void CloseButton(Button b)
         {

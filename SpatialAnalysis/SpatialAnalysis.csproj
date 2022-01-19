@@ -108,7 +108,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Dictionary\TagDictionary.xaml.cs" />
+    <Compile Include="Dictionary\TagDictionary.xaml.cs">
+      <DependentUpon>TagDictionary.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Entity\ComparisonInfo.cs" />
     <Compile Include="Entity\DirIndexBean.cs" />
     <Compile Include="Entity\DirNode.cs" />

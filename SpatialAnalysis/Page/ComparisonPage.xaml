@@ -13,7 +13,8 @@
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="65"/>
+            <RowDefinition Height="1"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <!-- 两个事件选择框 -->
@@ -42,9 +43,11 @@
                 </HierarchicalDataTemplate>
             </ComboBox.Resources>
         </ComboBox>
-        <Grid Grid.Row="1">
+        <Border Style="{StaticResource title-line}"/>
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="1"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!-- 树形结构 -->
@@ -63,10 +66,8 @@
                                        Style="{StaticResource node-name}"/>
                         </WrapPanel>
                     </HierarchicalDataTemplate>
-                </TreeView.Resources>
-                <!-- 为每一列添加展开事件 -->
-                <TreeView.Style>
                     <Style TargetType="TreeView">
+                        <!-- 为每一列添加展开事件 -->
                         <Setter Property="ItemContainerStyle">
                             <Setter.Value>
                                 <Style TargetType="TreeViewItem">
@@ -74,70 +75,69 @@
                                 </Style>
                             </Setter.Value>
                         </Setter>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Margin" Value="0,8,0,0"/>
                     </Style>
-                </TreeView.Style>
+                </TreeView.Resources>
             </TreeView>
+            <Border Style="{StaticResource page-line}"/>
             <!-- 详细变化信息的展示框 -->
-            <Border Grid.Column="1">
-                <Grid x:Name="comparisonGrid">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding Path=Title}" Style="{StaticResource dir-title}"/>
-                    <TextBlock Text="{Binding Path=Action}" Grid.Row="1" Style="{StaticResource dir-info}"/>
-                    <TextBlock Text="所在地址:" Grid.Row="2" Style="{StaticResource dir-info}"/>
-                    <ScrollViewer Grid.Row="3">
-                        <TextBlock Text="{Binding Path=Location}" Style="{StaticResource dir-info}"/>
-                    </ScrollViewer>
-                    <TextBlock Text="{Binding Path=TagName}" Grid.Row="4" Style="{StaticResource dir-info}"/>
-                    <Button x:Name="AddTag" Content="编辑标签" Click="AddTag_Click" Grid.Row="4" Margin="240,0,0,0"/>
-                    <TextBlock Text="{Binding Path=CreateTime}" Grid.Row="5" Style="{StaticResource dir-info}"/>
-                    <Border Grid.Row="6">
-                        <ScrollViewer>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="30"/>
-                                    <RowDefinition Height="30"/>
-                                    <RowDefinition Height="30"/>
-                                    <RowDefinition Height="30"/>
-                                    <RowDefinition Height="30"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition MinWidth="120"/>
-                                    <ColumnDefinition MinWidth="120"/>
-                                    <ColumnDefinition MinWidth="60"/>
-                                    <ColumnDefinition MinWidth="120"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="时间:" Grid.Row="0" Grid.Column="0" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=OldTime}" Grid.Row="0" Grid.Column="1" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=NewTime}" Grid.Row="0" Grid.Column="3" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="文件个数:" Grid.Row="1" Grid.Column="0" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=OldFileCount}" Grid.Row="1" Grid.Column="1" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=FileCountChanged}" Grid.Row="1" Grid.Column="2" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=NewFileCount}" Grid.Row="1" Grid.Column="3" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="文件夹个数:" Grid.Row="2" Grid.Column="0" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=OldDirCount}" Grid.Row="2" Grid.Column="1" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=DirCountChanged}" Grid.Row="2" Grid.Column="2" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=NewDirCount}" Grid.Row="2" Grid.Column="3" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="文件夹大小:" Grid.Row="3" Grid.Column="0" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=OldSize}" Grid.Row="3" Grid.Column="1" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=SizeChanged}" Grid.Row="3" Grid.Column="2" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=NewSize}" Grid.Row="3" Grid.Column="3" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="占用空间:" Grid.Row="4" Grid.Column="0" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=OldUsage}" Grid.Row="4" Grid.Column="1" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=UsageChanged}" Grid.Row="4" Grid.Column="2" Style="{StaticResource dir-table}"/>
-                                <TextBlock Text="{Binding Path=NewUsage}" Grid.Row="4" Grid.Column="3" Style="{StaticResource dir-table}"/>
-                            </Grid>
-                        </ScrollViewer>
-                    </Border>
-                </Grid>
-            </Border>
+            <Grid x:Name="comparisonGrid" d:DataContext="{x:Type local:ComparisonInfo}" Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding Path=DataContext.Title, ElementName=comparisonGrid}" Style="{StaticResource dir-title}"/>
+                <TextBlock Text="{Binding Path=DataContext.Action, ElementName=comparisonGrid}" Grid.Row="1" Style="{StaticResource dir-info}"/>
+                <TextBlock Text="所在地址:" Grid.Row="2" Style="{StaticResource dir-info}"/>
+                <ScrollViewer Grid.Row="3">
+                    <TextBlock Text="{Binding Path=Location}" Style="{StaticResource dir-info}"/>
+                </ScrollViewer>
+                <TextBlock Text="{Binding Path=TagName}" Grid.Row="4" Style="{StaticResource dir-info}"/>
+                <Button x:Name="AddTag" Content="编辑标签" Click="AddTag_Click" Grid.Row="4" Margin="240,0,0,0"/>
+                <TextBlock Text="{Binding Path=CreateTime}" Grid.Row="5" Style="{StaticResource dir-info}"/>
+                <ScrollViewer Grid.Row="6">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="120"/>
+                            <ColumnDefinition MinWidth="120"/>
+                            <ColumnDefinition MinWidth="60"/>
+                            <ColumnDefinition MinWidth="120"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="时间:" Grid.Row="0" Grid.Column="0" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=OldTime}" Grid.Row="0" Grid.Column="1" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=NewTime}" Grid.Row="0" Grid.Column="3" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="文件个数:" Grid.Row="1" Grid.Column="0" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=OldFileCount}" Grid.Row="1" Grid.Column="1" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=FileCountChanged}" Grid.Row="1" Grid.Column="2" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=NewFileCount}" Grid.Row="1" Grid.Column="3" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="文件夹个数:" Grid.Row="2" Grid.Column="0" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=OldDirCount}" Grid.Row="2" Grid.Column="1" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=DirCountChanged}" Grid.Row="2" Grid.Column="2" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=NewDirCount}" Grid.Row="2" Grid.Column="3" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="文件夹大小:" Grid.Row="3" Grid.Column="0" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=OldSize}" Grid.Row="3" Grid.Column="1" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=SizeChanged}" Grid.Row="3" Grid.Column="2" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=NewSize}" Grid.Row="3" Grid.Column="3" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="占用空间:" Grid.Row="4" Grid.Column="0" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=OldUsage}" Grid.Row="4" Grid.Column="1" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=UsageChanged}" Grid.Row="4" Grid.Column="2" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=NewUsage}" Grid.Row="4" Grid.Column="3" Style="{StaticResource dir-table}"/>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

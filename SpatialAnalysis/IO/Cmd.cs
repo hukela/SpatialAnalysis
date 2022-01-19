@@ -63,7 +63,7 @@ namespace SpatialAnalysis.IO
             process.StartInfo.FileName = path;
             ConfigCmd(process);
             process.Start();
-            //只有全部运行结束后才能拿到运行结果
+            //单线程下只有全部运行结束后才能拿到运行结果
             process.WaitForExit();
             string[] result = new string[2];
             result[0] = process.StandardOutput.ReadToEnd();

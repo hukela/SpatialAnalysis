@@ -2,3 +2,9 @@
 
 # IDE0011: 添加大括号
 csharp_prefer_braces = false
+
+# IDE0058: 永远不会使用表达式值
+dotnet_diagnostic.IDE0058.severity = none
+
+# IDE0046: 转换为条件表达式
+dotnet_diagnostic.IDE0046.severity = none

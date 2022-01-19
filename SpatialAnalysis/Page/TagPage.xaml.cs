@@ -18,10 +18,10 @@ namespace SpatialAnalysis.MyPage
     public partial class TagPage : Page
     {
         //为方便刷新页面
-        private ListBox[] nodeList;
-        long[] nodeParentId;
+        private readonly ListBox[] nodeList;
+        private readonly long[] nodeParentId;
         //当前所展示的标签
-        uint selectedTagId;
+        private uint selectedTagId;
         public TagPage()
         {
             nodeList = new ListBox[3];
@@ -37,7 +37,7 @@ namespace SpatialAnalysis.MyPage
             nodeList[2] = thirdNode;
         }
         //加载页面数据
-        private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             firstNode.ItemsSource = TagService.GetTagItemSource(0);
         }
@@ -108,6 +108,7 @@ namespace SpatialAnalysis.MyPage
                 case 2:
                     nodeParentId[3] = selectedTagId;
                     break;
+                default: break;
             }
             //刷新地址栏
             tagName.Text = string.Concat('[', bean.Name, "]所标注的地址：");
@@ -162,8 +163,8 @@ namespace SpatialAnalysis.MyPage
             }
         }
         //这里用单机事件模拟双击
-        bool isClick = false;
-        Timer timer;
+        private bool isClick = false;
+        private Timer timer;
         //路径行点击事件
         public void Path_Click(object sender, RoutedEventArgs e)
         {
@@ -224,8 +225,8 @@ namespace SpatialAnalysis.MyPage
             }
         }
         //记录该编辑项中所有的相关数据
-        Grid editedGrid;
-        bool isInIt = true;
+        private Grid editedGrid;
+        private bool isInIt = true;
         //鼠标移入事件
         private void EditedItem_MouseEnter(object sender, MouseEventArgs e) { isInIt = true; }
         //鼠标移出事件

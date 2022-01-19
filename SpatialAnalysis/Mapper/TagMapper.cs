@@ -17,8 +17,7 @@ namespace SpatialAnalysis.Mapper
             using (SQLiteCommand cmd = new SQLiteCommand ())
             {
                 cmd.CommandText = "INSERT INTO [tag] ([parent_id], [name], [color]) VALUES (@parent_id, @name, @color);";
-                object pid = bean.ParentId == 0 ? null : (object)bean.ParentId;
-                cmd.Parameters.Add("parent_id", DbType.UInt32).Value = pid;
+                cmd.Parameters.Add("parent_id", DbType.UInt32).Value = bean.ParentId;
                 cmd.Parameters.Add("name", DbType.String).Value = bean.Name;
                 cmd.Parameters.Add("color", DbType.String).Value = bean.Color;
                 SQLiteClient.Write(cmd);
@@ -49,7 +48,7 @@ namespace SpatialAnalysis.Mapper
         {
             using (SQLiteCommand cmd = new SQLiteCommand ())
             {
-                cmd.CommandText = "SELECT * FROM [tag] WHERE [parent_id] IS NULL;";
+                cmd.CommandText = "SELECT * FROM [tag] WHERE [parent_id] = 0;";
                 return GetBeanListByTable(SQLiteClient.Read(cmd));
             }
         }

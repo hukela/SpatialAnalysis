@@ -94,7 +94,6 @@ namespace SpatialAnalysis.MyWindow
         /// <param name="message">信息</param>
         public void WriteAll(string message)
         {
-            //这里委托用作匿名函数，直接将一个函数当作一个参数传递过去。
             DelegateMe(delegate (string str)
             {
                 content.Text = freezedMessage + str;

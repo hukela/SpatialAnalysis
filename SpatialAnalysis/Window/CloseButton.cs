@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Interop;
 using System.Runtime.InteropServices;
 
 namespace SpatialAnalysis.MyWindow
@@ -7,7 +6,7 @@ namespace SpatialAnalysis.MyWindow
     /// <summary>
     /// 用于禁用窗口上的关闭按键
     /// </summary>
-    class CloseButton
+    internal class CloseButton
     {
         [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         private static extern int GetSystemMenu(int hwnd, int revert);
