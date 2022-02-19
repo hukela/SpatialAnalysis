@@ -14,9 +14,21 @@
         <Setter Property="Grid.Row" Value="1"/>
     </Style>
     <Style x:Key="page-line" TargetType="Border">
-        <Setter Property="Margin" Value="0,4,0,0"/>
         <Setter Property="Background" Value="#63B8FF"/>
         <Setter Property="Grid.Column" Value="1"/>
+    </Style>
+    <Style x:Key="page-line-left" TargetType="Border">
+        <Setter Property="Background" Value="#63B8FF"/>
+        <Setter Property="Grid.Row" Value="6"/>
+    </Style>
+    <Style x:Key="grid-line-row" TargetType="Border">
+        <Setter Property="Grid.ColumnSpan" Value="7"/>
+        <Setter Property="Grid.Row" Value="1"/>
+        <Setter Property="Background" Value="#FF828790"/>
+    </Style>
+    <Style x:Key="grid-line-column" TargetType="Border">
+        <Setter Property="Grid.RowSpan" Value="6"/>
+        <Setter Property="Background" Value="#FF828790"/>
     </Style>
     <!-- 事件选择框 -->
     <Style TargetType="ComboBox">
@@ -53,17 +65,21 @@
         <Setter Property="BorderThickness" Value="1,1,1,1"/>
     </Style>
     <!-- 文件夹的比较信息 -->
-    <Style x:Key="dir-title" TargetType="TextBlock">
+    <Style x:Key="text-box-base" TargetType="TextBox">
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+    <Style x:Key="dir-title" TargetType="TextBox" BasedOn="{StaticResource text-box-base}">
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="Margin" Value="8,0,0,0"/>
         <Setter Property="Grid.Row" Value="0"/>
     </Style>
-    <Style x:Key="dir-info" TargetType="TextBlock">
+    <Style x:Key="dir-info" TargetType="TextBox" BasedOn="{StaticResource text-box-base}">
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="Margin" Value="8,0,0,0"/>
     </Style>
     <Style x:Key="dir-table" TargetType="TextBlock">

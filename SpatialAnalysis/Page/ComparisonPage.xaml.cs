@@ -55,8 +55,11 @@ namespace SpatialAnalysis.MyPage
         //选中文件夹的事件
         private void DirTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            locationTextBlock.Visibility = Visibility.Visible;
+            AddTag.Visibility = Visibility.Visible;
+            compareTable.Visibility = Visibility.Visible;
             ComparisonInfo info = ComparisonService.GetInfoByNode(dirTree.SelectedItem as DirNode);
-            //将页面上已经存在的数据放入，减少与数据库的交互和重复的计算
+            // 放入两个事件的创建时间
             info.OldTime = (oldIncident.SelectedItem as IncidentBean).CreateTimeFormat;
             info.NewTime = (newIncident.SelectedItem as IncidentBean).CreateTimeFormat;
             comparisonGrid.DataContext = info;
