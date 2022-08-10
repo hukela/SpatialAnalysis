@@ -2,6 +2,7 @@
 using SpatialAnalysis.Service;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace SpatialAnalysis.MyPage
 {
@@ -14,8 +15,7 @@ namespace SpatialAnalysis.MyPage
         {
             InitializeComponent();
         }
-        //被选中树节点
-        TreeViewItem selectedItem;
+        private TreeViewItem selectedItem = null;
         //绑定事件选择数据
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -46,22 +46,32 @@ namespace SpatialAnalysis.MyPage
         //展开节点事件
         private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
-            selectedItem = sender as TreeViewItem;
+            TreeViewItem selectedItem = sender as TreeViewItem;
             DirNode dirNode = selectedItem.DataContext as DirNode;
+            if (e == null)
+                //强制刷新子节点
+                dirNode.Children = new DirNode[1];
             bool needUpdate = ComparisonService.BuiledNodeChildren(dirNode);
             if (needUpdate)
                 selectedItem.ItemsSource = dirNode.Children;
         }
+        //用于记录被选中控件的方法
+        private void DirTree_Selected(object sender, RoutedEventArgs e)
+        { selectedItem = e.OriginalSource as TreeViewItem; }
         //选中文件夹的事件
         private void DirTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            // 显示比对信息控件
             locationTextBlock.Visibility = Visibility.Visible;
             AddTag.Visibility = Visibility.Visible;
             compareTable.Visibility = Visibility.Visible;
             ComparisonInfo info = ComparisonService.GetInfoByNode(dirTree.SelectedItem as DirNode);
-            // 放入两个事件的创建时间
-            info.OldTime = (oldIncident.SelectedItem as IncidentBean).CreateTimeFormat;
-            info.NewTime = (newIncident.SelectedItem as IncidentBean).CreateTimeFormat;
+            // 放入事件信息
+            IncidentBean oldBean = oldIncident.SelectedItem as IncidentBean;
+            IncidentBean newBean = newIncident.SelectedItem as IncidentBean;
+            info.OldTime = oldBean.CreateTimeFormat;
+            info.NewTime = newBean.CreateTimeFormat;
+            info.BuildExceptionInfo(oldBean.Title, newBean.Title);
             comparisonGrid.DataContext = info;
         }
         //为所选目录添加标签
@@ -72,10 +82,15 @@ namespace SpatialAnalysis.MyPage
                 MessageBox.Show("未选中文件夹", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
-            ComparisonService.AllOrEditTag(dirNode.Path, dirNode.Tag.Id == 0);
+            ComparisonService.AllOrEditTag(dirNode.Path, !dirNode.IsRootTag);
             //刷新页面数据
-            ComparisonService.RefreshNode(ref dirNode);
-            TreeViewItem_Expanded(selectedItem, null);
+            ComparisonService.RefreshNode(dirNode);
+            //DependencyObject parent = VisualTreeHelper.GetParent(selectedItem);
+            //while (!(parent is TreeViewItem))
+            //    parent = VisualTreeHelper.GetParent(parent);
+            //TreeViewItem_Expanded(parent, null);
+            //TreeViewItem_Expanded(selectedItem, null);
+            TreeViewItem_Expanded(ItemsControl.ItemsControlFromItemContainer(selectedItem), null);
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace SpatialAnalysis.Entity
 {
-    //获取文件异常类，使用位标志枚举，让多个异常可以共存
+    //获取文件异常类
     [Flags]
-    enum RecordExCode
+    internal enum RecordExCode
     {
         //正常
         Normal = 0x0,
@@ -19,9 +21,43 @@ namespace SpatialAnalysis.Entity
         //获取子文件占用空间失败
         SpaceUsageException = 0x8,
         // === 获取文件或文件夹所有者异常 ===
+        // todo 去除文件所有者异常
         IdentityNotMappedException = 0x10,
         ArgumentException = 0x20,
         UnauthorizedAccessException = 0x40,
         InvalidOperationException = 0x80,
+    }
+
+    internal class RecordExCodeMap
+    {
+        public static string[] GetValues(int code)
+        {
+            if (code == 0)
+                return null;
+            RecordExCode exCode = (RecordExCode)code;
+            List<string> list = new List<string>();
+            if ((exCode & RecordExCode.UnauthorizedAccess) != 0)
+                list.Add("权限不足");
+            if ((exCode & RecordExCode.IOExceptionForGetFile) != 0)
+                list.Add("读取时IO异常");
+            if ((exCode & RecordExCode.NotFound) != 0)
+                list.Add("未找到文件");
+            if ((exCode & RecordExCode.SpaceUsageException) != 0)
+                list.Add("读取文件占用空间失败");
+            return list.ToArray();
+        }
+
+        public static string GetInfo(int code, string incodentName)
+        {
+            if (code == 0)
+                return null;
+            string[] values = GetValues(code);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("记录[").Append(incodentName).Append("]异常：");
+            foreach (string exInfo in values)
+                builder.Append(exInfo).Append(",");
+            builder.Remove(builder.Length - 1, 1);
+            return builder.ToString();
+        }
     }
 }

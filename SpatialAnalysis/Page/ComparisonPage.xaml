@@ -51,7 +51,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!-- 树形结构 -->
-            <TreeView x:Name="dirTree" SelectedItemChanged="DirTree_SelectedItemChanged">
+            <TreeView x:Name="dirTree" SelectedItemChanged="DirTree_SelectedItemChanged" TreeViewItem.Selected="DirTree_Selected">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate
                         DataType="{x:Type local:DirNode}"
@@ -75,6 +75,7 @@
                                 </Style>
                             </Setter.Value>
                         </Setter>
+                        <Setter Property="BorderBrush" Value="{x:Null}"/>
                         <Setter Property="BorderThickness" Value="0"/>
                         <Setter Property="Margin" Value="0,8,0,0"/>
                     </Style>

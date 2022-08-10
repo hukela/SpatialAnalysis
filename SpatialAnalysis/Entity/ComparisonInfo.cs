@@ -19,6 +19,8 @@
         public string OldUsage { get; set; }
         public string NewUsage { get; set; }
         public string UsageChanged { get; set; }
+        public int OldExCode { get; set; }
+        public int NewExCode { get; set; }
         public string FileCountChanged
         {
             get
@@ -43,7 +45,7 @@
         }
         public string Location
         {
-            set { location = value; }
+            set => location = value;
             get
             {
                 if (location == string.Empty)
@@ -53,5 +55,30 @@
             }
         }
         private string location = string.Empty;
+        public void BuildExceptionInfo(string oldIncidentName, string newIncidentName)
+        {
+            string oldInfo = RecordExCodeMap.GetInfo(OldExCode, oldIncidentName);
+            string newInfo = RecordExCodeMap.GetInfo(NewExCode, newIncidentName);
+            if (oldInfo != null)
+            {
+                if (newInfo != null)
+                {
+                    exceptionInfo = oldInfo + "\n" + newInfo;
+                    return;
+                }
+                else
+                {
+                    exceptionInfo = oldInfo;
+                    return;
+                }
+            }
+            else
+            {
+                exceptionInfo = newInfo;
+                return;
+            }
+        }
+        private string exceptionInfo;
+        public string ExceptionInfo { get => exceptionInfo; }
     }
 }

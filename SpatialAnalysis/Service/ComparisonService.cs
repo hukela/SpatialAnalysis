@@ -55,7 +55,7 @@ namespace SpatialAnalysis.Service
                 BuildNodeTree.BuildChildrenNodes(dirNode);
             return update;
         }
-        public static void RefreshNode(ref DirNode dirNode)
+        public static void RefreshNode(DirNode dirNode)
         {
             //刷新标签
             TagBean tagBean = TagSupport.GetTagByPath(dirNode.Path, out bool isThis);
@@ -90,6 +90,7 @@ namespace SpatialAnalysis.Service
                 info.CreateTime = "创建时间：" + oldBean.CerateTime.ToString("yy-MM-dd HH:mm:ss");
                 info.OldFileCount = Convert.ToInt32(oldBean.FileCount);
                 info.OldDirCount = Convert.ToInt32(oldBean.DirCount);
+                info.OldExCode = oldBean.ExceptionCode;
                 oldSize = oldBean.Size;
                 oldUsage = oldBean.SpaceUsage;
             }
@@ -105,6 +106,7 @@ namespace SpatialAnalysis.Service
                 info.CreateTime = "创建时间：" + newBean.CerateTime.ToString("yy-MM-dd HH:mm:ss");
                 info.NewFileCount = Convert.ToInt32(newBean.FileCount);
                 info.NewDirCount = Convert.ToInt32(newBean.DirCount);
+                info.NewExCode = newBean.ExceptionCode;
                 newSize = newBean.Size;
                 newUsage = newBean.SpaceUsage;
             }
@@ -135,6 +137,7 @@ namespace SpatialAnalysis.Service
                 case DirNodeType.Deleted:
                     info.Action = "该文件夹已经被删除";
                     break;
+                default: break;
             }
             return info;
         }
