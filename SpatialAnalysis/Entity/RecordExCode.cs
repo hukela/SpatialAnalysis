@@ -28,7 +28,7 @@ namespace SpatialAnalysis.Entity
         InvalidOperationException = 0x80,
     }
 
-    internal class RecordExCodeMap
+    internal static class RecordExCodeMap
     {
         public static string[] GetValues(int code)
         {
@@ -45,19 +45,6 @@ namespace SpatialAnalysis.Entity
             if ((exCode & RecordExCode.SpaceUsageException) != 0)
                 list.Add("读取文件占用空间失败");
             return list.ToArray();
-        }
-
-        public static string GetInfo(int code, string incodentName)
-        {
-            if (code == 0)
-                return null;
-            string[] values = GetValues(code);
-            StringBuilder builder = new StringBuilder();
-            builder.Append("记录[").Append(incodentName).Append("]异常：");
-            foreach (string exInfo in values)
-                builder.Append(exInfo).Append(",");
-            builder.Remove(builder.Length - 1, 1);
-            return builder.ToString();
         }
     }
 }

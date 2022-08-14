@@ -1,12 +1,12 @@
 ﻿using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO;
-using SpatialAnalysis.IO.Log;
 using SpatialAnalysis.Mapper;
 using SpatialAnalysis.MyWindow;
 using System;
 using System.IO;
 using System.Text;
 using System.Threading;
+using SpatialAnalysis.IO.Log;
 
 namespace SpatialAnalysis.Service.AddRecordExtend
 {
@@ -77,7 +77,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
             }
         }
         //用于告知当前进度的
-        private ulong beanCount = 0;
+        private ulong beanCount;
         private string plies2Path = "";
         private volatile bool isRunning;
         private void ShowProgress(object obj)
@@ -198,7 +198,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
                         RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
                     else
                     {
-                        //将未改变的bena也记录下来
+                        //将未改变的bean也记录下来
                         dirBean.ParentId = bean.Id;
                         RecordMapper.AddOne(dirBean, incidentId, false);
                         beanCount++;
@@ -213,16 +213,15 @@ namespace SpatialAnalysis.Service.AddRecordExtend
             }
         }
     }
-
-    internal class Extend
+    internal static class Extend
     {
         //建立表格
-        internal static void BuildTable(uint incidentId, bool isFiest)
+        internal static void BuildTable(uint incidentId, bool isFirst)
         {
             string path = Base.locolPath + @"\Data\record.sql";
             string sql = TextFile.ReadAll(path, Encoding.UTF8);
             sql = sql.Replace("{incidentId}", incidentId.ToString());
-            if (isFiest)
+            if (isFirst)
             {
                 while (sql.IndexOf("{isNotFirst}") != -1)
                 {

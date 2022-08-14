@@ -31,7 +31,7 @@
                 </HierarchicalDataTemplate>
             </ComboBox.Resources>
         </ComboBox>
-        <ComboBox x:Name="newIncident" Margin="360,0,0,0" SelectionChanged="Incident_SelectionChanged">
+        <ComboBox Grid.Row="0" x:Name="newIncident" Margin="360,0,0,0" SelectionChanged="Incident_SelectionChanged">
             <ComboBox.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type local:IncidentBean}">
                     <Grid>
@@ -43,7 +43,7 @@
                 </HierarchicalDataTemplate>
             </ComboBox.Resources>
         </ComboBox>
-        <Border Style="{StaticResource title-line}"/>
+        <Border Grid.Row="1" Style="{StaticResource title-line}"/>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -81,9 +81,9 @@
                     </Style>
                 </TreeView.Resources>
             </TreeView>
-            <Border Style="{StaticResource page-line}"/>
+            <Border Grid.Column="1" Background="#63B8FF"/>
             <!-- 详细变化信息的展示框 -->
-            <Grid x:Name="comparisonGrid" d:DataContext="{x:Type local:ComparisonInfo}" Grid.Column="2">
+            <Grid x:Name="comparisonGrid" Grid.Column="2" d:DataContext="{d:DesignInstance {x:Type local:ComparisonInfo}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="30"/>
@@ -101,7 +101,7 @@
                 <TextBox Text="{Binding Path=DataContext.TagName, ElementName=comparisonGrid}" Grid.Row="4" Style="{StaticResource dir-info}"/>
                 <Button x:Name="AddTag" Content="编辑标签" Click="AddTag_Click" Grid.Row="5" Margin="250,0,0,0" Visibility="Hidden"/>
                 <TextBox Text="{Binding Path=DataContext.CreateTime, ElementName=comparisonGrid}" Grid.Row="5" Style="{StaticResource dir-info}"/>
-                <Border Style="{StaticResource page-line-left}"/>
+                <Border Grid.Row="6" Background="#63B8FF"/>
                 <ScrollViewer Grid.Row="7">
                     <Grid x:Name="compareTable" Visibility="Hidden">
                         <Grid.RowDefinitions>
@@ -111,6 +111,7 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
+                            <RowDefinition MinHeight="3"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="95"/>
@@ -121,11 +122,11 @@
                             <ColumnDefinition Width="1"/>
                             <ColumnDefinition MinWidth="130"/>
                         </Grid.ColumnDefinitions>
-                        <!-- 线段 -->
+                        <!-- 对比表格线段 -->
                         <Border Style="{StaticResource grid-line-row}"/>
-                        <Border Grid.Column="1" Style="{StaticResource grid-line-column}"/>
-                        <Border Grid.Column="3" Style="{StaticResource grid-line-column}"/>
-                        <Border Grid.Column="5" Style="{StaticResource grid-line-column}"/>
+                        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="7"/>
+                        <Border Grid.Row="0" Grid.Column="3" Grid.RowSpan="7"/>
+                        <Border Grid.Row="0" Grid.Column="5" Grid.RowSpan="7"/>
                         <!-- 文本框 -->
                         <TextBlock Text="时         间" Grid.Row="0" Grid.Column="0" Style="{StaticResource dir-table}"/>
                         <TextBlock Text="{Binding Path=DataContext.OldTime, ElementName=comparisonGrid}"
@@ -160,6 +161,12 @@
                                    Grid.Row="5" Grid.Column="4" Style="{StaticResource dir-table}"/>
                         <TextBlock Text="{Binding Path=DataContext.NewUsage, ElementName=comparisonGrid}"
                                    Grid.Row="5" Grid.Column="6" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=DataContext.ExInfo, ElementName=comparisonGrid}"
+                                   Grid.Row="6" Grid.Column="0" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=DataContext.OldExInfo, ElementName=comparisonGrid}"
+                                   Grid.Row="6" Grid.Column="2" Style="{StaticResource dir-table}"/>
+                        <TextBlock Text="{Binding Path=DataContext.NewExInfo, ElementName=comparisonGrid}"
+                                   Grid.Row="6" Grid.Column="6" Style="{StaticResource dir-table}"/>
                     </Grid>
                 </ScrollViewer>
             </Grid>

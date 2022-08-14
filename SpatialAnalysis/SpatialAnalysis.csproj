@@ -122,6 +122,7 @@
     <Compile Include="Entity\TagBean.cs" />
     <Compile Include="Entity\TagNode.cs" />
     <Compile Include="IO\Cmd.cs" />
+    <Compile Include="IO\Log\Log.cs" />
     <Compile Include="IO\MftReader.cs" />
     <Compile Include="IO\SpaceUsage.cs" />
     <Compile Include="IO\SQLiteClient.cs" />
@@ -204,7 +205,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IO\Base.cs" />
-    <Compile Include="IO\Log.cs" />
     <Compile Include="IO\XML.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -313,7 +313,9 @@
     <Content Include="Data\sqlite3.exe" />
     <Content Include="Data\record.sql" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="log" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
