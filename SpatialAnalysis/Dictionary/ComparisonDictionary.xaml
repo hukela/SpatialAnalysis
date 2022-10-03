@@ -12,6 +12,10 @@
         <Setter Property="Margin" Value="10,0,10,0"/>
         <Setter Property="Background" Value="#63B8FF"/>
     </Style>
+    <Style x:Key="info-line" TargetType="Border">
+        <Setter Property="Margin" Value="0,0,10,0"/>
+        <Setter Property="Background" Value="#63B8FF"/>
+    </Style>
     <Style x:Key="grid-line-row" TargetType="Border">
         <Setter Property="Grid.ColumnSpan" Value="7"/>
         <Setter Property="Grid.Row" Value="1"/>

@@ -105,7 +105,7 @@
                 <TextBox Text="{Binding Path=DataContext.TagName, ElementName=comparisonGrid}" Grid.Row="4" Style="{StaticResource dir-info}"/>
                 <Button x:Name="AddTag" Content="编辑标签" Click="AddTag_Click" Grid.Row="5" Margin="250,0,0,0" Visibility="Hidden"/>
                 <TextBox Text="{Binding Path=DataContext.CreateTime, ElementName=comparisonGrid}" Grid.Row="5" Style="{StaticResource dir-info}"/>
-                <Border Grid.Row="6" Background="#63B8FF"/>
+                <Border Grid.Row="6" Style="{StaticResource info-line}"/>
                 <ScrollViewer Grid.Row="7">
                     <Grid x:Name="compareTable" Visibility="Hidden">
                         <Grid.RowDefinitions>
