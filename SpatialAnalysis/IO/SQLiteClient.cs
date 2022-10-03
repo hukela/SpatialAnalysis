@@ -28,10 +28,7 @@ internal static class SQLiteClient
         {
             if (con == null)
                 return false;
-            if (con.State == ConnectionState.Closed || con.State == ConnectionState.Broken)
-                return false;
-            else
-                return true;
+            return con.State != ConnectionState.Closed && con.State != ConnectionState.Broken;
         }
     }
     /// <summary>
