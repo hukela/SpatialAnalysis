@@ -6,14 +6,14 @@ namespace SpatialAnalysis.IO
     /// <summary>
     /// 针对SQLite数据库的各种操作
     /// </summary>
-    static internal class SQLiteClient
+    internal static class SQLiteClient
     {
         /// <summary>
         /// 建立数据库链接
         /// </summary>
         static SQLiteClient()
         {
-            string conString = string.Concat("Data Source=", Base.locolPath,
+            string conString = string.Concat("Data Source=", IoBase.localPath,
                 @"\Data\main.db;Max Pool Size=10;Journal Mode=Off");
             con = new SQLiteConnection(conString);
         }

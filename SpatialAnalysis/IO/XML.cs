@@ -4,10 +4,10 @@ using System.Xml.Linq;
 
 namespace SpatialAnalysis.IO.Xml
 {
-    internal class XML : Base
+    internal static class XML
     {
         //存储文件位置
-        private static readonly string filePath = locolPath + @"\Data\Core.xml";
+        private static readonly string filePath = IoBase.localPath + @"\Data\Core.xml";
         /// <summary>
         /// xml中可选的key
         /// </summary>
@@ -33,9 +33,9 @@ namespace SpatialAnalysis.IO.Xml
             }
             //自动返回对应的数据类型
             try { return bool.Parse(value); }
-            catch { }
+            catch { /*ignored*/ }
             try { return int.Parse(value); }
-            catch { }
+            catch { /*ignored*/ }
             if (value == "null")
                 return null;
             else
@@ -74,7 +74,7 @@ namespace SpatialAnalysis.IO.Xml
             Write(key, value.ToString(), "Dictionary", "Add");
         }
         //读取
-        protected static string Read(string key, string firstNode, string secondNode)
+        private static string Read(string key, string firstNode, string secondNode)
         {
             //跳转到firstNode节点
             XElement dict = XElement.Load(filePath).Element(firstNode);
@@ -88,7 +88,7 @@ namespace SpatialAnalysis.IO.Xml
             return add.Attribute("value").Value;
         }
         //写入
-        protected static void Write(string key, string value, string firstNode, string secondNode)
+        private static void Write(string key, string value, string firstNode, string secondNode)
         {
             //根节点:Main
             XElement main = XElement.Load(filePath);

@@ -2,11 +2,11 @@
 
 namespace SpatialAnalysis.IO
 {
-    internal class Base
+    internal static class IoBase
     {
-        public static readonly string locolPath;
+        public static readonly string localPath;
         //静态构造函数
-        static Base()
+        static IoBase()
         {
             string path = System.Environment.CurrentDirectory;
             string runMode = ConfigurationManager.AppSettings["RunMode"];
@@ -23,7 +23,7 @@ namespace SpatialAnalysis.IO
                     break;
                 default: break;
             }
-            locolPath = path;
+            localPath = path;
         }
     }
 }

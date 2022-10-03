@@ -122,7 +122,7 @@
     <Compile Include="Entity\TagBean.cs" />
     <Compile Include="Entity\TagNode.cs" />
     <Compile Include="IO\Cmd.cs" />
-    <Compile Include="IO\Log\Log.cs" />
+    <Compile Include="IO\Log.cs" />
     <Compile Include="IO\MftReader.cs" />
     <Compile Include="IO\SpaceUsage.cs" />
     <Compile Include="IO\SQLiteClient.cs" />
@@ -204,7 +204,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IO\Base.cs" />
+    <Compile Include="IO\IoBase.cs" />
     <Compile Include="IO\XML.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

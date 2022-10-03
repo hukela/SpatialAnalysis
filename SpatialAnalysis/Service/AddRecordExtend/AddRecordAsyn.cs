@@ -218,7 +218,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
         //建立表格
         internal static void BuildTable(uint incidentId, bool isFirst)
         {
-            string path = Base.locolPath + @"\Data\record.sql";
+            string path = IoBase.localPath + @"\Data\record.sql";
             string sql = TextFile.ReadAll(path, Encoding.UTF8);
             sql = sql.Replace("{incidentId}", incidentId.ToString());
             if (isFirst)
@@ -240,7 +240,7 @@ namespace SpatialAnalysis.Service.AddRecordExtend
         //建立索引
         internal static void BuildIndex(uint incidentId)
         {
-            string path = Base.locolPath + @"\Data\index.sql";
+            string path = IoBase.localPath + @"\Data\index.sql";
             string sql = TextFile.ReadAll(path, Encoding.UTF8);
             sql = sql.Replace("{incidentId}", incidentId.ToString());
             SQLiteClient.ExecuteSql(sql);

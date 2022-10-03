@@ -5,9 +5,12 @@ using System.Reflection;
 
 namespace SpatialAnalysis.IO.Log
 {
-internal class Log : Base
+internal static class Log
 {
-    private static readonly string logPath = locolPath + @"\log";
+    private static readonly string logPath = IoBase.localPath + @"\log";
+    //在不读取全部内容的情况下在末尾添加内容(如果文件不存在，则新建一个) 默认UTF-8
+    private static readonly StreamWriter writer = File.AppendText(logPath + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+
     /// <summary>
     /// 添加日志信息
     /// </summary>
@@ -51,17 +54,13 @@ internal class Log : Base
     private static void AddLog(string message, string type, int i)
     {
         DateTime now = DateTime.Now;
-        string filePath = logPath + "\\" + now.ToString("yyyy-MM-dd") + ".txt";
         string time = now.ToString("hh:mm:ss.fff");
         //获取添加日志的类的路径
         StackTrace trace = new StackTrace(true);
         MethodBase method = trace.GetFrame(i).GetMethod();
         string classPath = method.DeclaringType?.FullName;
         message = time + " " + type + " " + classPath + " [" + method.ToString() + "]: " + message;
-        //在不读取全部内容的情况下在末尾添加内容(如果文件不存在，则新建一个)
-        //默认UTF-8
-        StreamWriter writer = File.AppendText(filePath);
         writer.WriteLine(message);
-        writer.Close();
+        Console.WriteLine(message);
     }
 } }
