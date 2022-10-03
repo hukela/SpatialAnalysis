@@ -31,7 +31,7 @@ public partial class ComparisonPage : Page
     //实现选择框的选中事件
     private void Incident_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        //在页面刚加载的时候，设置selectedIndex会触发这里的事件,回导致bean为null
+        //在页面刚加载的时候 设置selectedIndex会触发这里的事件 会导致bean为null
         if (!(newIncident.SelectedItem is IncidentBean bean))
             return;
         uint newIncidentId = bean.Id;
@@ -43,6 +43,13 @@ public partial class ComparisonPage : Page
             return;
         dirTree.ItemsSource = ComparisonService.GetRootNodes(oldIncidentId, newIncidentId);
     }
+
+    // 节点刷新按键点击事件
+    private void RefreshTree_OnClick(object sender, RoutedEventArgs e)
+    {
+        Incident_SelectionChanged(null, null);
+    }
+
     //展开节点事件
     private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
     {

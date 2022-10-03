@@ -18,7 +18,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <!-- 两个事件选择框 -->
-        <ComboBox x:Name="oldIncident" Margin="20,0,0,0" SelectionChanged="Incident_SelectionChanged">
+        <ComboBox Grid.Row="0" x:Name="oldIncident" Margin="20,0,0,0"
+                  Width="290" SelectionChanged="Incident_SelectionChanged">
             <ComboBox.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type local:IncidentBean}">
                     <Grid>
@@ -31,7 +32,8 @@
                 </HierarchicalDataTemplate>
             </ComboBox.Resources>
         </ComboBox>
-        <ComboBox Grid.Row="0" x:Name="newIncident" Margin="360,0,0,0" SelectionChanged="Incident_SelectionChanged">
+        <ComboBox Grid.Row="0" x:Name="newIncident" Margin="320,0,0,0"
+                  Width="290" SelectionChanged="Incident_SelectionChanged">
             <ComboBox.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type local:IncidentBean}">
                     <Grid>
@@ -43,6 +45,8 @@
                 </HierarchicalDataTemplate>
             </ComboBox.Resources>
         </ComboBox>
+        <Button x:Name="RefreshTree" Grid.Row="0" Content="刷新" Margin="620,18,0,0" Width="50" Height="30" Click="RefreshTree_OnClick"/>
+        <!-- 页面分割横线 下面是比较树以及相应比较信息 -->
         <Border Grid.Row="1" Style="{StaticResource title-line}"/>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
