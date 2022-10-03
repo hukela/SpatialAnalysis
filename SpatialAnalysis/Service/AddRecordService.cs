@@ -24,7 +24,7 @@ internal static class AddRecordService
     /// <param name="bean">事件bean</param>
     public static void AddIncident(IncidentBean bean)
     {
-        AddRecordAsyn addRecord = new AddRecordAsyn();
+        AddRecord addRecord = new AddRecord();
         Log.Info("开始添加记录");
         ProgramWindow window = new ProgramWindow();
         object[] objs = { window, bean };

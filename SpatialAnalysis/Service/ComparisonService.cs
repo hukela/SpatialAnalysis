@@ -87,7 +87,7 @@ internal static class ComparisonService
         {
             info.Title = oldBean.Name;
             info.Location = oldBean.Location;
-            info.CreateTime = "创建时间：" + oldBean.CerateTime.ToString("yy-MM-dd HH:mm:ss");
+            info.CreateTime = "创建时间：" + oldBean.CreateTime.ToString("yy-MM-dd HH:mm:ss");
             info.OldFileCount = Convert.ToInt32(oldBean.FileCount);
             info.OldDirCount = Convert.ToInt32(oldBean.DirCount);
             info.OldExCode = oldBean.ExceptionCode;
@@ -103,7 +103,7 @@ internal static class ComparisonService
         {
             info.Title = newBean.Name;
             info.Location = newBean.Location;
-            info.CreateTime = "创建时间：" + newBean.CerateTime.ToString("yy-MM-dd HH:mm:ss");
+            info.CreateTime = "创建时间：" + newBean.CreateTime.ToString("yy-MM-dd HH:mm:ss");
             info.NewFileCount = Convert.ToInt32(newBean.FileCount);
             info.NewDirCount = Convert.ToInt32(newBean.DirCount);
             info.NewExCode = newBean.ExceptionCode;

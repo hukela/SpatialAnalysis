@@ -12,7 +12,7 @@ namespace SpatialAnalysis.Utils
     {
         public static void Entrance()
         {
-            AddRecordAsyn add = new AddRecordAsyn();
+            AddRecord add = new AddRecord();
             DirectoryInfo dir = new DirectoryInfo(@"");
             //RecordBean bean = add.SeeDirectory(dir, 1);
         }

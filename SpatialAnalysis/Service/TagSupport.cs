@@ -6,21 +6,20 @@ using System.Threading;
 namespace SpatialAnalysis.Service
 {
     //提供标签支持
-    internal class TagSupport
+    internal static class TagSupport
     {
         /// <summary>
         /// 设置或刷新标签标注的数据
         /// </summary>
         public static void SetTagSort()
         {
-            Thread thrend = new Thread(SetTagSortAsyn) { Name = "SetTagSort" };
-            thrend.Start();
+            Thread thread = new Thread(SetTagSortAsyn) { Name = "SetTagSort" };
+            thread.Start();
         }
         private static void SetTagSortAsyn()
         {
             DirTagBean[] beans = DirTagMapper.GetAll();
             //根据标注长度进行排序
-            DirTagBean bean = null;
             int count = beans.Length;
             for (int r = 0; r < count; r++)
             {
@@ -29,11 +28,7 @@ namespace SpatialAnalysis.Service
                     string a = beans[i].Path;
                     string b = beans[i + 1].Path;
                     if (a.Length < b.Length)
-                    {
-                        bean = beans[i];
-                        beans[i] = beans[i + 1];
-                        beans[i + 1] = bean;
-                    }
+                        (beans[i], beans[i + 1]) = (beans[i + 1], beans[i]);
                 }
             }
             InternalStorage.Set(InternalStorage.Domain.tag, "tagSort", beans);
@@ -66,10 +61,7 @@ namespace SpatialAnalysis.Service
                     break;
                 }
             }
-            if (tagId == 0)
-                return null;
-            else
-                return TagMapper.GetOneById(tagId);
+            return tagId == 0 ? null : TagMapper.GetOneById(tagId);
         }
     }
 }

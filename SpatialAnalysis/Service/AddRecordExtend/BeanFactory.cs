@@ -24,7 +24,7 @@ internal static class BeanFactory
             Path = file.FullName,
             Plies = plies,
             Size = file.Length,
-            CerateTime = file.CreationTime,
+            CreateTime = file.CreationTime,
             ModifyTime = file.LastWriteTime,
             VisitTime = file.LastAccessTime,
             ExceptionCode = (int)RecordExCode.Normal,
@@ -101,7 +101,7 @@ internal static class BeanFactory
         {
             Path = dir.FullName,
             Plies = plies,
-            CerateTime = dir.CreationTime,
+            CreateTime = dir.CreationTime,
             Owner = owner,
             ExceptionCode = (int)errorCode,
             DirCount = 0,

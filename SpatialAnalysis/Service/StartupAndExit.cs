@@ -2,7 +2,7 @@
 
 namespace SpatialAnalysis.Service
 {
-    static internal class StartupAndExit
+    internal static class StartupAndExit
     {
         //当程序启动时执行
         public static void ApplicationStartup()

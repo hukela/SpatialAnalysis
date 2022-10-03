@@ -5,6 +5,6 @@
     {
         public string Path { get; set; }
         public uint IncidentId { get; set; }
-        public ulong TargectId { get; set; }
+        public ulong TargetId { get; set; }
     }
 }
