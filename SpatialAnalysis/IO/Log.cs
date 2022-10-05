@@ -59,8 +59,9 @@ internal static class Log
         StackTrace trace = new StackTrace(true);
         MethodBase method = trace.GetFrame(i).GetMethod();
         string classPath = method.DeclaringType?.FullName;
-        message = time + " " + type + " " + classPath + " [" + method.ToString() + "]: " + message;
+        message = time + " " + type + " " + classPath + " [" + method + "]: " + message;
         writer.WriteLine(message);
+        writer.Flush();
         Console.WriteLine(message);
     }
 } }
