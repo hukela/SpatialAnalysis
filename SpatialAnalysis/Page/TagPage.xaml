@@ -85,9 +85,9 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Border Grid.Column="0" Style="{StaticResource vertical-line}"/>
-                <ListView x:Name="pathList" Grid.Column="1"
-                          BorderBrush="{x:Null}" BorderThickness="0"
-                          ItemContainerStyle="{StaticResource path-item}"/>
+                <ListBox x:Name="pathList" Grid.Column="1"
+                         BorderBrush="{x:Null}" BorderThickness="0"
+                         ItemContainerStyle="{StaticResource path-item}"/>
             </Grid>
         </Grid>
     </Grid>

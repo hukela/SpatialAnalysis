@@ -188,11 +188,11 @@ public partial class TagPage : Page
             }
             editedGrid = grid;
             isInIt = true;
-            //为ListViewItem添加相关事件
+            //为ListBoxItem添加相关事件
             DependencyObject parent = VisualTreeHelper.GetParent(grid);
-            while (!(parent is ListViewItem))
+            while (!(parent is ListBoxItem))
                 parent = VisualTreeHelper.GetParent(parent);
-            ListViewItem item = parent as ListViewItem;
+            ListBoxItem item = parent as ListBoxItem;
             item.MouseEnter += EditedItem_MouseEnter;
             item.MouseLeave += EditedItem_MouseLeave;
             MouseLeftButtonDown += EditedItem_MouseDown;
@@ -200,7 +200,7 @@ public partial class TagPage : Page
             tagName.MouseLeftButtonDown += EditedItem_MouseDown;
             pathGrid.MouseLeftButtonDown += EditedItem_MouseDown;
             //设置textBox为聚焦
-            //因为在设置聚焦后会瞬间被ListViewItem抢去所以这里异步设置
+            //因为在设置聚焦后会瞬间被ListBoxItem抢去所以这里异步设置
             DispatcherTimer setFocus = new DispatcherTimer()
             {
                 //一微秒后设置聚焦
