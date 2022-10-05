@@ -13,10 +13,7 @@ public partial class SeeRecordPage : Page
 {
     public SeeRecordPage() { InitializeComponent(); }
 
-    private void Page_Loaded(object sender, RoutedEventArgs e)
-    {
-        InitPageData();
-    }
+    private void Page_Loaded(object sender, RoutedEventArgs e) { InitPageData(); }
 
     private void InitPageData()
     {
@@ -25,10 +22,7 @@ public partial class SeeRecordPage : Page
         incidentListBox.ItemsSource = incidents;
     }
 
-    private void ShowAll_OnChecked(object sender, RoutedEventArgs e)
-    {
-        InitPageData();
-    }
+    private void ShowAllBox_OnClick(object sender, RoutedEventArgs e) { InitPageData(); }
 
     private void IncidentListBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {

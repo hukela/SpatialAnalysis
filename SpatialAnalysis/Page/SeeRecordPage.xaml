@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
         <!-- 标题和分割线 -->
         <TextBlock Grid.Row="0" Text="查看记录" Style="{StaticResource title}"/>
-        <CheckBox x:Name="showAllBox" Grid.Row="0" Content="是否展示失败或已删除的事件" Checked="ShowAll_OnChecked"
+        <CheckBox x:Name="showAllBox" Grid.Row="0" Content="是否展示失败或已删除的事件" Click="ShowAllBox_OnClick"
                   Style="{StaticResource title-checkBox}"/>
         <Border Grid.Row="1" Style="{StaticResource title-line}"/>
         <!-- 事件记录表 -->
