@@ -274,7 +274,7 @@ public partial class TagPage : Page
         editingItem.MouseEnter -= EditedItem_MouseEnter;
         editingItem.MouseLeave -= EditedItem_MouseLeave;
         //获取相关信息
-        if (editingDirTextBox != null)
+        if (editingDirTextBox != null && editingDirTextBox.Text != string.Empty)
         {
             //添加
             if ( editingDirTagId == 0)
