@@ -41,7 +41,7 @@
             <TextBlock Grid.Row="0" Grid.Column="3" Text="创建时间" Style="{StaticResource table-head}"/>
             <!-- 表内容 -->
             <ListBox x:Name="incidentListBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
-                     ItemContainerStyle="{StaticResource table-body}">
+                     ItemContainerStyle="{StaticResource table-body}" MouseDoubleClick="IncidentListBox_OnMouseDoubleClick">
                 <ListBox.Resources>
                     <DataTemplate DataType="{x:Type local:IncidentInfo}">
                         <Grid>

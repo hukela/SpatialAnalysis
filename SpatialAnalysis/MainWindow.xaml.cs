@@ -84,4 +84,13 @@ public partial class MainWindow : Window
         pageFrame.Content = seeRecordPage;
         CloseButton(toRecordPage);
     }
+
+    /// <summary>
+    /// 跳转到指定页面
+    /// </summary>
+    /// <param name="page">页面</param>
+    public void ToPage(Page page)
+    {
+        pageFrame.Content = page;
+    }
 } }

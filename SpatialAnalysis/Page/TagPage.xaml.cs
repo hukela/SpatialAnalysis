@@ -108,7 +108,6 @@ public partial class TagPage : Page
             case 2:
                 nodeParentId[3] = selectedTagId;
                 break;
-            default: break;
         }
         //刷新地址栏
         tagName.Text = string.Concat('[', bean.Name, "]所标注的地址：");
@@ -181,8 +180,8 @@ public partial class TagPage : Page
                 {
                     element.Visibility = Visibility.Visible;
                     //顺便找到输入框控件，后面对其设置聚焦
-                    if (element is TextBox)
-                        textBox = element as TextBox;
+                    if (element is TextBox box)
+                        textBox = box;
                 }
                 else
                     element.Visibility = Visibility.Collapsed;
@@ -246,8 +245,8 @@ public partial class TagPage : Page
         string editedPath = null;
         foreach (UIElement element in editedGrid.Children)
         {
-            if (element is TextBox)
-                editedPath = (element as TextBox).Text;
+            if (element is TextBox box)
+                editedPath = box.Text;
         }
         if (editedPath != string.Empty)
         {

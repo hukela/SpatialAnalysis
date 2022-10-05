@@ -136,6 +136,9 @@
     <Compile Include="Page\ComparisonPage.xaml.cs">
       <DependentUpon>ComparisonPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Page\RecordDetailPage.xaml.cs">
+      <DependentUpon>RecordDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Page\SeeRecordPage.xaml.cs">
       <DependentUpon>SeeRecordPage.xaml</DependentUpon>
     </Compile>
@@ -223,6 +226,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Page\RecordDetailPage.xaml" />
     <Page Include="Page\SeeRecordPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
