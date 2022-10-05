@@ -31,6 +31,17 @@
     <Style x:Key="path-item" TargetType="ListBoxItem">
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     </Style>
+    <Style x:Key="path-item-edit" TargetType="TextBox">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Margin" Value="0,0,40,0"/>
+        <Setter Property="Visibility" Value="Collapsed"/>
+    </Style>
+    <Style x:Key="path-item-btn" TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Setter Property="Background" Value="#000000FF"/>
+    </Style>
     <!-- 右键菜单 -->
     <ContextMenu x:Key="tag-item-menu">
         <MenuItem Name="EditTag" Click="EditTag_Click" Header="编辑标签"/>

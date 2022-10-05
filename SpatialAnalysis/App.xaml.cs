@@ -20,18 +20,20 @@ public partial class App : Application
         //Task线程内未捕获异常处理事件
         TaskScheduler.UnobservedTaskException += ExceptionHandling;
         //UI线程未捕获异常处理事件
-        DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(ExceptionHandling);
+        DispatcherUnhandledException += ExceptionHandling;
         //非UI线程未捕获异常处理事件
-        AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExceptionHandling);
+        AppDomain.CurrentDomain.UnhandledException += ExceptionHandling;
     }
     //当程序启动时执行
     private void Application_Startup(object sender, StartupEventArgs e)
     {
+        Log.Info("程序启动");
         StartupAndExit.ApplicationStartup();
     }
     //当程序关闭时执行
     private void Application_Exit(object sender, ExitEventArgs e)
     {
+        Log.Info("程序关闭");
         StartupAndExit.ApplicationExit();
     }
     //异常处理

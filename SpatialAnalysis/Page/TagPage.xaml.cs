@@ -3,6 +3,7 @@ using SpatialAnalysis.Mapper;
 using SpatialAnalysis.MyWindow;
 using SpatialAnalysis.Service;
 using System;
+using System.Diagnostics;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,12 +37,17 @@ public partial class TagPage : Page
         nodeList[1] = secondNode;
         nodeList[2] = thirdNode;
     }
+
     //加载页面数据
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         firstNode.ItemsSource = TagService.GetTagItemSource(0);
     }
-    //通过名称获取节点层级
+
+    /// <summary>
+    /// 通过名称获取节点层级
+    /// </summary>
+    /// <param name="name">对应节点对象的名称</param>
     private int GetPliesByName(string name)
     {
         switch (name)
@@ -55,7 +61,10 @@ public partial class TagPage : Page
             default: throw new ApplicationException("无法识别新加标签的层数");
         }
     }
-    //刷新所有的节点
+
+    /// <summary>
+    /// 刷新所有的节点
+    /// </summary>
     private void RefreshAll()
     {
         for (int i = 0; i < 3; i++)
@@ -64,22 +73,25 @@ public partial class TagPage : Page
                 nodeList[i].ItemsSource = null;
             else
             {
-                int indiex = -1;
+                int index = -1;
                 uint parentId = Convert.ToUInt32(nodeParentId[i]);
                 TagBean[] items = TagService.GetTagItemSource(parentId);
                 nodeList[i].ItemsSource = items;
                 for (int k = 0; k < items.Length; k++)
                     if (nodeParentId[i + 1] == items[k].Id)
                     {
-                        indiex = k;
+                        index = k;
                         break;
                     }
-                if (indiex != -1)
-                    nodeList[i].SelectedIndex = indiex;
+                if (index != -1)
+                    nodeList[i].SelectedIndex = index;
             }
         }
     }
-    //标签的点击事件
+
+    /// <summary>
+    /// 标签的点击事件
+    /// </summary>
     private void Tag_Selected(object sender, SelectionChangedEventArgs e)
     {
         ListBox node = sender as ListBox;
@@ -113,7 +125,11 @@ public partial class TagPage : Page
         tagName.Text = string.Concat('[', bean.Name, "]所标注的地址：");
         pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
     }
-    //新建标签
+
+    /// <summary>
+    /// 新建标签
+    /// </summary>
+    /// <param name="sender">要添加标签的列表对象</param>
     public void NewTag_Click(ListBox sender)
     {
         int plies = GetPliesByName(sender.Name);
@@ -133,7 +149,11 @@ public partial class TagPage : Page
             RefreshAll();
         }
     }
-    //修改标签
+
+    /// <summary>
+    /// 修改标签
+    /// </summary>
+    /// <param name="bean">要修改的标签对象</param>
     public void EditTag_Click(TagBean bean)
     {
         TagWindow window = new TagWindow("修改标签", bean);
@@ -144,35 +164,43 @@ public partial class TagPage : Page
             RefreshAll();
         }
     }
-    //删除标签
+
+    /// <summary>
+    /// 删除标签
+    /// </summary>
+    /// <param name="tagId">标签id</param>
+    /// <param name="sender">当前标签list对象</param>
     public void DeleteTag_Click(uint tagId, ListBox sender)
     {
-        if (MessageBox.Show("是否确定删除该标签和其所有的子标签", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+        MessageBoxResult result = MessageBox.Show("是否确定删除该标签和其所有的子标签", "提示", MessageBoxButton.OKCancel);
+        if (result != MessageBoxResult.OK) return;
+        long id = Convert.ToInt64(tagId);
+        int plies = GetPliesByName(sender.Name);
+        TagService.DeleteTag(tagId);
+        if (nodeParentId[plies + 1] == id)
         {
-            long id = Convert.ToInt64(tagId);
-            int plies = GetPliesByName(sender.Name);
-            TagService.DeleteTag(tagId);
-            if (nodeParentId[plies + 1] == id)
-            {
-                for (int i = plies + 1; i < nodeParentId.Length; i++)
-                    nodeParentId[i] = -1;
-            }
-            RefreshAll();
-            pathList.ItemsSource = null;
+            for (int i = plies + 1; i < nodeParentId.Length; i++)
+                nodeParentId[i] = -1;
         }
+        RefreshAll();
+        pathList.ItemsSource = null;
     }
-    //这里用单机事件模拟双击
-    private bool isClick = false;
+
+    //这里用单击事件模拟双击
+    private bool isClick;
     private Timer timer;
-    //路径行点击事件
-    public void Path_Click(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// 路径行点击事件
+    /// </summary>
+    /// <param name="sender">展示地址的对象(TextBlock)</param>
+    private void Path_Edit(object sender, RoutedEventArgs e)
     {
         if (isClick)
         {
             timer.Stop();
             isClick = false;
             TextBox textBox = null;
-            Grid grid = VisualTreeHelper.GetParent(sender as UIElement) as Grid;
+            Grid grid = VisualTreeHelper.GetParent((UIElement)sender) as Grid;
             //进入编辑模式
             foreach (UIElement element in grid.Children)
             {
@@ -186,28 +214,24 @@ public partial class TagPage : Page
                 else
                     element.Visibility = Visibility.Collapsed;
             }
-            editedGrid = grid;
-            isInIt = true;
-            //为ListBoxItem添加相关事件
+            Debug.Assert(textBox != null, nameof(textBox) + " != null");
+            // 记录编辑状态
+            editingDirTagId = ((DirTagBean)pathList.SelectedItem).Id;
+            isEditing = true;
+            editingDirTextBox = textBox;
+            if (editingDirTagId == 0)
+                textBox.Text = string.Empty;
+            //单独为当前ListBoxItem添加相关事件 防止其他item得到干扰
             DependencyObject parent = VisualTreeHelper.GetParent(grid);
             while (!(parent is ListBoxItem))
                 parent = VisualTreeHelper.GetParent(parent);
-            ListBoxItem item = parent as ListBoxItem;
-            item.MouseEnter += EditedItem_MouseEnter;
-            item.MouseLeave += EditedItem_MouseLeave;
-            MouseLeftButtonDown += EditedItem_MouseDown;
-            pathList.MouseLeftButtonDown += EditedItem_MouseDown;
-            tagName.MouseLeftButtonDown += EditedItem_MouseDown;
-            pathGrid.MouseLeftButtonDown += EditedItem_MouseDown;
-            //设置textBox为聚焦
-            //因为在设置聚焦后会瞬间被ListBoxItem抢去所以这里异步设置
-            DispatcherTimer setFocus = new DispatcherTimer()
-            {
-                //一微秒后设置聚焦
-                Interval = new TimeSpan(10000),
-                IsEnabled = true,
-            };
-            setFocus.Tick += delegate { setFocus.Stop(); textBox.Focus(); };
+            editingItem = parent as ListBoxItem;
+            editingItem.MouseEnter += EditedItem_MouseEnter;
+            editingItem.MouseLeave += EditedItem_MouseLeave;
+            //添加保存事件
+            Application.Current.MainWindow.MouseLeftButtonDown += Path_Save;
+            //设置textBox为聚焦 因为在设置聚焦后会瞬间被ListBoxItem抢去所以这里延迟设置
+            SetFocus(textBox, 1);
         }
         else
         {
@@ -223,57 +247,76 @@ public partial class TagPage : Page
             timer.Start();
         }
     }
+
     //记录该编辑项中所有的相关数据
-    private Grid editedGrid;
-    private bool isInIt = true;
+    private bool isEditing;
+    private uint editingDirTagId;
+    private TextBox editingDirTextBox;
+    private ListBoxItem editingItem;
     //鼠标移入事件
-    private void EditedItem_MouseEnter(object sender, MouseEventArgs e) { isInIt = true; }
+    private void EditedItem_MouseEnter(object sender, MouseEventArgs e) { isEditing = true; }
     //鼠标移出事件
-    private void EditedItem_MouseLeave(object sender, MouseEventArgs e) { isInIt = false; }
-    //添加或修改标签的地址
-    public void EditedItem_MouseDown(object sender, MouseButtonEventArgs e)
+    private void EditedItem_MouseLeave(object sender, MouseEventArgs e) { isEditing = false; }
+
+    /// <summary>
+    /// 添加或修改标签的地址
+    /// </summary>
+    private void Path_Save(object sender, RoutedEventArgs e)
     {
-        if (isInIt)
-            return;
-        //取消注册事件
-        MouseLeftButtonDown -= EditedItem_MouseDown;
-        pathList.MouseLeftButtonDown -= EditedItem_MouseDown;
-        tagName.MouseLeftButtonDown -= EditedItem_MouseDown;
-        pathGrid.MouseLeftButtonDown -= EditedItem_MouseDown;
-        //获取相关信息
-        string editedGridUid = editedGrid.Uid;
-        string editedPath = null;
-        foreach (UIElement element in editedGrid.Children)
+        if (isEditing)
         {
-            if (element is TextBox box)
-                editedPath = box.Text;
+            // 保持当前焦点状态 直接设置会报异常 这里延迟设置
+            SetFocus(editingDirTextBox, 100);
+            return;
         }
-        if (editedPath != string.Empty)
+        //移除启动编辑时事件
+        Application.Current.MainWindow.MouseLeftButtonDown -= Path_Save;
+        editingItem.MouseEnter -= EditedItem_MouseEnter;
+        editingItem.MouseLeave -= EditedItem_MouseLeave;
+        //获取相关信息
+        if (editingDirTextBox != null)
         {
             //添加
-            if (editedGridUid == "newPath")
+            if ( editingDirTagId == 0)
             {
                 DirTagMapper.AddOne(new DirTagBean()
                 {
                     TagId = selectedTagId,
-                    Path = editedPath,
+                    Path = editingDirTextBox.Text,
                 });
             }
             //修改
             else
-                DirTagMapper.EditOneById(uint.Parse(editedGridUid), editedPath);
+                DirTagMapper.EditOneById(editingDirTagId, editingDirTextBox.Text);
         }
         TagSupport.SetTagSort();
+        // 刷新时保持当前选中对象
         int index = pathList.SelectedIndex;
         pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
         pathList.SelectedIndex = index;
-        isInIt = true; //设置为true，关闭该方法的相应
     }
-    //删除路径
-    public void DeletePath_Click(object sender, RoutedEventArgs e)
+
+    /// <summary>
+    /// 延迟异步设置输入框焦点
+    /// </summary>
+    /// <param name="element">设置对象</param>
+    /// <param name="time">延迟时间 单位微秒</param>
+    private void SetFocus(IInputElement element, long time)
     {
-        Grid grid = VisualTreeHelper.GetParent(sender as UIElement) as Grid;
-        DirTagMapper.DeleteOneById(uint.Parse(grid.Uid));
+        DispatcherTimer setFocus = new DispatcherTimer()
+        {
+            Interval = new TimeSpan(time * 10000),
+            IsEnabled = true,
+        };
+        setFocus.Tick += delegate { setFocus.Stop(); element.Focus(); };
+    }
+
+    /// <summary>
+    /// 删除路径
+    /// </summary>
+    private void DeletePath_Click(object sender, RoutedEventArgs e)
+    {
+        DirTagMapper.DeleteOneById(editingDirTagId);
         pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
     }
 } }

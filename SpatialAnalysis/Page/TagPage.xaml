@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:SpatialAnalysis.MyPage"
+      xmlns:local="clr-namespace:SpatialAnalysis.Entity"
       mc:Ignorable="d"
       Loaded="Page_Loaded"
       Title="TagPage" d:DesignHeight="550" d:DesignWidth="702">
@@ -87,7 +87,17 @@
                 <Border Grid.Column="0" Style="{StaticResource vertical-line}"/>
                 <ListBox x:Name="pathList" Grid.Column="1"
                          BorderBrush="{x:Null}" BorderThickness="0"
-                         ItemContainerStyle="{StaticResource path-item}"/>
+                         ItemContainerStyle="{StaticResource path-item}">
+                    <ListBox.Resources>
+                        <DataTemplate DataType="{x:Type local:DirTagBean}">
+                            <Grid>
+                                <TextBlock FontSize="16" Text="{Binding Path}" MouseLeftButtonDown="Path_Edit"/>
+                                <TextBox Text="{Binding Path}" LostFocus="Path_Save" Style="{StaticResource path-item-edit}"/>
+                                <Button Content="删除" Click="DeletePath_Click" Style="{StaticResource path-item-btn}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.Resources>
+                </ListBox>
             </Grid>
         </Grid>
     </Grid>
