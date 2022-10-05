@@ -17,7 +17,7 @@ internal static class BeanFactory
     /// <param name="file">文件info</param>
     /// <param name="plies">层数</param>
     /// <returns></returns>
-    public static RecordBean GetFileBean(FileInfo file, uint plies)
+    public static RecordBean BuildFileBean(FileInfo file, uint plies)
     {
         RecordBean bean = new RecordBean()
         {
@@ -48,7 +48,7 @@ internal static class BeanFactory
     /// <param name="dir">文件夹info</param>
     /// <param name="plies">层数</param>
     /// <returns></returns>
-    public static RecordBean GetDirBean(DirectoryInfo dir, uint plies)
+    public static RecordBean BuildDirBean(DirectoryInfo dir, uint plies)
     {
         string owner;
         RecordExCode errorCode;
@@ -90,7 +90,7 @@ internal static class BeanFactory
         catch (FileNotFoundException e)
         {
             errorCode = RecordExCode.NotFound;
-            Log.Warn(string.Format("文件夹不存在。{0}, [error code: {1}]", e.Message, errorCode));
+            Log.Warn($"文件夹不存在。{e.Message}, [error code: {errorCode}]");
             return new RecordBean()
             {
                 Path = dir.FullName,

@@ -11,7 +11,7 @@ internal static class AddRecordService
 {
     public static IncidentBean GetBean()
     {
-        IncidentBean bean = IncidentMapper.GetLastBean();
+        IncidentBean bean = IncidentMapper.SelectLastBean();
         if (bean == null)
             bean = new IncidentBean();
         bean.Title = string.Empty;

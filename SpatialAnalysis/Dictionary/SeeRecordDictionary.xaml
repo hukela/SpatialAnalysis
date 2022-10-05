@@ -2,80 +2,34 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:SpatialAnalysis.Dictionary">
 
-    <!-- 滚动条 -->
-    <Style TargetType="ScrollViewer">
-        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
-    </Style>
-    <!-- 边框 -->
-    <Style TargetType="Border">
-        <Setter Property="BorderBrush" Value="#FF828790"/>
-        <Setter Property="BorderThickness" Value="1,1,1,1"/>
-    </Style>
-    <!-- 事件选择框 -->
-    <Style TargetType="ComboBox">
-        <Setter Property="VerticalAlignment" Value="Center"/>
+    <!-- 文字 -->
+    <Style x:Key="title" TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Width" Value="300"/>
-        <Setter Property="Height" Value="28"/>
-        <Setter Property="Grid.Row" Value="0"/>
-    </Style>
-    <Style TargetType="ComboBoxItem">
-        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <Setter Property="Width" Value="600"/>
-    </Style>
-    <Style x:Key="incident-title" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Margin" Value="10,0,0,8"/>
         <Setter Property="FontSize" Value="16"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Margin" Value="8,0,0,0"/>
     </Style>
-    <Style x:Key="incident-time" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="16"/>
+    <!-- 线段上的选项框 -->
+    <Style x:Key="title-checkBox" TargetType="CheckBox">
         <Setter Property="HorizontalAlignment" Value="Right"/>
-        <Setter Property="Margin" Value="300,0,8,0"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Margin" Value="0,0,10,8"/>
     </Style>
-    <!-- 树形结构 -->
-    <Style TargetType="TreeView">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="Grid.Column" Value="0"/>
+    <!-- 线段 -->
+    <Style x:Key="title-line" TargetType="Border">
+        <Setter Property="Margin" Value="10,0,10,0"/>
+        <Setter Property="Background" Value="#63B8FF"/>
     </Style>
-    <Style x:Key="node-name" TargetType="TextBlock">
+    <!-- 表头 -->
+    <Style x:Key="table-head" TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Margin" Value="2,0,0,0"/>
-    </Style>
-    <Style x:Key="node-tag-color" TargetType="Border">
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Margin" Value="2,0,0,0"/>
-        <Setter Property="Width" Value="12"/>
-        <Setter Property="Height" Value="12"/>
-        <Setter Property="BorderBrush" Value="#C5C1AA"/>
-        <Setter Property="BorderThickness" Value="1,1,1,1"/>
-    </Style>
-    <!-- 文件夹的比较信息 -->
-    <Style x:Key="dir-title" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="18"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Margin" Value="8,0,0,0"/>
-        <Setter Property="Grid.Row" Value="0"/>
-    </Style>
-    <Style x:Key="dir-info" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="16"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Margin" Value="8,0,0,0"/>
+        <Setter Property="Margin" Value="6,5,0,0"/>
+        <Setter Property="FontSize" Value="14"/>
     </Style>
-    <Style x:Key="dir-table" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Margin" Value="8,0,0,0"/>
-    </Style>
-    <!-- 按键 -->
-    <Style TargetType="Button">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Padding" Value="4,0,4,0"/>
+    <!-- 表格内容 -->
+    <Style x:Key="table-body" TargetType="ListBoxItem">
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     </Style>
 </ResourceDictionary>

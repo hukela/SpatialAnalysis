@@ -24,11 +24,6 @@
         <Setter Property="Background" Value="#63B8FF"/>
         <Setter Property="Width" Value="1"/>
     </Style>
-    <!-- 数据框架 -->
-    <Style x:Key="data-grid" TargetType="Grid">
-        <Setter Property="Grid.Row" Value="2"/>
-        <Setter Property="Grid.Column" Value="1"/>
-    </Style>
     <!-- 标签和地址列表 -->
     <Style TargetType="ListBox">
         <Setter Property="BorderThickness" Value="0,0,0,0"/>

@@ -30,7 +30,7 @@
         <WrapPanel Grid.Row="1" Grid.Column="0" Margin="0,-1,0,0">
             <Button x:Name="toMainPage" Content="主页" Click="ToMainPage_Click"/>
             <Button x:Name="toAddRecord" Content="添加记录" Click="ToAddRecord_Click"/>
-            <Button x:Name="toIncidentPage" Content="查看事件" Click="ToIncidentPage_Click"/>
+            <Button x:Name="toRecordPage" Content="查看记录" Click="ToRecordPage_Click"/>
             <Button x:Name="toComparisonPage" Content="对比模式" Click="ToComparisonPage_Click"/>
             <Button x:Name="toTagPage" Content="编辑标签" Click="ToTagPage_Click"/>
         </WrapPanel>

@@ -15,7 +15,7 @@ internal static class ComparisonService
     /// </summary>
     public static IncidentBean[] GetComboBoxResource()
     {
-        IncidentBean[] beans = IncidentMapper.GetSuccessIncident();
+        IncidentBean[] beans = IncidentMapper.SelectSuccessIncidents();
         IncidentBean[] items = new IncidentBean[beans.Length + 1];
         items[0] = new IncidentBean
         {
@@ -74,10 +74,10 @@ internal static class ComparisonService
         //获取bean
         RecordBean oldBean = null;
         if (node.OldId != 0)
-            oldBean = RecordMapper.GetOneById(node.OldId, node.OldIncidentId);
+            oldBean = RecordMapper.SelectOneById(node.OldId, node.OldIncidentId);
         RecordBean newBean = null;
         if (node.NewId != 0)
-            newBean = RecordMapper.GetOneById(node.NewId, node.NewIncidentId);
+            newBean = RecordMapper.SelectOneById(node.NewId, node.NewIncidentId);
         //设置标签
         ComparisonInfo info = new ComparisonInfo()
         { TagName = string.Concat("标签：", node.Tag.Name ?? "没有标签") };
@@ -116,12 +116,12 @@ internal static class ComparisonService
             newUsage = BigInteger.Zero;
         }
         //单位换算
-        info.OldSize = ConversionUtil.StorageFormate(oldSize, false);
-        info.NewSize = ConversionUtil.StorageFormate(newSize, false);
-        info.SizeChanged = ConversionUtil.StorageFormate(newSize - oldSize, true);
-        info.OldUsage = ConversionUtil.StorageFormate(oldUsage, false);
-        info.NewUsage = ConversionUtil.StorageFormate(newUsage, false);
-        info.UsageChanged = ConversionUtil.StorageFormate(newUsage - oldUsage, true);
+        info.OldSize = ConversionUtil.StorageFormat(oldSize, false);
+        info.NewSize = ConversionUtil.StorageFormat(newSize, false);
+        info.SizeChanged = ConversionUtil.StorageFormat(newSize - oldSize, true);
+        info.OldUsage = ConversionUtil.StorageFormat(oldUsage, false);
+        info.NewUsage = ConversionUtil.StorageFormat(newUsage, false);
+        info.UsageChanged = ConversionUtil.StorageFormat(newUsage - oldUsage, true);
         //设置状态
         switch (node.Type)
         {

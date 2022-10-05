@@ -118,6 +118,7 @@
     <Compile Include="Entity\IncidentBean.cs" />
     <Compile Include="Entity\RecordBean.cs" />
     <Compile Include="Entity\RecordExCode.cs" />
+    <Compile Include="Entity\IncidentInfo.cs" />
     <Compile Include="Entity\ServerState.cs" />
     <Compile Include="Entity\TagBean.cs" />
     <Compile Include="Entity\TagNode.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Service\AddRecordService.cs" />
     <Compile Include="Service\ComparisonExtend\BuildNodeTree.cs" />
     <Compile Include="Service\ComparisonService.cs" />
+    <Compile Include="Service\SeeRecordService.cs" />
     <Compile Include="Service\StartupAndExit.cs" />
     <Compile Include="Service\TagService.cs" />
     <Compile Include="Service\TagSupport.cs" />
@@ -158,7 +160,6 @@
     <Compile Include="Utils\ForTest.cs" />
     <Compile Include="Utils\InternalStorage.cs" />
     <Compile Include="Utils\LocalCache.cs" />
-    <Compile Include="Utils\SortUtil.cs" />
     <Compile Include="Window\CloseButton.cs" />
     <Compile Include="Window\ProgramWindow.xaml.cs">
       <DependentUpon>ProgramWindow.xaml</DependentUpon>

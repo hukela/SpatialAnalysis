@@ -3,12 +3,62 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:SpatialAnalysis.MyPage"
-      mc:Ignorable="d" 
-      d:DesignHeight="550" d:DesignWidth="702"
-      Title="SeeRecord">
+      xmlns:local="clr-namespace:SpatialAnalysis.Entity"
+      mc:Ignorable="d" Loaded="Page_Loaded"
+      Title="SeeRecord" d:DesignHeight="550" d:DesignWidth="702">
 
+    <Page.Resources>
+        <ResourceDictionary  Source="/Dictionary/SeeRecordDictionary.xaml"/>
+    </Page.Resources>
     <Grid>
-        <TextBlock Text="1235"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="1"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <!-- 标题和分割线 -->
+        <TextBlock Grid.Row="0" Text="查看记录" Style="{StaticResource title}"/>
+        <CheckBox x:Name="showAllBox" Grid.Row="0" Content="是否展示失败或已删除的事件" Checked="ShowAll_OnChecked"
+                  Style="{StaticResource title-checkBox}"/>
+        <Border Grid.Row="1" Style="{StaticResource title-line}"/>
+        <!-- 事件记录表 -->
+        <Grid Grid.Row="2" Margin="10,4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="110"/>
+            </Grid.ColumnDefinitions>
+            <!-- 表头 -->
+            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="Silver"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="事件标题" Style="{StaticResource table-head}"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="状态" Style="{StaticResource table-head}"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="总大小" Style="{StaticResource table-head}"/>
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="创建时间" Style="{StaticResource table-head}"/>
+            <!-- 表内容 -->
+            <ListBox x:Name="incidentListBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                     ItemContainerStyle="{StaticResource table-body}">
+                <ListBox.Resources>
+                    <DataTemplate DataType="{x:Type local:IncidentInfo}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="45"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Title}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding State}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Size}"/>
+                            <TextBlock Grid.Column="3" Text="{Binding CreateTime}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.Resources>
+            </ListBox>
+        </Grid>
     </Grid>
 </Page>

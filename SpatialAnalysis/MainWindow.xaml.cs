@@ -38,7 +38,7 @@ public partial class MainWindow : Window
         bool isEnabled = SQLiteClient.IsConnected;
         toAddRecord.IsEnabled = isEnabled;
         toTagPage.IsEnabled = isEnabled;
-        toIncidentPage.IsEnabled = isEnabled;
+        toRecordPage.IsEnabled = isEnabled;
         toComparisonPage.IsEnabled = isEnabled;
         if(isEnabled)
             main = mainPage;
@@ -79,9 +79,9 @@ public partial class MainWindow : Window
         pageFrame.Content = tagPage;
         CloseButton(toTagPage);
     }
-    private void ToIncidentPage_Click(object sender, RoutedEventArgs e)
+    private void ToRecordPage_Click(object sender, RoutedEventArgs e)
     {
         pageFrame.Content = seeRecordPage;
-        CloseButton(toIncidentPage);
+        CloseButton(toRecordPage);
     }
 } }

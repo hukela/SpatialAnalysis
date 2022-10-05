@@ -16,7 +16,7 @@ internal static class RecordMapper
     /// <param name="incidentId">对应的事件id</param>
     /// <param name="isFirst">是否是第一次记录</param>
     /// <returns>该行的id</returns>
-    public static ulong AddOne(RecordBean bean, uint incidentId, bool isFirst)
+    public static ulong InsertOne(RecordBean bean, uint incidentId, bool isFirst)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -85,6 +85,7 @@ internal static class RecordMapper
         }
         return id;
     }
+
     //将数据由表格转化为bean
     private static RecordBean[] GetBeansByTable(DataTable table)
     {
@@ -122,13 +123,14 @@ internal static class RecordMapper
         }
         return beans;
     }
+
     /// <summary>
     /// 通过id设置父级id
     /// </summary>
     /// <param name="id">要修改的行id</param>
     /// <param name="incidentId">对应的事件id</param>
     /// <param name="ParentId">父级id</param>
-    public static void SetParentId(ulong id, ulong ParentId, uint incidentId)
+    public static void UpdateParentId(ulong id, ulong ParentId, uint incidentId)
     {
         using (SQLiteCommand  cmd = new SQLiteCommand ())
         {
@@ -138,13 +140,14 @@ internal static class RecordMapper
             SQLiteClient.Write(cmd);
         }
     }
+
     /// <summary>
     /// 通过id获取一个数据实体
     /// </summary>
     /// <param name="id">id</param>
     /// <param name="incidentId">对应的事件id</param>
     /// <returns>数据实体</returns>
-    public static RecordBean GetOneById(ulong id, uint incidentId)
+    public static RecordBean SelectOneById(ulong id, uint incidentId)
     {
         DataTable table;
         using (SQLiteCommand  cmd = new SQLiteCommand ())
@@ -161,6 +164,25 @@ internal static class RecordMapper
         else
             return GetBeansByTable(table)[0];
     }
+
+    /// <summary>
+    /// 查找根记录
+    /// </summary>
+    /// <param name="incidentId">对应事件id</param>
+    public static RecordBean[] SelectRootRecords(uint incidentId)
+    {
+        DataTable table;
+        using (SQLiteCommand  cmd = new SQLiteCommand ())
+        {
+            cmd.CommandText = string.Concat(
+                "select * " +
+                "from [record_", incidentId,
+                "] where [parent_id] = 0;");
+            table = SQLiteClient.Read(cmd);
+        }
+        return GetBeansByTable(table);
+    }
+
     /// <summary>
     /// 通过id获取其子一级文件夹
     /// </summary>
@@ -176,6 +198,7 @@ internal static class RecordMapper
             return GetBeansByTable(SQLiteClient.Read(cmd));
         }
     }
+
     /// <summary>
     /// 获取表中的记录总数
     /// </summary>
@@ -190,6 +213,7 @@ internal static class RecordMapper
             return (long)table.Rows[0][0];
         }
     }
+
     /// <summary>
     /// 删除对应事件的记录表格
     /// </summary>

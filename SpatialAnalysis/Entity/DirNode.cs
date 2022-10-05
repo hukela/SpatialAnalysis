@@ -21,16 +21,8 @@ internal class DirNode
     public TagBean Tag { get; set; }
     public bool IsRootTag { get; set; }
     public DirNode[] Children { get; set; }
-    public string RootTagName
-    {
-        get
-        {
-            if (IsRootTag)
-                return string.Concat('[', Tag.Name, ']');
-            else
-                return string.Empty;
-        }
-    }
+    public string RootTagName => IsRootTag ? string.Concat('[', Tag.Name, ']') : string.Empty;
+
     public string Color
     {
         get

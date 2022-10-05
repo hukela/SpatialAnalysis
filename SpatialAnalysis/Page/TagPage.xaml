@@ -30,7 +30,7 @@
             <TextBlock Text="标签：" Style="{StaticResource title}"/>
             <Border Style="{StaticResource line}"/>
             <!-- 用于展现标签的表格 -->
-            <Grid Margin="0,8,0,8" Style="{StaticResource data-grid}">
+            <Grid Grid.Row="2" Grid.Column="1" Margin="0,8,0,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="10"/>
@@ -79,7 +79,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="tagName" Text="[标签]所标注的地址：" Style="{StaticResource title}"/>
             <Border Style="{StaticResource line}"/>
-            <Grid x:Name="pathGrid" Margin="0,8,30,16" Style="{StaticResource data-grid}">
+            <Grid Grid.Row="2" Grid.Column="1" x:Name="pathGrid" Margin="0,8,30,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1"/>
                     <ColumnDefinition/>

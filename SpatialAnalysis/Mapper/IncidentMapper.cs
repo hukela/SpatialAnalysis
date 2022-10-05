@@ -13,7 +13,7 @@ internal static class IncidentMapper
     /// </summary>
     /// <param name="bean">对应的bean</param>
     /// <returns>该行的id</returns>
-    public static uint AddOne(IncidentBean bean)
+    public static uint InsertOne(IncidentBean bean)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -36,6 +36,7 @@ internal static class IncidentMapper
         }
         return id;
     }
+
     //将表格结果改为bean
     private static IncidentBean[] GetBeanByTable(DataTable table)
     {
@@ -54,10 +55,11 @@ internal static class IncidentMapper
         }
         return beans;
     }
+
     /// <summary>
     /// 获取最近一条事件
     /// </summary>
-    public static IncidentBean GetLastBean()
+    public static IncidentBean SelectLastBean()
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -70,10 +72,23 @@ internal static class IncidentMapper
                 return GetBeanByTable(table)[0];
         }
     }
+
+    /// <summary>
+    /// 查询所有记录事件
+    /// </summary>
+    public static IncidentBean[] SelectAllIncidents()
+    {
+        using (SQLiteCommand cmd = new SQLiteCommand())
+        {
+            cmd.CommandText = "SELECT * FROM [incident];";
+            return GetBeanByTable(SQLiteClient.Read(cmd));
+        }
+    }
+
     /// <summary>
     /// 获取所有的记录成功的事件
     /// </summary>
-    public static IncidentBean[] GetSuccessIncident()
+    public static IncidentBean[] SelectSuccessIncidents()
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -81,6 +96,7 @@ internal static class IncidentMapper
             return GetBeanByTable(SQLiteClient.Read(cmd));
         }
     }
+
     /// <summary>
     /// 查看是否是第一个有效记录
     /// </summary>
@@ -93,12 +109,13 @@ internal static class IncidentMapper
             return table.Rows.Count == 0;
         }
     }
+
     /// <summary>
     /// 通过id设置事件状态
     /// </summary>
     /// <param name="id">id</param>
     /// <param name="state">状态</param>
-    public static void SetStateById(uint id, sbyte state)
+    public static void UpdateStateById(uint id, IncidentStateEnum state)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {

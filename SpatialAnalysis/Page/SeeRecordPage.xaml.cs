@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using SpatialAnalysis.Entity;
+using SpatialAnalysis.Service;
 
 namespace SpatialAnalysis.MyPage
 {
@@ -20,9 +10,23 @@ namespace SpatialAnalysis.MyPage
     /// </summary>
     public partial class SeeRecordPage : Page
     {
-        public SeeRecordPage()
+        public SeeRecordPage() { InitializeComponent(); }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
+            InitPageData();
+        }
+
+        private void InitPageData()
+        {
+            bool showAll = showAllBox.IsChecked ?? false;
+            IncidentInfo[] incidents = SeeRecordService.getIncidentInfos(showAll);
+            incidentListBox.ItemsSource = incidents;
+        }
+
+        private void ShowAll_OnChecked(object sender, RoutedEventArgs e)
+        {
+            InitPageData();
         }
     }
 }

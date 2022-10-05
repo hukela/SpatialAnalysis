@@ -4,8 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SpatialAnalysis.Entity"
-      mc:Ignorable="d"
-      Loaded="Page_Loaded"
+      mc:Ignorable="d" Loaded="Page_Loaded"
       Title="ComparisonPage" d:DesignHeight="550" d:DesignWidth="702">
 
     <Page.Resources>
@@ -45,7 +44,7 @@
                 </HierarchicalDataTemplate>
             </ComboBox.Resources>
         </ComboBox>
-        <Button x:Name="RefreshTree" Grid.Row="0" Content="刷新" Margin="620,18,0,0" Width="50" Height="30" Click="RefreshTree_OnClick"/>
+        <Button Grid.Row="0" Content="刷新" Margin="620,18,0,0" Width="50" Height="30" Click="RefreshTree_OnClick"/>
         <!-- 页面分割横线 下面是比较树以及相应比较信息 -->
         <Border Grid.Row="1" Style="{StaticResource title-line}"/>
         <Grid Grid.Row="2">

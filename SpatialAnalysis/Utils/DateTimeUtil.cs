@@ -12,7 +12,7 @@ namespace SpatialAnalysis.Utils
         /// <summary> 
         /// 根据时间戳获取时间
         /// </summary>  
-        public static long GetTimeStamp(DateTime dateTime)
+        private static long GetTimeStamp(DateTime dateTime)
         {
             return Convert.ToInt64(dateTime.Subtract(_dtStart).TotalMilliseconds);
         }

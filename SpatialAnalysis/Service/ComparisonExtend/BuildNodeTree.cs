@@ -1,4 +1,5 @@
-﻿using SpatialAnalysis.Entity;
+﻿using System;
+using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
 using System.Collections.Generic;
 
@@ -16,12 +17,12 @@ internal class BuildNodeTree
         //获取对应节点下的文件夹列表
         RecordBean[] oldBeans;
         if (node.OldIncidentId == 0)
-            oldBeans = new RecordBean[0];
+            oldBeans = Array.Empty<RecordBean>();
         else
             oldBeans = RecordMapper.GetBeansByPid(node.OldId, node.OldIncidentId);
         RecordBean[] newBeans;
         if (node.NewIncidentId == 0)
-            newBeans = new RecordBean[0];
+            newBeans = Array.Empty<RecordBean>();
         else
             newBeans = RecordMapper.GetBeansByPid(node.NewId, node.NewIncidentId);
         List<DirNode> dirNodes = new List<DirNode>();

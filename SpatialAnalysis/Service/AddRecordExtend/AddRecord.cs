@@ -18,6 +18,10 @@ internal class AddRecord
     private uint incidentId;
     //当前类的线程
     public Thread thread;
+    /// <summary>
+    /// 添加记录方法
+    /// </summary>
+    /// <param name="obj">两个参数 第一个是用于输出进度的ProgramWindow 第二个是要添加记录的目标事件IncidentBean</param>
     public void AddOne(object obj)
     {
         DateTime startTime = DateTime.Now;
@@ -30,8 +34,8 @@ internal class AddRecord
         {
             //处理事件
             bean.CreateTime = DateTime.Now;
-            bean.State = 1;
-            incidentId = IncidentMapper.AddOne(bean);
+            bean.StateEnum = IncidentStateEnum.failure;
+            incidentId = IncidentMapper.InsertOne(bean);
             isFirst = IncidentMapper.IsFirstRecord();
             //第一次记录必须保证索引表为空
             if (isFirst)
@@ -56,12 +60,12 @@ internal class AddRecord
             Extend.BuildIndex(incidentId);
             //收尾工作
             long count = RecordMapper.Count(incidentId);
-            IncidentMapper.SetStateById(incidentId, 0);
+            IncidentMapper.UpdateStateById(incidentId, IncidentStateEnum.success);
             if (isFirst)
                 //删除以前记录失败的作废表格
                 Extend.DeleteErrorTable(incidentId);
             TimeSpan consumption = DateTime.Now - startTime;
-            Log.Info(string.Format("数据记录完成, 记录：{0}({1}), 耗时：{2}", count, beanCount, consumption));
+            Log.Info($"数据记录完成, 记录：{count}({beanCount}), 耗时：{consumption}");
             programWindow.WriteLine(string.Format("数据记录完成，耗时：{0}小时{1}分。",
                 consumption.Days * 24 + consumption.Hours, consumption.Minutes));
             programWindow.RunOver();
@@ -108,7 +112,7 @@ internal class AddRecord
         //告知当前进度
         if (plies == 2)
             plies2Path = baseDir.FullName;
-        RecordBean bean = BeanFactory.GetDirBean(baseDir, plies);
+        RecordBean bean = BeanFactory.BuildDirBean(baseDir, plies);
         //C盘有传送门，两个路径可以同时访问一个文件，所以这里放弃其中一个路径
         if (bean.Path == @"C:\Users\All Users") return bean;
         //获取子文件和子文件夹列表
@@ -145,7 +149,7 @@ internal class AddRecord
         //遍历并获取子文件
         foreach (FileInfo file in files)
         {
-            RecordBean fileBean = BeanFactory.GetFileBean(file, plies);
+            RecordBean fileBean = BeanFactory.BuildFileBean(file, plies);
             bean.Add(fileBean);
         }
         // 存储记录结果
@@ -159,7 +163,7 @@ internal class AddRecord
     private void SaveBeanForFirstRecord(RecordBean bean, RecordBean[] childDirBeans)
     {
         //记录并获取当前id
-        bean.Id = RecordMapper.AddOne(bean, incidentId, true);
+        bean.Id = RecordMapper.InsertOne(bean, incidentId, true);
         //记录索引
         DirIndexMapper.AddOne(new DirIndexBean()
         {
@@ -170,7 +174,7 @@ internal class AddRecord
         beanCount++;
         //设置子一级的父id
         foreach (RecordBean dirBean in childDirBeans)
-            RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
+            RecordMapper.UpdateParentId(dirBean.Id, bean.Id, incidentId);
     }
     // 后续记录需要过滤掉未变化的重复项
     private void SaveBeanForOtherRecord(RecordBean bean, RecordBean[] childDirBeans)
@@ -183,7 +187,7 @@ internal class AddRecord
         //如果该bean没有变化，则不再记录
         if (bean.IsChange)
         {
-            bean.Id = RecordMapper.AddOne(bean, incidentId, false);
+            bean.Id = RecordMapper.InsertOne(bean, incidentId, false);
             beanCount++;
             //刷新索引
             DirIndexMapper.RefreshIndex(new DirIndexBean()
@@ -195,12 +199,12 @@ internal class AddRecord
             foreach (RecordBean dirBean in childDirBeans)
             {
                 if (dirBean.IsChange)
-                    RecordMapper.SetParentId(dirBean.Id, bean.Id, incidentId);
+                    RecordMapper.UpdateParentId(dirBean.Id, bean.Id, incidentId);
                 else
                 {
-                    //将未改变的bean也记录下来
+                    //将下一层未改变的bean也记录下来
                     dirBean.ParentId = bean.Id;
-                    RecordMapper.AddOne(dirBean, incidentId, false);
+                    RecordMapper.InsertOne(dirBean, incidentId, false);
                     beanCount++;
                 }
             }
@@ -259,7 +263,7 @@ internal static class Extend
         DirIndexBean dirIndex = DirIndexMapper.GetOneByPath(path);
         if (dirIndex == null)
             return null;
-        RecordBean bean = RecordMapper.GetOneById(dirIndex.TargetId, dirIndex.IncidentId);
+        RecordBean bean = RecordMapper.SelectOneById(dirIndex.TargetId, dirIndex.IncidentId);
         if (bean == null)
             return null;
         //告知该bean是属于哪一个事件的
