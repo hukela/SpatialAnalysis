@@ -15,7 +15,7 @@ internal static class AddRecordService
         if (bean == null)
             bean = new IncidentBean();
         bean.Title = string.Empty;
-        bean.Explain = string.Empty;
+        bean.Description = string.Empty;
         return bean;
     }
     /// <summary>
