@@ -3,15 +3,14 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:SpatialAnalysis.MyPage"
-      mc:Ignorable="d"
-      Loaded="Page_Loaded"
+      xmlns:local="clr-namespace:SpatialAnalysis.Entity"
+      mc:Ignorable="d" Loaded="Page_Loaded"
       Title="AddRecord" d:DesignHeight="550" d:DesignWidth="702">
 
     <Page.Resources>
         <ResourceDictionary Source="/Dictionary/AddRecordDictionary.xaml"/>
     </Page.Resources>
-    <Grid>
+    <Grid d:DataContext="{d:DesignInstance {x:Type local:IncidentBean}}">
         <!-- 定义表格结构 -->
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -24,11 +23,11 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <!-- 表单 -->
-        <TextBlock Text="事件标题：" Style="{StaticResource left-row1}"/>
-        <TextBox Text="{Binding Path=Title}" Style="{StaticResource right-row1}"/>
-        <TextBlock Text="备注：" Style="{StaticResource left-row2}"/>
-        <TextBox Text="{Binding Path=Explain}" Style="{StaticResource right-row2}"/>
-        <Canvas>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="事件标题：" Style="{StaticResource left}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Title}" Style="{StaticResource right}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="备注：" Style="{StaticResource left}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Description}" Style="{StaticResource right-row2}"/>
+        <Canvas Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="2">
             <TextBlock x:Name="timeSpan" Text="距离上一次记录：- 天" Style="{StaticResource lastTime}"/>
             <Button x:Name="submit" Content="开始记录" Click="Submit_Click" Style="{StaticResource submit}"/>
         </Canvas>

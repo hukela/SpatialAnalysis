@@ -8,7 +8,7 @@ internal class IncidentBean
     public uint Id { get; set; }
     public DateTime CreateTime { get; set; }
     public string Title { get; set; }
-    public string Explain { get; set; }
+    public string Description { get; set; }
     public sbyte State { get; set; }
 
     public IncidentStateEnum StateEnum

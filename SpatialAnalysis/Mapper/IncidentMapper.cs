@@ -18,12 +18,12 @@ internal static class IncidentMapper
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
             cmd.CommandText = "INSERT INTO " +
-            "[incident] ([create_time],[title],[explain],[state]) " +
-            "VALUES (@create_time,@title,@explain,@state);";
-            cmd.Parameters.Add("create_time", DbType.DateTime).Value = bean.CreateTime;
+            "[incident] ([title],[description],[state],[create_time]) " +
+            "VALUES (@title,@explain,@state,@create_time);";
             cmd.Parameters.Add("title", DbType.String).Value = bean.Title;
-            cmd.Parameters.Add("explain", DbType.String).Value = bean.Explain;
+            cmd.Parameters.Add("explain", DbType.String).Value = bean.Description;
             cmd.Parameters.Add("state", DbType.SByte).Value = bean.State;
+            cmd.Parameters.Add("create_time", DbType.DateTime).Value = bean.CreateTime;
             SQLiteClient.Write(cmd);
         }
         uint id;
@@ -47,10 +47,10 @@ internal static class IncidentMapper
             beans[i] = new IncidentBean()
             {
                 Id = Convert.ToUInt32(table.Rows[i]["id"]),
-                CreateTime = (DateTime)table.Rows[i]["create_time"],
                 Title = table.Rows[i]["title"] as string,
-                Explain = table.Rows[i]["explain"] as string,
+                Description = table.Rows[i]["description"] as string,
                 State = Convert.ToSByte(table.Rows[i]["state"]),
+                CreateTime = (DateTime)table.Rows[i]["create_time"],
             };
         }
         return beans;
