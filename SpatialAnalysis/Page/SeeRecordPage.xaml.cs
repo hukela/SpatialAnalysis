@@ -15,6 +15,7 @@ public partial class SeeRecordPage : Page
 
     private void Page_Loaded(object sender, RoutedEventArgs e) { InitPageData(); }
 
+    // 加载页面数据
     private void InitPageData()
     {
         bool showAll = showAllBox.IsChecked ?? false;

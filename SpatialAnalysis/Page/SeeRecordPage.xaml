@@ -8,7 +8,7 @@
       Title="SeeRecord" d:DesignHeight="550" d:DesignWidth="702">
 
     <Page.Resources>
-        <ResourceDictionary  Source="/Dictionary/SeeRecordDictionary.xaml"/>
+        <ResourceDictionary Source="/Dictionary/SeeRecordDictionary.xaml"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>

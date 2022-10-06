@@ -1,4 +1,7 @@
+using System.Windows;
 using System.Windows.Controls;
+using SpatialAnalysis.Entity;
+using SpatialAnalysis.Mapper;
 
 namespace SpatialAnalysis.MyPage
 {
@@ -9,9 +12,15 @@ public partial class RecordDetailPage : Page
 {
     public RecordDetailPage(uint incidentId)
     {
-        this.incidentId = incidentId;
         InitializeComponent();
-        testBlock.Text = "事件id：" + incidentId;
+        incident = IncidentMapper.SelectById(incidentId);
     }
-    private readonly uint incidentId;
+
+    private readonly IncidentBean incident;
+
+    // 加载页面数据
+    private void Page_Loaded(object sender, RoutedEventArgs e)
+    {
+        incidentTitleTextBlock.Text = incident.Title;
+    }
 } }

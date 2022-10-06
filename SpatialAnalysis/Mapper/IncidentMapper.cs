@@ -57,6 +57,21 @@ internal static class IncidentMapper
     }
 
     /// <summary>
+    /// 通过id查询
+    /// </summary>
+    /// <param name="id">id</param>
+    public static IncidentBean SelectById(uint id)
+    {
+        using (SQLiteCommand cmd = new SQLiteCommand ())
+        {
+            cmd.CommandText = "SELECT * FROM [incident] WHERE [id]=@id;";
+            cmd.Parameters.Add("id", DbType.UInt32).Value = id;
+            DataTable table = SQLiteClient.Read(cmd);
+            return table.Rows.Count == 0 ? null : GetBeanByTable(table)[0];
+        }
+    }
+
+    /// <summary>
     /// 获取最近一条事件
     /// </summary>
     public static IncidentBean SelectLastBean()
@@ -66,10 +81,7 @@ internal static class IncidentMapper
             cmd.CommandText = "SELECT * FROM [incident] " +
                 "WHERE [state] = 0 ORDER BY [create_time] DESC LIMIT 1;";
             DataTable table = SQLiteClient.Read(cmd);
-            if (table.Rows.Count == 0)
-                return null;
-            else
-                return GetBeanByTable(table)[0];
+            return table.Rows.Count == 0 ? null : GetBeanByTable(table)[0];
         }
     }
 

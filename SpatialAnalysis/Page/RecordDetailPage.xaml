@@ -3,10 +3,36 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:SpatialAnalysis.MyPage"
-      mc:Ignorable="d"
-      Title="RecordDetailPage" Height="450" Width="800">
+      mc:Ignorable="d" Loaded="Page_Loaded"
+      Title="RecordDetailPage" d:DesignHeight="550" d:DesignWidth="702">
+
+    <Page.Resources>
+        <ResourceDictionary Source="/Dictionary/RecordDetailDictionary.xaml"/>
+    </Page.Resources>
     <Grid>
-        <TextBlock x:Name="testBlock"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="1"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <!-- 标题和线段 -->
+        <TextBlock Grid.Row="0" x:Name="incidentTitleTextBlock" Style="{StaticResource title}"/>
+        <Border Grid.Row="1" Style="{StaticResource title-line}"/>
+        <!-- 详细信息展示框 -->
+        <Border Grid.Row="0" Style="{StaticResource detail-border}" ToolTip="提示，好多的提示">
+            <Canvas Width="75" Height="24" Margin="0,-2">
+                <TextBlock Text="详细信息" Margin="4"/>
+                <Path Fill="Gray" Stretch="None" Canvas.Left="64" Canvas.Top="17">
+                    <Path.Data><PathGeometry>
+                        <PathFigure StartPoint="0,0">
+                            <PathSegmentCollection>
+                                <PolyLineSegment Points="8,-10"/>
+                                <PolyLineSegment Points="-8,-10"/>
+                            </PathSegmentCollection>
+                        </PathFigure>
+                    </PathGeometry></Path.Data>
+                </Path>
+            </Canvas>
+        </Border>
     </Grid>
 </Page>
