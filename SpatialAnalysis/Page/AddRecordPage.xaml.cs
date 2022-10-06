@@ -37,7 +37,7 @@ public partial class AddRecordPage : Page
         }
         else
         {
-            if (bean.Title.Length > 20)
+            if (bean.Title.Length > 25)
             {
                 MessageBox.Show("标题不得超过25个字符", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
