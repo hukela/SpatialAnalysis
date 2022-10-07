@@ -9,18 +9,20 @@
     <Page.Resources>
         <ResourceDictionary Source="/Dictionary/RecordDetailDictionary.xaml"/>
     </Page.Resources>
-    <Grid>
+    <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="1"/>
+            <RowDefinition Height="2.5*"/>
             <RowDefinition Height="1"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <!-- 标题和线段 -->
         <TextBlock Grid.Row="0" x:Name="incidentTitleTextBlock" Style="{StaticResource title}"/>
-        <Border Grid.Row="1" Style="{StaticResource title-line}"/>
+        <Border Grid.Row="1" Style="{StaticResource line-horizontal}"/>
         <!-- 详细信息展示框 -->
-        <Border Grid.Row="0" Style="{StaticResource detail-border}" ToolTip="提示，好多的提示">
-            <Canvas Width="75" Height="24" Margin="0,-2">
+        <Border Grid.Row="0" Style="{StaticResource detail-border}">
+            <Canvas Width="75" Height="24" Margin="0,-2" MouseEnter="IncidentDetail_OnMouseEnter">
                 <TextBlock Text="详细信息" Margin="4"/>
                 <Path Fill="Gray" Stretch="None" Canvas.Left="64" Canvas.Top="17">
                     <Path.Data><PathGeometry>
@@ -32,7 +34,26 @@
                         </PathFigure>
                     </PathGeometry></Path.Data>
                 </Path>
+                <Popup x:Name="incidentPopup" Style="{StaticResource detail-popup}">
+                    <Border Margin="4" BorderThickness="1" BorderBrush="Aqua" Background="White">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="-5" BlurRadius="3" Color="Black"/>
+                        </Border.Effect>
+                        <TextBlock x:Name="incidentDescriptionTextBlock" Style="{StaticResource detail}"/>
+                    </Border>
+                </Popup>
             </Canvas>
         </Border>
+        <!-- 详细信息统计图 -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1" Style="{StaticResource line-vertical}"/>
+        </Grid>
+        <!-- 标注地址 -->
+        <Border Grid.Row="3" Style="{StaticResource line-horizontal}"/>
     </Grid>
 </Page>

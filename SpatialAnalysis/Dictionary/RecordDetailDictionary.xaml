@@ -8,8 +8,12 @@
         <Setter Property="FontSize" Value="16"/>
     </Style>
     <!-- 分割线 -->
-    <Style x:Key="title-line" TargetType="Border">
-        <Setter Property="Margin" Value="10,0,10,0"/>
+    <Style x:Key="line-horizontal" TargetType="Border">
+        <Setter Property="Margin" Value="10,0"/>
+        <Setter Property="Background" Value="#63B8FF"/>
+    </Style>
+    <Style x:Key="line-vertical" TargetType="Border">
+        <Setter Property="Margin" Value="0,10"/>
         <Setter Property="Background" Value="#63B8FF"/>
     </Style>
     <!-- 详细信息 外框 -->
@@ -24,5 +28,22 @@
     <Style x:Key="detail-triangle" TargetType="Path">
         <Setter Property="Fill" Value="Gray"/>
         <Setter Property="Stretch" Value="Fill"/>
+    </Style>
+    <!-- 详细信息 内容弹框 -->
+    <Style x:Key="detail-popup" TargetType="Popup">
+        <Setter Property="Placement" Value="Center"/>
+        <Setter Property="HorizontalOffset" Value="325"/>
+        <Setter Property="VerticalOffset" Value="110"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="StaysOpen" Value="False"/>
+        <Setter Property="Width" Value="400"/>
+        <Setter Property="MinHeight" Value="200"/>
+        <Setter Property="PlacementTarget" Value="{Binding ElementName=incidentTitleTextBlock}"/>
+    </Style>
+    <!-- 详细信息 内容 -->
+    <Style x:Key="detail" TargetType="TextBlock">
+        <Setter Property="Margin" Value="4"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 </ResourceDictionary>

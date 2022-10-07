@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
 
@@ -22,5 +23,11 @@ public partial class RecordDetailPage : Page
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         incidentTitleTextBlock.Text = incident.Title;
+        incidentDescriptionTextBlock.Text = incident.Description;
+    }
+
+    private void IncidentDetail_OnMouseEnter(object sender, MouseEventArgs e)
+    {
+        incidentPopup.IsOpen = true;
     }
 } }
