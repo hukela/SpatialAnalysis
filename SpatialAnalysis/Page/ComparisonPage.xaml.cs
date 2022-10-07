@@ -25,8 +25,8 @@ public partial class ComparisonPage : Page
         index = newIncident.SelectedIndex;
         newIncident.ItemsSource = ComparisonService.GetComboBoxResource();
         newIncident.SelectedIndex = index == -1 ? 0 : index;
-        //添加标签标注缓存
-        TagSupport.CheckTagSort();
+        //检查标签标注缓存
+        TagCache.CheckTagCache();
     }
     //实现选择框的选中事件
     private void Incident_SelectionChanged(object sender, SelectionChangedEventArgs e)

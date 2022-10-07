@@ -200,12 +200,11 @@
     <Compile Include="Service\SeeRecordService.cs" />
     <Compile Include="Service\StartupAndExit.cs" />
     <Compile Include="Service\TagService.cs" />
-    <Compile Include="Service\TagSupport.cs" />
+    <Compile Include="Service\TagCache.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\ConversionUtil.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Utils\ForTest.cs" />
-    <Compile Include="Utils\InternalStorage.cs" />
     <Compile Include="Utils\LocalCache.cs" />
     <Compile Include="Window\CloseButton.cs" />
     <Compile Include="Window\ProgramWindow.xaml.cs">

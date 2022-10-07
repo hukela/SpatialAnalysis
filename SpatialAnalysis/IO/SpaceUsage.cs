@@ -17,12 +17,11 @@ internal static class SpaceUsage
             throw new Win32Exception(Marshal.GetLastWin32Error());
         ulong result = ((ulong)tall << 32) + low;
         uint size = clusterCache.Get(rootPath);
-        if (result % size != 0)
-        {
-            decimal res = result / size;
-            ulong clu = (ulong)Convert.ToInt32(Math.Ceiling(res)) + 1;
-            result = size * clu;
-        }
+        if (result % size == 0)
+            return result;
+        decimal res = (decimal)result / size;
+        ulong clu = (ulong)Convert.ToInt32(Math.Ceiling(res)) + 1;
+        result = size * clu;
         return result;
     }
     //本地缓存

@@ -58,7 +58,7 @@ internal static class ComparisonService
     public static void RefreshNode(DirNode dirNode)
     {
         //刷新标签
-        TagBean tagBean = TagSupport.GetTagByPath(dirNode.Path, out bool isThis);
+        TagBean tagBean = TagCache.GetTagByPath(dirNode.Path, out bool isThis);
         if (tagBean == null)
             dirNode.Tag = new TagBean() { Color = "#FFFFFF" };
         dirNode.IsRootTag = isThis;
@@ -164,6 +164,6 @@ internal static class ComparisonService
         else
             DirTagMapper.EditOneByPath(path, tagBean.Id);
         //刷新标签缓存
-        TagSupport.SetTagSort();
+        TagCache.DeleteTagCache();
     }
 } }
