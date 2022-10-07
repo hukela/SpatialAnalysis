@@ -23,8 +23,10 @@ internal static class SeeRecordService
             incidentInfos[i] = new IncidentInfo(incidentBean);
             RecordBean[] rootRecordBeans = RecordMapper.SelectRootRecords(incidentBean.Id);
             BigInteger sizeCount = BigInteger.Zero;
-            Array.ForEach(rootRecordBeans, bean => sizeCount += bean.Size);
-            incidentInfos[i].Size = ConversionUtil.StorageFormat(sizeCount, false);
+            BigInteger spaceCount = BigInteger.Zero;
+            Array.ForEach(rootRecordBeans, bean => { sizeCount += bean.Size; spaceCount += bean.SpaceUsage; });
+            incidentInfos[i].Size = sizeCount;
+            incidentInfos[i].SpaceUsage = spaceCount;
         }
         return incidentInfos;
     }

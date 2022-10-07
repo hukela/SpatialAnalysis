@@ -4,12 +4,28 @@ using System.Numerics;
 namespace SpatialAnalysis.Utils
 {
 /// <summary>
-/// 存储单位的换算
+/// 单位的换算工具
 /// </summary>
 internal static class ConversionUtil
 {
     /// <summary>
-    /// 将存大小数据换算成合适的单位
+    /// 将RGB字符串转换为byte数组
+    /// </summary>
+    /// <param name="str">RGB字符串 例如 #FFFFFF</param>
+    /// <returns>r,g,b 三个byte数据</returns>
+    public static byte[] HexToRgb(string str)
+    {
+        byte[] rgb = new byte[3];
+        for (int i = 0; i < 3; i++)
+        {
+            string oneByte = str.Substring(1 + i * 2, 2);
+            rgb[i] = Convert.ToByte(oneByte, 16);
+        }
+        return rgb;
+    }
+
+    /// <summary>
+    /// 将存储大小数据换算成合适的单位
     /// </summary>
     /// <param name="bigInt">数据(字节)</param>
     /// <param name="haveSign">是否带有正号</param>
@@ -20,7 +36,7 @@ internal static class ConversionUtil
         if (bigInt == BigInteger.Zero)
             return "0.00B";
         bool isNegative = bigInt < 0;
-        //取绝对值，因为log不能处理负数
+        //取绝对值，因为Math.Log不能处理负数
         double size = Math.Abs(double.Parse(bigInt.ToString()));
         int level = Convert.ToInt32(Math.Floor(Math.Log(size, 2) / 10));
         double result = size / Math.Pow(1024, level);

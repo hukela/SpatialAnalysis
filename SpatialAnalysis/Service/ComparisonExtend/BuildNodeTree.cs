@@ -19,12 +19,12 @@ internal class BuildNodeTree
         if (node.OldIncidentId == 0)
             oldBeans = Array.Empty<RecordBean>();
         else
-            oldBeans = RecordMapper.GetBeansByPid(node.OldId, node.OldIncidentId);
+            oldBeans = RecordMapper.SelectByPid(node.OldId, node.OldIncidentId);
         RecordBean[] newBeans;
         if (node.NewIncidentId == 0)
             newBeans = Array.Empty<RecordBean>();
         else
-            newBeans = RecordMapper.GetBeansByPid(node.NewId, node.NewIncidentId);
+            newBeans = RecordMapper.SelectByPid(node.NewId, node.NewIncidentId);
         List<DirNode> dirNodes = new List<DirNode>();
         //遍历两个文件夹列表
         foreach (RecordBean oldBean in oldBeans)

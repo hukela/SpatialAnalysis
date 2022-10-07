@@ -12,7 +12,7 @@ internal static class TagMapper
     /// 添加一行数据
     /// </summary>
     /// <param name="bean">对应的数据实体</param>
-    public static void AddOne(TagBean bean)
+    public static void InsertOne(TagBean bean)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -44,7 +44,7 @@ internal static class TagMapper
     /// <summary>
     /// 获取所有根标签
     /// </summary>
-    public static TagBean[] GetRootTag()
+    public static TagBean[] SelectRoot()
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -56,7 +56,7 @@ internal static class TagMapper
     /// 获取所有子标签
     /// </summary>
     /// <param name="ParentId">父级标签id</param>
-    public static TagBean[] GetChildTag(uint ParentId)
+    public static TagBean[] SelectChild(uint ParentId)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -68,7 +68,7 @@ internal static class TagMapper
     /// <summary>
     /// 通过标签id获取数据实体
     /// </summary>
-    public static TagBean GetOneById(uint tagId)
+    public static TagBean SelectById(uint tagId)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -81,7 +81,7 @@ internal static class TagMapper
     /// 更新已有标签
     /// </summary>
     /// <param name="bean">对应的数据实体</param>
-    public static void UpdataOne(TagBean bean)
+    public static void UpdateOne(TagBean bean)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {

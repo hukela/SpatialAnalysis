@@ -1,10 +1,12 @@
-﻿using SpatialAnalysis.Entity;
+﻿using System;
+using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO.Xml;
 using SpatialAnalysis.Utils;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using SpatialAnalysis.IO.Log;
 
 namespace SpatialAnalysis.MyWindow
 {
@@ -13,28 +15,25 @@ namespace SpatialAnalysis.MyWindow
 /// </summary>
 public partial class TagWindow : Window
 {
-    public TagWindow(string title, TagBean bean = null)
+    internal TagWindow(string title, TagBean bean = null)
     {
         InitializeComponent();
         Title = title;
         WindowStartupLocation = WindowStartupLocation.CenterScreen;
-        if (bean == null)
-            DataContext = new TagBean() { Name = string.Empty, Color = string.Empty };
-        else
-            DataContext = bean;
+        DataContext = bean ?? new TagBean() { Name = string.Empty, Color = string.Empty };
     }
     //加载页面数据
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         string[] colors = XML.Map(XML.Params.tagColor).Split(',');
-        string beanColor = (DataContext as TagBean).Color;
+        string beanColor = ((TagBean)DataContext).Color;
         int index = -1;
         bool isSelected = beanColor != string.Empty;
         List<Border> items = new List<Border>();
         //添加颜色块
         for (int i = 0; i < colors.Length; i++)
         {
-            byte[] rgb = ColorUtil.GetRGB(colors[i]);
+            byte[] rgb = ConversionUtil.HexToRgb(colors[i]);
             items.Add(new Border()
             {
                 Width = 50,
@@ -45,17 +44,16 @@ public partial class TagWindow : Window
                     Color = Color.FromRgb(rgb[0], rgb[1], rgb[2])
                 },
             });
-            if (isSelected)
-            {
-                if (colors[i] == beanColor)
-                    index = i;
-            }
+            if (!isSelected)
+                continue;
+            if (colors[i] == beanColor)
+                index = i;
         }
         if (isSelected)
         {
             if (index == -1)
             {
-                byte[] rgb = ColorUtil.GetRGB(beanColor);
+                byte[] rgb = ConversionUtil.HexToRgb(beanColor);
                 items.Add(new Border()
                 {
                     Width = 50,
@@ -81,13 +79,13 @@ public partial class TagWindow : Window
     //选中颜色
     private void SelectColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        string value = (selectColor.SelectedItem as UIElement).Uid;
+        string value = ((UIElement)selectColor.SelectedItem).Uid;
         color.Text = value;
-        (DataContext as TagBean).Color = value;
+        ((TagBean)DataContext).Color = value;
     }
     private void Yes_Click(object sender, RoutedEventArgs e)
     {
-        TagBean bean = DataContext as TagBean;
+        TagBean bean = (TagBean)DataContext;
         bean.Name = bean.Name.Trim();
         bean.Color = bean.Color.Trim();
         if (bean.Name == string.Empty)
@@ -108,12 +106,14 @@ public partial class TagWindow : Window
         {
             try
             {
-                ColorUtil.GetRGB(bean.Color);
+                ConversionUtil.HexToRgb(bean.Color);
                 DialogResult = true;
                 Close(); return;
             }
-            catch
-            { /* ignored */ }
+            catch (Exception ex)
+            {
+                Log.Warn("颜色代码有误 " + ex.Message);
+            }
         }
         MessageBox.Show("颜色代码格式错误", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
     }

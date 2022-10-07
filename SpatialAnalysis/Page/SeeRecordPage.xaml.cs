@@ -28,7 +28,7 @@ public partial class SeeRecordPage : Page
     private void IncidentListBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (!(incidentListBox.SelectedItem is IncidentInfo incident)) return;
-        RecordDetailPage page = new RecordDetailPage(incident.Id);
+        RecordDetailPage page = new RecordDetailPage(incident);
         MainWindow main = Application.Current.MainWindow as MainWindow;
         main?.ToPage(page);
     }

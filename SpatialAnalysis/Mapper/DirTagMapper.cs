@@ -12,7 +12,7 @@ internal static class DirTagMapper
     /// 添加一行数据
     /// </summary>
     /// <param name="bean">对应的数据实体</param>
-    public static void AddOne(DirTagBean bean)
+    public static void InsertOne(DirTagBean bean)
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
         {
@@ -43,7 +43,7 @@ internal static class DirTagMapper
     /// 通过id设定标签标注的路径
     /// </summary>
     /// <param name="bean">对应的数据实体</param>
-    public static void EditOneById(uint id, string path)
+    public static void UpdateById(uint id, string path)
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
         {
@@ -57,7 +57,7 @@ internal static class DirTagMapper
     /// 通过path修改标注的标签
     /// </summary>
     /// <param name="bean">对应的数据实体</param>
-    public static void EditOneByPath(string path, uint tagId)
+    public static void UpdateByPath(string path, uint tagId)
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
         {
@@ -110,7 +110,7 @@ internal static class DirTagMapper
     /// 获取所有的数据
     /// </summary>
     /// <returns></returns>
-    public static DirTagBean[] GetAll()
+    public static DirTagBean[] SelectAll()
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
         {
@@ -121,13 +121,33 @@ internal static class DirTagMapper
     /// <summary>
     /// 获取对应标签id的标注路径
     /// </summary>
-    public static DirTagBean[] GetAllByTag(uint tagId)
+    public static DirTagBean[] SelectByTagId(uint tagId)
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
         {
             cmd.CommandText = "SELECT * FROM [dir_tag] WHERE [tag_id] = @tag_id;";
             cmd.Parameters.Add("tag_id", DbType.UInt32).Value = tagId;
             return GetBeanByTable(SQLiteClient.Read(cmd));
+        }
+    }
+
+    /// <summary>
+    /// 获取对应标签id的标注路径
+    /// </summary>
+    public static string[] selectPathByTagId(uint tagId)
+    {
+        using (SQLiteCommand cmd = new SQLiteCommand())
+        {
+            cmd.CommandText = "SELECT [path] FROM [dir_tag] WHERE [tag_id] = @tag_id;";
+            cmd.Parameters.Add("tag_id", DbType.UInt32).Value = tagId;
+            DataTable table = SQLiteClient.Read(cmd);
+            int count = table.Rows.Count;
+            string[] paths = new string[count];
+            for (int i = 0; i < count; i++)
+            {
+                paths[i] = table.Rows[i]["path"] as string;
+            }
+            return paths;
         }
     }
 } }

@@ -160,6 +160,7 @@
     <Compile Include="Entity\DirNode.cs" />
     <Compile Include="Entity\DirTagBean.cs" />
     <Compile Include="Entity\IncidentBean.cs" />
+    <Compile Include="Entity\IncidentDetail.cs" />
     <Compile Include="Entity\RecordBean.cs" />
     <Compile Include="Entity\RecordExCode.cs" />
     <Compile Include="Entity\IncidentInfo.cs" />
@@ -197,11 +198,11 @@
     <Compile Include="Service\AddRecordService.cs" />
     <Compile Include="Service\ComparisonExtend\BuildNodeTree.cs" />
     <Compile Include="Service\ComparisonService.cs" />
+    <Compile Include="Service\RecordDetailService.cs" />
     <Compile Include="Service\SeeRecordService.cs" />
     <Compile Include="Service\StartupAndExit.cs" />
     <Compile Include="Service\TagService.cs" />
     <Compile Include="Service\TagCache.cs" />
-    <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\ConversionUtil.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Utils\ForTest.cs" />

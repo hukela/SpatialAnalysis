@@ -17,7 +17,7 @@ internal static class TagCache
     /// </summary>
     private static void InitTagCache()
     {
-        DirTagBean[] beans = DirTagMapper.GetAll();
+        DirTagBean[] beans = DirTagMapper.SelectAll();
         //根据标注长度进行排序
         int count = beans.Length;
         for (int r = 0; r < count; r++)
@@ -80,6 +80,6 @@ internal static class TagCache
                 isThis = true;
             break;
         }
-        return tagId == 0 ? null : TagMapper.GetOneById(tagId);
+        return tagId == 0 ? null : TagMapper.SelectById(tagId);
     }
 } }

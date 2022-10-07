@@ -137,7 +137,8 @@ internal static class ComparisonService
             case DirNodeType.Deleted:
                 info.Action = "该文件夹已经被删除";
                 break;
-            default: break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
         return info;
     }
@@ -156,13 +157,13 @@ internal static class ComparisonService
         if (tagBean.Id == 0)
             DirTagMapper.DeleteOneByPath(path);
         if (isNew)
-            DirTagMapper.AddOne(new DirTagBean()
+            DirTagMapper.InsertOne(new DirTagBean()
             {
                 Path = path,
                 TagId = tagBean.Id,
             });
         else
-            DirTagMapper.EditOneByPath(path, tagBean.Id);
+            DirTagMapper.UpdateByPath(path, tagBean.Id);
         //刷新标签缓存
         TagCache.DeleteTagCache();
     }

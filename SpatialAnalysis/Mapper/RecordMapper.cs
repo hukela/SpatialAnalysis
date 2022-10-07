@@ -189,13 +189,29 @@ internal static class RecordMapper
     /// <param name="ParentId">文件夹id</param>
     /// <param name="incidentId">事件id</param>
     /// <returns></returns>
-    public static RecordBean[] GetBeansByPid(ulong ParentId, uint incidentId)
+    public static RecordBean[] SelectByPid(ulong ParentId, uint incidentId)
     {
         using (SQLiteCommand  cmd = new SQLiteCommand ())
         {
             cmd.CommandText = string.Concat("SELECT * FROM [record_", incidentId, "] WHERE [parent_id] = @parent_id and [id] != 0");
             cmd.Parameters.Add("parent_id", DbType.UInt64).Value = ParentId;
             return GetBeansByTable(SQLiteClient.Read(cmd));
+        }
+    }
+
+    /// <summary>
+    /// 通过path查询对应记录
+    /// </summary>
+    /// <param name="incidentId">事件id</param>
+    /// <param name="path">路径</param>
+    public static RecordBean SelectByPath(uint incidentId, string path)
+    {
+        using (SQLiteCommand  cmd = new SQLiteCommand ())
+        {
+            cmd.CommandText = string.Concat("SELECT * FROM [record_", incidentId, "] WHERE [path] = @path");
+            cmd.Parameters.Add("path", DbType.String).Value = path;
+            DataTable table = SQLiteClient.Read(cmd);
+            return table.Rows.Count == 0 ? null : GetBeansByTable(table)[0];
         }
     }
 

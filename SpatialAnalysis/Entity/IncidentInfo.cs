@@ -1,4 +1,6 @@
 using System;
+using System.Numerics;
+using SpatialAnalysis.Utils;
 
 namespace SpatialAnalysis.Entity
 {
@@ -23,7 +25,9 @@ namespace SpatialAnalysis.Entity
         public uint Id { get; }
         public string Title { get; set; }
         public string State { get; set; }
-        public string Size { get; set; }
+        public BigInteger Size { get; set; }
+        public BigInteger SpaceUsage { get; set; }
+        public string SizeFormat => ConversionUtil.StorageFormat(Size, false);
         public string CreateTime { get; set; }
     }
 }

@@ -38,8 +38,8 @@ public partial class SelectTagWindow : Window
     {
         yes.IsEnabled = true;
     }
-    //用于传递参数
-    public TagBean tagBean;
+    //用于向父级传递参数
+    internal TagBean tagBean;
     //确定
     private void Yes_Click(object sender, RoutedEventArgs e)
     {

@@ -16,9 +16,9 @@ namespace SpatialAnalysis.Service
         public static TagBean[] GetTagItemSource(uint parentId)
         {
             if (parentId == 0)
-                return TagMapper.GetRootTag();
+                return TagMapper.SelectRoot();
             else
-                return TagMapper.GetChildTag(parentId);
+                return TagMapper.SelectChild(parentId);
         }
         /// <summary>
         /// 递归删除标签及其所有子标签
@@ -26,7 +26,7 @@ namespace SpatialAnalysis.Service
         /// <param name="tagId"></param>
         public static void DeleteTag(uint tagId)
         {
-            TagBean[] beanList = TagMapper.GetChildTag(tagId);
+            TagBean[] beanList = TagMapper.SelectChild(tagId);
             foreach (TagBean bean in beanList)
                 DeleteTag(bean.Id);
             TagMapper.DeleteOne(tagId);
@@ -39,7 +39,7 @@ namespace SpatialAnalysis.Service
         public static DirTagBean[] GetPathItemSource(uint tagId)
         {
             MainWindow main = Application.Current.MainWindow as MainWindow;
-            DirTagBean[] beans = DirTagMapper.GetAllByTag(tagId);
+            DirTagBean[] beans = DirTagMapper.SelectByTagId(tagId);
             int length = beans.Length;
             DirTagBean[] items = new DirTagBean[length + 1];
             Array.Copy(beans, items, length);

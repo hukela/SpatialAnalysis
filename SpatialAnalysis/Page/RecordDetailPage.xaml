@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
       mc:Ignorable="d" Loaded="Page_Loaded"
       Title="RecordDetailPage" d:DesignHeight="550" d:DesignWidth="702">
 
@@ -51,6 +52,8 @@
                 <ColumnDefinition Width="1"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
+            <lvc:PieChart Grid.Column="0" x:Name="incidentPieChart" LegendPosition="Right"
+                          ChartPointPointerDown="IncidentPieChart_OnChartPointPointerDown"/>
             <Border Grid.Column="1" Style="{StaticResource line-vertical}"/>
         </Grid>
         <!-- 标注地址 -->

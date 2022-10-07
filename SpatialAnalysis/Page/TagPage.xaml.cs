@@ -130,7 +130,7 @@ public partial class TagPage : Page
     /// 新建标签
     /// </summary>
     /// <param name="sender">要添加标签的列表对象</param>
-    public void NewTag_Click(ListBox sender)
+    internal void NewTag_Click(ListBox sender)
     {
         int plies = GetPliesByName(sender.Name);
         if (nodeParentId[plies] == -1)
@@ -145,7 +145,7 @@ public partial class TagPage : Page
         {
             TagBean bean = window.DataContext as TagBean;
             bean.ParentId = patentId;
-            TagMapper.AddOne(bean);
+            TagMapper.InsertOne(bean);
             RefreshAll();
         }
     }
@@ -154,13 +154,13 @@ public partial class TagPage : Page
     /// 修改标签
     /// </summary>
     /// <param name="bean">要修改的标签对象</param>
-    public void EditTag_Click(TagBean bean)
+    internal void EditTag_Click(TagBean bean)
     {
         TagWindow window = new TagWindow("修改标签", bean);
         bool? result = window.ShowDialog();
         if (result == true)
         {
-            TagMapper.UpdataOne(bean);
+            TagMapper.UpdateOne(bean);
             RefreshAll();
         }
     }
@@ -170,7 +170,7 @@ public partial class TagPage : Page
     /// </summary>
     /// <param name="tagId">标签id</param>
     /// <param name="sender">当前标签list对象</param>
-    public void DeleteTag_Click(uint tagId, ListBox sender)
+    internal void DeleteTag_Click(uint tagId, ListBox sender)
     {
         MessageBoxResult result = MessageBox.Show("是否确定删除该标签和其所有的子标签", "提示", MessageBoxButton.OKCancel);
         if (result != MessageBoxResult.OK) return;
@@ -279,7 +279,7 @@ public partial class TagPage : Page
             //添加
             if ( editingDirTagId == 0)
             {
-                DirTagMapper.AddOne(new DirTagBean()
+                DirTagMapper.InsertOne(new DirTagBean()
                 {
                     TagId = selectedTagId,
                     Path = editingDirTextBox.Text,
@@ -287,7 +287,7 @@ public partial class TagPage : Page
             }
             //修改
             else
-                DirTagMapper.EditOneById(editingDirTagId, editingDirTextBox.Text);
+                DirTagMapper.UpdateById(editingDirTagId, editingDirTextBox.Text);
         }
         TagCache.DeleteTagCache();
         // 刷新时保持当前选中对象

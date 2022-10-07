@@ -53,7 +53,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{Binding Title}"/>
                             <TextBlock Grid.Column="1" Text="{Binding State}"/>
-                            <TextBlock Grid.Column="2" Text="{Binding Size}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding SizeFormat}"/>
                             <TextBlock Grid.Column="3" Text="{Binding CreateTime}"/>
                         </Grid>
                     </DataTemplate>

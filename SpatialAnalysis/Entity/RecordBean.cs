@@ -55,11 +55,7 @@ internal class RecordBean
     public void Add(RecordBean bean)
     {
         //继承文件或文件夹的大小和数量
-        if (Size == null)
-            Size = new BigInteger(0);
         Size += bean.Size;
-        if (SpaceUsage == null)
-            SpaceUsage = new BigInteger(0);
         SpaceUsage += bean.SpaceUsage;
         FileCount += bean.FileCount;
         // 继承是否被改变
@@ -70,20 +66,10 @@ internal class RecordBean
         else
             DirCount += bean.DirCount + 1;
         // 继承最新的修改和访问时间
-        if (ModifyTime == null)
+        if (bean.ModifyTime > ModifyTime)
             ModifyTime = bean.ModifyTime;
-        else
-        {
-            if (bean.ModifyTime > ModifyTime)
-                ModifyTime = bean.ModifyTime;
-        }
-        if (VisitTime == null)
+        if (bean.VisitTime > VisitTime)
             VisitTime = bean.VisitTime;
-        else
-        {
-            if (bean.VisitTime > VisitTime)
-                VisitTime = bean.VisitTime;
-        }
     }
     /// <summary>
     /// 比较两个文件夹是否一样
