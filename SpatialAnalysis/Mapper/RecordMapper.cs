@@ -4,6 +4,7 @@ using System;
 using System.Data;
 using System.Data.SQLite;
 using System.Numerics;
+using System.Text;
 
 namespace SpatialAnalysis.Mapper
 {
@@ -212,6 +213,31 @@ internal static class RecordMapper
             cmd.Parameters.Add("path", DbType.String).Value = path;
             DataTable table = SQLiteClient.Read(cmd);
             return table.Rows.Count == 0 ? null : GetBeansByTable(table)[0];
+        }
+    }
+
+    /// <summary>
+    /// 批量通过path查询对应记录
+    /// </summary>
+    /// <param name="incidentId">事件id</param>
+    /// <param name="paths">多个路径</param>
+    public static RecordBean[] SelectByPaths(uint incidentId, string[] paths)
+    {
+        using (SQLiteCommand  cmd = new SQLiteCommand ())
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("SELECT * FROM [record_").Append(incidentId).Append("] WHERE [path] IN (");
+            for (int i = 0; i < paths.Length; i++)
+            {
+                builder.Append("@path").Append(i);
+                if (i != paths.Length - 1)
+                    builder.Append(",");
+            }
+            builder.Append(")");
+            cmd.CommandText = builder.ToString();
+            for (int i = 0; i < paths.Length; i++)
+                cmd.Parameters.Add("path" + i, DbType.String).Value = paths[i];
+            return GetBeansByTable(SQLiteClient.Read(cmd));
         }
     }
 

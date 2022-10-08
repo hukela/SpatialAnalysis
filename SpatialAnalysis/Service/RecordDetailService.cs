@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore;
 using System.Numerics;
 using LiveChartsCore.Measure;
@@ -16,27 +18,47 @@ namespace SpatialAnalysis.Service
 /// </summary>
 internal static class RecordDetailService
 {
+    private class CountBean
+    {
+        public uint fileCount, dirCount;
+        public BigInteger size, spaceUsage;
+    }
+
     /// <summary>
     /// 建立页面所需的数据
     /// </summary>
     public static IncidentDetail BuildIncidentDetail(IncidentInfo info, bool isSpaceUsage)
     {
+        // 参数准备
         TagBean[] tags = TagMapper.SelectRoot();
         int length = tags.Length;
+        uint[] tagIds = new uint[length];
+        for (int i = 0; i < length; i++)
+            tagIds[i] = tags[i].Id;
         BigInteger totalSize = isSpaceUsage ? info.SpaceUsage : info.Size;
         BigInteger otherSize = totalSize;
+        // 查询各标签的文件数、文件夹数、大小
+        Dictionary<uint, CountBean> countMap = CountTagSize(info.Id, tagIds);
+        // 生成饼图数据和页面信息
         ISeries<BigInteger>[] pieChart = new ISeries<BigInteger>[length + 1];
         for (int i = 0; i < length; i++)
         {
             TagBean tag = tags[i];
-            BigInteger size = CountSize(tag.Id, info.Id, isSpaceUsage);
-            otherSize -= size;
+            CountBean count = countMap.ContainsKey(tag.Id) ? countMap[tag.Id] : new CountBean();
+            BigInteger size = isSpaceUsage ? count.spaceUsage : count.size;
             pieChart[i] = BuildPieChart(tag, size, totalSize);
+            otherSize -= size;
         }
-        pieChart[length] = BuildPieChart(new TagBean() { Name = "未分类", Color = "#D3D3D3" }, otherSize, totalSize);
-        return new IncidentDetail()
+        if (otherSize != 0)
+            pieChart[length] = BuildPieChart(new TagBean
+            {
+                Name = "未分类", Color = "#D3D3D3"
+            }, otherSize, totalSize);
+        else
+            pieChart = pieChart.Take(length).ToArray();
+        return new IncidentDetail
         {
-            Tag = new TagBean() { Name = "标签" },
+            Tag = new TagBean { Name = "标签" },
             ChildrenTags = tags,
             paths = Array.Empty<string>(),
             FileCount = info.FileCount,
@@ -48,23 +70,105 @@ internal static class RecordDetailService
     }
 
     /// <summary>
-    /// 通过标签id获取对应大小或占用空间
+    /// 建立页面所需的数据
     /// </summary>
-    private static BigInteger CountSize(uint tagId, uint incidentId, bool isSpaceUsage)
+    public static IncidentDetail BuildIncidentDetail(TagBean tag, uint incidentId, bool isSpaceUsage)
+    {
+        // 准备参数
+        TagBean[] tags = TagMapper.SelectChildren(tag.Id);
+        bool noChildren = tags.Length == 0;
+        if (noChildren)
+            tags = new[] { tag };
+        int length = tags.Length;
+        uint[] tagIds = new uint[length];
+        for (int i = 0; i < length; i++)
+            tagIds[i] = tags[i].Id;
+        // 查询标签的文件数、文件夹数、大小
+        CountBean total = CountTagSize(incidentId, tag.Id);
+        Dictionary<uint, CountBean> countMap = CountTagSize(incidentId, tagIds);
+        // 生成饼图数据和页面信息
+        BigInteger totalSize = isSpaceUsage ? total.spaceUsage : total.size;
+        BigInteger otherSize = totalSize;
+        ISeries<BigInteger>[] pieChart = new ISeries<BigInteger>[tags.Length + 1];
+        for (int i = 0; i < length; i++)
+        {
+            TagBean tagBean = tags[i];
+            CountBean count = countMap.ContainsKey(tag.Id) ? countMap[tag.Id] : new CountBean();
+            BigInteger size = isSpaceUsage ? count.spaceUsage : count.size;
+            pieChart[i] = BuildPieChart(tagBean, size, totalSize);
+            otherSize -= size;
+        }
+        if (otherSize != 0)
+            pieChart[length] = BuildPieChart(new TagBean
+            {
+                Name = "未分类", Color = "#D3D3D3"
+            }, otherSize, totalSize);
+        else
+            pieChart = pieChart.Take(length).ToArray();
+        return new IncidentDetail
+        {
+            Tag = tag,
+            ChildrenTags = noChildren ? null : tags,
+            paths = DirTagMapper.selectPathByTagId(tag.Id),
+            FileCount = total.fileCount,
+            DirCount = total.dirCount,
+            Size = total.size,
+            SpaceUsage = total.spaceUsage,
+            pieChart = pieChart
+        };
+    }
+
+    /// <summary>
+    /// 统计对应标签下的所有文件文件夹大小和占用空间
+    /// </summary>
+    private static CountBean CountTagSize(uint incidentId, uint tagId)
     {
         string[] paths = DirTagMapper.selectPathByTagId(tagId);
-        BigInteger size = BigInteger.Zero;
-        foreach (string path in paths)
+        RecordBean[] records = RecordMapper.SelectByPaths(incidentId, paths);
+        CountBean count = new CountBean();
+        foreach (RecordBean record in records)
         {
-            RecordBean record = RecordMapper.SelectByPath(incidentId, path);
-            if (record == null)
-                continue;
-            if (isSpaceUsage)
-                size += record.SpaceUsage;
-            else
-                size += record.Size;
+            count.fileCount += record.FileCount;
+            count.dirCount += record.DirCount;
+            count.size += record.Size;
+            count.spaceUsage += record.SpaceUsage;
         }
-        return size;
+        return count;
+    }
+
+    /// <summary>
+    /// 统计对应标签下的所有文件文件夹大小和占用空间(批量)
+    /// </summary>
+    private static Dictionary<uint, CountBean> CountTagSize(uint incidentId, uint[] tagIds)
+    {
+        Dictionary<HashSet<string>, uint> tagPathMap = new Dictionary<HashSet<string>, uint>();
+        List<string> allPaths = new List<string>();
+        foreach (uint tagId in tagIds)
+        {
+            string[] tagPaths = DirTagMapper.selectPathByTagId(tagId);
+            HashSet<string> paths = new HashSet<string>(tagPaths);
+            allPaths.AddRange(tagPaths);
+            tagPathMap.Add(paths, tagId);
+        }
+        RecordBean[] records = RecordMapper.SelectByPaths(incidentId, allPaths.ToArray());
+        Dictionary<uint, CountBean> countMap = new Dictionary<uint, CountBean>(); // 批量查询 节省IO
+        foreach (RecordBean record in records)
+        {
+            string path = record.Path;
+            foreach (uint tagId in from set in tagPathMap.Keys where set.Contains(path) select tagPathMap[set])
+            {
+                if (!countMap.TryGetValue(tagId, out CountBean count))
+                {
+                    count = new CountBean();
+                    countMap.Add(tagId, count);
+                }
+                count.fileCount += record.FileCount;
+                count.dirCount += record.DirCount;
+                count.size += record.Size;
+                count.spaceUsage += record.SpaceUsage;
+            }
+        }
+        return countMap;
     }
 
     /// <summary>
@@ -79,7 +183,7 @@ internal static class RecordDetailService
             Name = tag.Name,
             Values = new []{ value },
             Fill = new SolidColorPaint(new SKColor(rgb[0], rgb[1], rgb[2])),
-            Mapping = (v, point) => { point.PrimaryValue = (double)v; },
+            Mapping = (v, point) => { point.PrimaryValue = (double)v; point.TertiaryValue = tag.Id; },
             DataLabelsFormatter = point => $"{percent:P2}",
             TooltipLabelFormatter = point => tag.Name + " " + ConversionUtil.StorageFormat(value, false),
             DataLabelsPosition = PolarLabelsPosition.Middle,

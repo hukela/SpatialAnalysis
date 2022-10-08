@@ -23,6 +23,7 @@ public partial class RecordDetailPage : Page
 
     private readonly IncidentBean incident;
     private readonly IncidentInfo incidentInfo;
+    private IncidentDetail incidentDetail;
 
     // 加载页面数据
     private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -30,23 +31,49 @@ public partial class RecordDetailPage : Page
         incidentTitleTextBlock.Text = incident.Title;
         incidentDescriptionTextBlock.Text = incident.Description;
         IncidentDetail detail = RecordDetailService.BuildIncidentDetail(incidentInfo, false);
+        incidentDetail = detail;
         incidentPieChart.Series = detail.pieChart;
         childrenTagListBox.ItemsSource = detail.ChildrenTags;
         incidentDetailGrid.DataContext = detail;
     }
 
+    /// <summary>
+    /// 用于展示详细信息的事件
+    /// </summary>
     private void IncidentDetail_OnMouseEnter(object sender, MouseEventArgs e)
     {
         incidentPopup.IsOpen = true;
     }
 
-    private void IncidentPieChart_OnChartPointPointerDown(IChartView chart, ChartPoint point)
-    {
-        throw new System.NotImplementedException();
-    }
-
+    /// <summary>
+    /// 子标签双击事件
+    /// </summary>
     private void ChildrenTagListBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        throw new System.NotImplementedException();
+        TagBean tag = (TagBean) childrenTagListBox.SelectedItem;
+        RefreshTagInfo(tag);
+    }
+
+    /// <summary>
+    /// 饼图点击事件
+    /// </summary>
+    private void IncidentPieChart_OnChartPointPointerDown(IChartView chart, ChartPoint point)
+    {
+        uint tagId = (uint)point.TertiaryValue;
+        foreach (TagBean tag in incidentDetail.ChildrenTags)
+        {
+            if (tag.Id != tagId)
+                continue;
+            RefreshTagInfo(tag);
+            break;
+        }
+    }
+
+    private void RefreshTagInfo(TagBean tag)
+    {
+        IncidentDetail detail = RecordDetailService.BuildIncidentDetail(tag, incident.Id, false);
+        incidentPieChart.Series = detail.pieChart;
+        childrenTagListBox.ItemsSource = detail.ChildrenTags;
+        incidentDetailGrid.DataContext = detail;
     }
 } }

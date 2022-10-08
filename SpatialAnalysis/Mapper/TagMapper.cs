@@ -56,7 +56,7 @@ internal static class TagMapper
     /// 获取所有子标签
     /// </summary>
     /// <param name="ParentId">父级标签id</param>
-    public static TagBean[] SelectChild(uint ParentId)
+    public static TagBean[] SelectChildren(uint ParentId)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {

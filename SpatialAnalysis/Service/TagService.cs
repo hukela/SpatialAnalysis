@@ -18,7 +18,7 @@ namespace SpatialAnalysis.Service
             if (parentId == 0)
                 return TagMapper.SelectRoot();
             else
-                return TagMapper.SelectChild(parentId);
+                return TagMapper.SelectChildren(parentId);
         }
         /// <summary>
         /// 递归删除标签及其所有子标签
@@ -26,7 +26,7 @@ namespace SpatialAnalysis.Service
         /// <param name="tagId"></param>
         public static void DeleteTag(uint tagId)
         {
-            TagBean[] beanList = TagMapper.SelectChild(tagId);
+            TagBean[] beanList = TagMapper.SelectChildren(tagId);
             foreach (TagBean bean in beanList)
                 DeleteTag(bean.Id);
             TagMapper.DeleteOne(tagId);

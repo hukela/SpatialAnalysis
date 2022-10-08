@@ -70,7 +70,8 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="[无标签]" Margin="10,0,0,4" Style="{StaticResource incident-detail}"/>
+                <TextBlock Grid.Row="0" Text="{Binding TagName}"
+                           Margin="10,0,0,4" Style="{StaticResource incident-detail}"/>
                 <Border Grid.Row="1" Style="{StaticResource line-horizontal}"/>
                 <TextBlock Grid.Row="2" Text="{Binding FileCountFormatted}"
                            Margin="10,0,0,4" Style="{StaticResource incident-detail}"/>
