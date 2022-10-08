@@ -39,6 +39,8 @@ internal static class RecordDetailService
             Tag = new TagBean() { Name = "标签" },
             ChildrenTags = tags,
             paths = Array.Empty<string>(),
+            FileCount = info.FileCount,
+            DirCount = info.DirCount,
             Size = info.Size,
             SpaceUsage = info.SpaceUsage,
             pieChart = pieChart

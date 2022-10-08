@@ -46,4 +46,17 @@
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
+    <!-- 页面右侧信息 -->
+    <Style x:Key="incident-detail" TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+    <!-- ListBox通用样式 -->
+    <Style x:Key="listbox" TargetType="ListBox">
+        <Setter Property="Margin" Value="10,4"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
 </ResourceDictionary>

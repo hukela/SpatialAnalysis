@@ -25,6 +25,8 @@ namespace SpatialAnalysis.Entity
         public uint Id { get; }
         public string Title { get; set; }
         public string State { get; set; }
+        public uint FileCount { get; set; }
+        public uint DirCount { get; set; }
         public BigInteger Size { get; set; }
         public BigInteger SpaceUsage { get; set; }
         public string SizeFormat => ConversionUtil.StorageFormat(Size, false);

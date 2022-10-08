@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:SpatialAnalysis.Entity"
       xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
       mc:Ignorable="d" Loaded="Page_Loaded"
       Title="RecordDetailPage" d:DesignHeight="550" d:DesignWidth="702">
@@ -45,16 +46,50 @@
                 </Popup>
             </Canvas>
         </Border>
-        <!-- 详细信息统计图 -->
+        <!-- 页面中间部分 -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="1"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
+            <!-- 详细信息统计图 -->
             <lvc:PieChart Grid.Column="0" x:Name="incidentPieChart" LegendPosition="Right"
                           ChartPointPointerDown="IncidentPieChart_OnChartPointPointerDown"/>
             <Border Grid.Column="1" Style="{StaticResource line-vertical}"/>
+            <!-- 标签详细信息 -->
+            <Grid Grid.Column="2" x:Name="incidentDetailGrid" d:DataContext="{d:DesignInstance {x:Type local:IncidentDetail}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="28"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="[无标签]" Margin="10,0,0,4" Style="{StaticResource incident-detail}"/>
+                <Border Grid.Row="1" Style="{StaticResource line-horizontal}"/>
+                <TextBlock Grid.Row="2" Text="{Binding FileCountFormatted}"
+                           Margin="10,0,0,4" Style="{StaticResource incident-detail}"/>
+                <TextBlock Grid.Row="3" Text="{Binding DirCountFormatted}"
+                           Margin="10,0,0,4" Style="{StaticResource incident-detail}"/>
+                <TextBlock Grid.Row="4" Text="{Binding SizeFormatted}"
+                           Margin="10,0,0,4" Style="{StaticResource incident-detail}"/>
+                <TextBlock Grid.Row="5" Text="{Binding SpaceUsageFormatted}"
+                           Margin="10,0,0,8" Style="{StaticResource incident-detail}"/>
+                <Border Grid.Row="6" Style="{StaticResource line-horizontal}"/>
+                <TextBlock Grid.Row="7" Text="双击进入子标签查看"
+                           Margin="10,0,0,0" Style="{StaticResource incident-detail}"/>
+                <ListBox Grid.Row="8" x:Name="childrenTagListBox" Style="{StaticResource listbox}"
+                         MouseDoubleClick="ChildrenTagListBox_OnMouseDoubleClick">
+                    <ListBox.Resources>
+                        <ResourceDictionary Source="/Dictionary/TagSelectDictionary.xaml"/>
+                    </ListBox.Resources>
+                </ListBox>
+            </Grid>
         </Grid>
         <!-- 标注地址 -->
         <Border Grid.Row="3" Style="{StaticResource line-horizontal}"/>

@@ -31,6 +31,8 @@ public partial class RecordDetailPage : Page
         incidentDescriptionTextBlock.Text = incident.Description;
         IncidentDetail detail = RecordDetailService.BuildIncidentDetail(incidentInfo, false);
         incidentPieChart.Series = detail.pieChart;
+        childrenTagListBox.ItemsSource = detail.ChildrenTags;
+        incidentDetailGrid.DataContext = detail;
     }
 
     private void IncidentDetail_OnMouseEnter(object sender, MouseEventArgs e)
@@ -39,6 +41,11 @@ public partial class RecordDetailPage : Page
     }
 
     private void IncidentPieChart_OnChartPointPointerDown(IChartView chart, ChartPoint point)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void ChildrenTagListBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         throw new System.NotImplementedException();
     }

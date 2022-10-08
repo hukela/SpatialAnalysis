@@ -26,6 +26,7 @@ internal static class ComparisonService
             items[i] = beans[i - 1];
         return items;
     }
+
     /// <summary>
     /// 获取根节点列表
     /// </summary>
@@ -43,6 +44,7 @@ internal static class ComparisonService
         BuildNodeTree.BuildChildrenNodes(baseNode);
         return baseNode.Children;
     }
+
     /// <summary>
     /// 建立该节点中子节点的子节点
     /// </summary>
@@ -55,6 +57,10 @@ internal static class ComparisonService
             BuildNodeTree.BuildChildrenNodes(dirNode);
         return update;
     }
+
+    /// <summary>
+    /// 刷新对应节点中的数据
+    /// </summary>
     public static void RefreshNode(DirNode dirNode)
     {
         //刷新标签
@@ -66,6 +72,7 @@ internal static class ComparisonService
         //刷新子节点
         BuildNodeTree.BuildChildrenNodes(dirNode);
     }
+
     /// <summary>
     /// 通过节点获取文件夹的比较信息
     /// </summary>
@@ -142,6 +149,7 @@ internal static class ComparisonService
         }
         return info;
     }
+
     /// <summary>
     /// 修改或新添标签标注
     /// </summary>

@@ -1,5 +1,6 @@
 using LiveChartsCore;
 using System.Numerics;
+using SpatialAnalysis.Utils;
 
 namespace SpatialAnalysis.Entity
 {
@@ -12,11 +13,21 @@ internal class IncidentDetail
 
     public TagBean[] ChildrenTags { get; set; }
 
-    public string[] paths { get; set; }
+    public string TagName => '[' + Tag.Name + ']';
+
+    public uint FileCount { get; set; }
+    public string FileCountFormatted => "文件数：" + FileCount;
+
+    public uint DirCount { get; set; }
+    public string DirCountFormatted => "文件夹数：" + DirCount;
 
     public BigInteger Size { get; set; }
+    public string SizeFormatted => "大小：" + ConversionUtil.StorageFormat(Size, false);
 
     public BigInteger SpaceUsage { get; set; }
+    public string SpaceUsageFormatted => "占用空间：" + ConversionUtil.StorageFormat(SpaceUsage, false);
 
     public ISeries<BigInteger>[] pieChart { get; set; } // 饼图数据
+
+    public string[] paths { get; set; } // 路径
 } }
