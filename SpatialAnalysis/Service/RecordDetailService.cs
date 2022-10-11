@@ -44,7 +44,7 @@ internal static class RecordDetailService
         for (int i = 0; i < length; i++)
         {
             TagBean tag = tags[i];
-            CountBean count = countMap.ContainsKey(tag.Id) ? countMap[tag.Id] : new CountBean();
+            CountBean count = countMap[tag.Id];
             BigInteger size = isSpaceUsage ? count.spaceUsage : count.size;
             pieChart[i] = BuildPieChart(tag, size, totalSize);
             otherSize -= size;
@@ -93,7 +93,7 @@ internal static class RecordDetailService
         for (int i = 0; i < length; i++)
         {
             TagBean tagBean = tags[i];
-            CountBean count = countMap.ContainsKey(tag.Id) ? countMap[tag.Id] : new CountBean();
+            CountBean count = countMap[tagBean.Id];
             BigInteger size = isSpaceUsage ? count.spaceUsage : count.size;
             pieChart[i] = BuildPieChart(tagBean, size, totalSize);
             otherSize -= size;
@@ -143,6 +143,7 @@ internal static class RecordDetailService
     {
         Dictionary<HashSet<string>, uint> tagPathMap = new Dictionary<HashSet<string>, uint>();
         List<string> allPaths = new List<string>();
+        // 查询标签所有路径
         foreach (uint tagId in tagIds)
         {
             string[] tagPaths = DirTagMapper.selectPathByTagId(tagId);
@@ -150,6 +151,7 @@ internal static class RecordDetailService
             allPaths.AddRange(tagPaths);
             tagPathMap.Add(paths, tagId);
         }
+        // 通过路径查询对应记录
         RecordBean[] records = RecordMapper.SelectByPaths(incidentId, allPaths.ToArray());
         Dictionary<uint, CountBean> countMap = new Dictionary<uint, CountBean>(); // 批量查询 节省IO
         foreach (RecordBean record in records)
@@ -168,6 +170,10 @@ internal static class RecordDetailService
                 count.spaceUsage += record.SpaceUsage;
             }
         }
+        // 填补没有路径的标签
+        foreach (uint tagId in tagIds)
+            if (!countMap.ContainsKey(tagId))
+                countMap.Add(tagId, new CountBean());
         return countMap;
     }
 

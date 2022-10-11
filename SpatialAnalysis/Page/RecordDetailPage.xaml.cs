@@ -23,6 +23,7 @@ public partial class RecordDetailPage : Page
 
     private readonly IncidentBean incident;
     private readonly IncidentInfo incidentInfo;
+    private bool isSpaceUsage;
     private IncidentDetail incidentDetail;
 
     // 加载页面数据
@@ -30,11 +31,42 @@ public partial class RecordDetailPage : Page
     {
         incidentTitleTextBlock.Text = incident.Title;
         incidentDescriptionTextBlock.Text = incident.Description;
-        IncidentDetail detail = RecordDetailService.BuildIncidentDetail(incidentInfo, false);
-        incidentDetail = detail;
-        incidentPieChart.Series = detail.pieChart;
-        childrenTagListBox.ItemsSource = detail.ChildrenTags;
-        incidentDetailGrid.DataContext = detail;
+        UpdatePage(PageUpdateType.refresh, null);
+    }
+
+    private enum PageUpdateType
+    {
+        refresh,
+        toChildrenTag,
+        toParentTag,
+    }
+
+    /// <summary>
+    /// 通用页面更新方法
+    /// </summary>
+    /// <param name="type">更新方式</param>
+    /// <param name="tag">若进入子一级标签则 则需要传递该参数</param>
+    /// <param name="isSpaceUsage">图表是否是展示占用空间</param>
+    private void UpdatePage(PageUpdateType type, TagBean tag)
+    {
+        switch (type)
+        {
+            case PageUpdateType.refresh:
+                tag = incidentDetail == null ? new TagBean() : incidentDetail.Tag;
+                if (tag.Id == 0)
+                    incidentDetail = RecordDetailService.BuildIncidentDetail(incidentInfo, isSpaceUsage);
+                else
+                    incidentDetail = RecordDetailService.BuildIncidentDetail(tag, incidentInfo.Id, isSpaceUsage);
+                break;
+            case PageUpdateType.toParentTag:
+                throw new System.NotImplementedException();
+            case PageUpdateType.toChildrenTag:
+                incidentDetail = RecordDetailService.BuildIncidentDetail(tag, incidentInfo.Id, isSpaceUsage);
+                break;
+        }
+        incidentPieChart.Series = incidentDetail.pieChart;
+        childrenTagListBox.ItemsSource = incidentDetail.ChildrenTags;
+        incidentDetailGrid.DataContext = incidentDetail;
     }
 
     /// <summary>
@@ -46,12 +78,32 @@ public partial class RecordDetailPage : Page
     }
 
     /// <summary>
+    /// 单选框大小点击事件
+    /// </summary>
+    private void RadioButtonSize_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (!isSpaceUsage) return;
+        isSpaceUsage = false;
+        UpdatePage(PageUpdateType.refresh, null);
+    }
+
+    /// <summary>
+    /// 单选框占用空间点击事件
+    /// </summary>
+    private void RadioButtonSpaceUsage_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (isSpaceUsage) return;
+        isSpaceUsage = true;
+        UpdatePage(PageUpdateType.refresh, null);
+    }
+
+    /// <summary>
     /// 子标签双击事件
     /// </summary>
     private void ChildrenTagListBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         TagBean tag = (TagBean) childrenTagListBox.SelectedItem;
-        RefreshTagInfo(tag);
+        UpdatePage(PageUpdateType.toChildrenTag, tag);
     }
 
     /// <summary>
@@ -64,16 +116,8 @@ public partial class RecordDetailPage : Page
         {
             if (tag.Id != tagId)
                 continue;
-            RefreshTagInfo(tag);
+            UpdatePage(PageUpdateType.toChildrenTag, tag);
             break;
         }
-    }
-
-    private void RefreshTagInfo(TagBean tag)
-    {
-        IncidentDetail detail = RecordDetailService.BuildIncidentDetail(tag, incident.Id, false);
-        incidentPieChart.Series = detail.pieChart;
-        childrenTagListBox.ItemsSource = detail.ChildrenTags;
-        incidentDetailGrid.DataContext = detail;
     }
 } }

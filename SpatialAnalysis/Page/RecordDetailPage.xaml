@@ -36,7 +36,8 @@
                         </PathFigure>
                     </PathGeometry></Path.Data>
                 </Path>
-                <Popup x:Name="incidentPopup" Style="{StaticResource detail-popup}">
+                <Popup x:Name="incidentPopup" Style="{StaticResource detail-popup}"
+                       PlacementTarget="{Binding ElementName=incidentTitleTextBlock}">
                     <Border Margin="4" BorderThickness="1" BorderBrush="Aqua" Background="White">
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="-5" BlurRadius="3" Color="Black"/>
@@ -54,8 +55,12 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!-- 详细信息统计图 -->
-            <lvc:PieChart Grid.Column="0" x:Name="incidentPieChart" LegendPosition="Right"
+            <lvc:PieChart Grid.Column="0" x:Name="incidentPieChart" LegendPosition="Bottom"
                           ChartPointPointerDown="IncidentPieChart_OnChartPointPointerDown"/>
+            <RadioButton Grid.Column="0" GroupName="PieChartType" Content="大小" Margin="380,10,0,0"
+                         Click="RadioButtonSize_OnClick" IsChecked="True" Style="{StaticResource pie-char-type}"/>
+            <RadioButton Grid.Column="0" GroupName="PieChartType" Content="占用空间" Margin="380,30,0,0"
+                         Click="RadioButtonSpaceUsage_OnClick" Style="{StaticResource pie-char-type}"/>
             <Border Grid.Column="1" Style="{StaticResource line-vertical}"/>
             <!-- 标签详细信息 -->
             <Grid Grid.Column="2" x:Name="incidentDetailGrid" d:DataContext="{d:DesignInstance {x:Type local:IncidentDetail}}">
