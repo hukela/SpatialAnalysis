@@ -57,6 +57,14 @@
         <Setter Property="VerticalAlignment" Value="Bottom"/>
         <Setter Property="FontSize" Value="14"/>
     </Style>
+    <!-- 返回上一级按键 -->
+    <Style x:Key="return-btn" TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Margin" Value="0,0,10,0"/>
+        <Setter Property="Background" Value="Snow"/>
+        <Setter Property="Visibility" Value="Hidden"/>
+    </Style>
     <!-- ListBox通用样式 -->
     <Style x:Key="listbox" TargetType="ListBox">
         <Setter Property="Margin" Value="10,4"/>

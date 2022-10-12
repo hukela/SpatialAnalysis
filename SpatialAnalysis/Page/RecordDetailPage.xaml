@@ -89,6 +89,8 @@
                 <Border Grid.Row="6" Style="{StaticResource line-horizontal}"/>
                 <TextBlock Grid.Row="7" Text="双击进入子标签查看"
                            Margin="10,0,0,0" Style="{StaticResource incident-detail}"/>
+                <Button x:Name="returnBtn" Grid.Row="7" Content="返回上一级"
+                        Click="ReturnBtn_OnClick" Style="{StaticResource return-btn}"/>
                 <ListBox Grid.Row="8" x:Name="childrenTagListBox" Style="{StaticResource listbox}"
                          MouseDoubleClick="ChildrenTagListBox_OnMouseDoubleClick">
                     <ListBox.Resources>

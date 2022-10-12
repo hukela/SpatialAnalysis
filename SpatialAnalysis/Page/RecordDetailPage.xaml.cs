@@ -59,8 +59,20 @@ public partial class RecordDetailPage : Page
                     incidentDetail = RecordDetailService.BuildIncidentDetail(tag, incidentInfo.Id, isSpaceUsage);
                 break;
             case PageUpdateType.toParentTag:
-                throw new System.NotImplementedException();
+                TagBean parentTag = incidentDetail.Tag;
+                if (parentTag.ParentId == 0)
+                {
+                    returnBtn.Visibility = Visibility.Hidden;
+                    incidentDetail = RecordDetailService.BuildIncidentDetail(incidentInfo, isSpaceUsage);
+                }
+                else
+                {
+                    parentTag = TagMapper.SelectById(parentTag.ParentId);
+                    incidentDetail = RecordDetailService.BuildIncidentDetail(parentTag, incidentInfo.Id, isSpaceUsage);
+                }
+                break;
             case PageUpdateType.toChildrenTag:
+                returnBtn.Visibility = Visibility.Visible;
                 incidentDetail = RecordDetailService.BuildIncidentDetail(tag, incidentInfo.Id, isSpaceUsage);
                 break;
         }
@@ -119,5 +131,13 @@ public partial class RecordDetailPage : Page
             UpdatePage(PageUpdateType.toChildrenTag, tag);
             break;
         }
+    }
+
+    /// <summary>
+    /// 返回上一级按键
+    /// </summary>
+    private void ReturnBtn_OnClick(object sender, RoutedEventArgs e)
+    {
+        UpdatePage(PageUpdateType.toParentTag, null);
     }
 } }
