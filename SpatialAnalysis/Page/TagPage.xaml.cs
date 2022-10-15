@@ -255,7 +255,7 @@ public partial class TagPage : Page
     private uint editingDirTagId;
     private TextBox editingDirTextBox;
     private ListBoxItem editingItem;
-    private bool editingPathIsLock;
+    private volatile bool editingPathIsLock;
     //鼠标移入事件
     private void EditedItem_MouseEnter(object sender, MouseEventArgs e) { mouseInItem = true; }
     //鼠标移出事件
