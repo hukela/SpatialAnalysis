@@ -20,7 +20,7 @@ public partial class ProgramWindow : Window
         CloseButton.Disable(handle);
     }
     //被冻结的信息
-    private string freezedMessage = "";
+    private string freezeMessage = "";
     /// <summary>
     /// 清空内容
     /// </summary>
@@ -31,14 +31,14 @@ public partial class ProgramWindow : Window
             if (cleanFreeze)
             {
                 content.Text = "";
-                freezedMessage = "";
+                freezeMessage = "";
             }
             else
-                content.Text = freezedMessage;
+                content.Text = freezeMessage;
         }
         else
         {
-            CleanDel me = new CleanDel(Clean);
+            CleanDel me = Clean;
             content.Dispatcher.Invoke(me, cleanFreeze);
         }
     }
@@ -49,7 +49,7 @@ public partial class ProgramWindow : Window
     public void Freeze()
     {
         if (content.Dispatcher.CheckAccess())
-            freezedMessage = content.Text;
+            freezeMessage = content.Text;
         else
             content.Dispatcher.Invoke(Freeze);
     }
@@ -69,43 +69,43 @@ public partial class ProgramWindow : Window
     /// <summary>
     /// 添加信息
     /// </summary>
-    /// <param name="message">信息</param>
-    public void Write(string message)
+    /// <param name="msg">信息</param>
+    public void Write(string msg)
     {
         DelegateMe(delegate (string str)
         {
             content.Text += str;
-        }, message);
+        }, msg);
     }
     /// <summary>
     /// 添加一行信息
     /// </summary>
     /// <param name="message">信息</param>
-    public void WriteLine(string message)
+    public void WriteLine(string msg)
     {
         DelegateMe(delegate (string str)
         {
             content.Text += str + "\n";
-        }, message);
+        }, msg);
     }
     /// <summary>
     /// 重写原有信息
     /// </summary>
     /// <param name="message">信息</param>
-    public void WriteAll(string message)
+    public void WriteAll(string msg)
     {
         DelegateMe(delegate (string str)
         {
-            content.Text = freezedMessage + str;
-        }, message);
+            content.Text = freezeMessage + str;
+        }, msg);
     }
     private delegate void WriteMessage(string str);
-    private void DelegateMe(WriteMessage me, string message)
+    private void DelegateMe(WriteMessage me, string msg)
     {
         if (content.Dispatcher.CheckAccess())
-            me(message);
+            me(msg);
         else
-            content.Dispatcher.Invoke(me, message);
+            content.Dispatcher.Invoke(me, msg);
     }
     private void CloseWindow_Click(object sender, RoutedEventArgs e)
     {
