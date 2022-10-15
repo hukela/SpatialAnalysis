@@ -15,8 +15,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="1"/>
-            <RowDefinition Height="2.5*"/>
+            <RowDefinition Height="2.6*"/>
             <RowDefinition Height="1"/>
+            <RowDefinition Height="20"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <!-- 标题和线段 -->
@@ -101,5 +102,8 @@
         </Grid>
         <!-- 标注地址 -->
         <Border Grid.Row="3" Style="{StaticResource line-horizontal}"/>
+        <TextBlock Grid.Row="4" Text="标签标注的路径（双击进入）" Style="{StaticResource path-title}"/>
+        <ListBox Grid.Row="5" x:Name="pathListBox" Style="{StaticResource listbox}"
+                 MouseDoubleClick="PathListBox_OnMouseDoubleClick"/>
     </Grid>
 </Page>

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -46,7 +47,6 @@ public partial class RecordDetailPage : Page
     /// </summary>
     /// <param name="type">更新方式</param>
     /// <param name="tag">若进入子一级标签则 则需要传递该参数</param>
-    /// <param name="isSpaceUsage">图表是否是展示占用空间</param>
     private void UpdatePage(PageUpdateType type, TagBean tag)
     {
         switch (type)
@@ -79,6 +79,7 @@ public partial class RecordDetailPage : Page
         incidentPieChart.Series = incidentDetail.pieChart;
         childrenTagListBox.ItemsSource = incidentDetail.ChildrenTags;
         incidentDetailGrid.DataContext = incidentDetail;
+        pathListBox.ItemsSource = incidentDetail.paths;
     }
 
     /// <summary>
@@ -139,5 +140,21 @@ public partial class RecordDetailPage : Page
     private void ReturnBtn_OnClick(object sender, RoutedEventArgs e)
     {
         UpdatePage(PageUpdateType.toParentTag, null);
+    }
+
+    /// <summary>
+    /// 路径双击事件
+    /// </summary>
+    private void PathListBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        string path = (string) pathListBox.SelectedItem;
+        // 判断路径是否存在
+        if (!Directory.Exists(path))
+        {
+            MessageBox.Show("路径不存在", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            return;
+        }
+        // 在资源管理器中打开
+        System.Diagnostics.Process.Start("explorer.exe", path);
     }
 } }

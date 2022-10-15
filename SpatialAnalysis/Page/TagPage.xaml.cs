@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using SpatialAnalysis.IO.Log;
 
 namespace SpatialAnalysis.MyPage
 {
@@ -217,7 +218,8 @@ public partial class TagPage : Page
             Debug.Assert(textBox != null, nameof(textBox) + " != null");
             // 记录编辑状态
             editingDirTagId = ((DirTagBean)pathList.SelectedItem).Id;
-            isEditing = true;
+            mouseInItem = true;
+            editingPathIsLock = false; // 放重复执行参数
             editingDirTextBox = textBox;
             if (editingDirTagId == 0)
                 textBox.Text = string.Empty;
@@ -249,21 +251,42 @@ public partial class TagPage : Page
     }
 
     //记录该编辑项中所有的相关数据
-    private bool isEditing;
+    private bool mouseInItem;
     private uint editingDirTagId;
     private TextBox editingDirTextBox;
     private ListBoxItem editingItem;
+    private bool editingPathIsLock;
     //鼠标移入事件
-    private void EditedItem_MouseEnter(object sender, MouseEventArgs e) { isEditing = true; }
+    private void EditedItem_MouseEnter(object sender, MouseEventArgs e) { mouseInItem = true; }
     //鼠标移出事件
-    private void EditedItem_MouseLeave(object sender, MouseEventArgs e) { isEditing = false; }
+    private void EditedItem_MouseLeave(object sender, MouseEventArgs e) { mouseInItem = false; }
+
+    /// <summary>
+    /// 加锁 防止多线程重复执行
+    /// </summary>
+    private bool lockPathEdit()
+    {
+        lock (this)
+        {
+            if (editingPathIsLock)
+                return false;
+            editingPathIsLock = true;
+            return true;
+        }
+    }
 
     /// <summary>
     /// 添加或修改标签的地址
     /// </summary>
     private void Path_Save(object sender, RoutedEventArgs e)
     {
-        if (isEditing)
+        Log.Info("Path_Save");
+        if (!lockPathEdit()) // 由于有可能有多个事件同时触发 所以这里要加锁防止重复执行
+        {
+            Log.Info("Path_Save return");
+            return;
+        }
+        if (mouseInItem)
         {
             // 保持当前焦点状态 直接设置会报异常 这里延迟设置
             SetFocus(editingDirTextBox, 100);
@@ -294,6 +317,8 @@ public partial class TagPage : Page
         int index = pathList.SelectedIndex;
         pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
         pathList.SelectedIndex = index;
+        editingPathIsLock = false; // 释放锁
+        Log.Info("修改地址完成");
     }
 
     /// <summary>
@@ -316,6 +341,11 @@ public partial class TagPage : Page
     /// </summary>
     private void DeletePath_Click(object sender, RoutedEventArgs e)
     {
+        //移除启动编辑时事件
+        Application.Current.MainWindow.MouseLeftButtonDown -= Path_Save;
+        editingItem.MouseEnter -= EditedItem_MouseEnter;
+        editingItem.MouseLeave -= EditedItem_MouseLeave;
+        //删除
         DirTagMapper.DeleteOneById(editingDirTagId);
         pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);
     }

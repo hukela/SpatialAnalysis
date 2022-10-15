@@ -188,6 +188,7 @@ internal static class RecordDetailService
         {
             Name = tag.Name,
             Values = new []{ value },
+            Stroke = new SolidColorPaint(SKColors.Black),
             Fill = new SolidColorPaint(new SKColor(rgb[0], rgb[1], rgb[2])),
             Mapping = (v, point) => { point.PrimaryValue = (double)v; point.TertiaryValue = tag.Id; },
             DataLabelsFormatter = point => $"{percent:P2}",
