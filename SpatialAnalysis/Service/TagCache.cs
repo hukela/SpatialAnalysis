@@ -18,15 +18,15 @@ internal static class TagCache
     private static void InitTagCache()
     {
         DirTagBean[] beans = DirTagMapper.SelectAll();
-        //根据标注长度进行排序
+        //根据标文件夹层数排序
         int count = beans.Length;
         for (int r = 0; r < count; r++)
         {
             for (int i = 0; i < count - 1; i++)
             {
-                string a = beans[i].Path;
-                string b = beans[i + 1].Path;
-                if (a.Length < b.Length)
+                int a = beans[i].Path.Split('\\').Length;
+                int b = beans[i + 1].Path.Split('\\').Length;
+                if (a < b)
                     (beans[i], beans[i + 1]) = (beans[i + 1], beans[i]);
             }
         }
@@ -50,7 +50,7 @@ internal static class TagCache
     {
         if (clearTimer.Enabled)
             clearTimer.Stop();
-        clearTimer.Interval = 10 * 60 * 1000; // 10分钟清理一次
+        clearTimer.Interval = 10 * 60 * 1000; // 10分钟后清理
         clearTimer.Elapsed += (s, e) => DeleteTagCache();
         clearTimer.Start();
     }
@@ -69,15 +69,25 @@ internal static class TagCache
     {
         CheckTagCache();
         DirTagBean[] dirTags = tagCache;
+        int plies = path.Split('\\').Length;
         uint tagId = 0;
         isThis = false;
         foreach (DirTagBean dirTag in dirTags)
         {
             if (path.IndexOf(dirTag.Path) == -1)
                 continue;
+            int plies_i = dirTag.Path.Split('\\').Length;
+            if (plies < plies_i)
+                continue;
+            if (plies > plies_i)
+            {
+                tagId = dirTag.TagId;
+                break;
+            }
+            if (path != dirTag.Path)
+                continue;
+            isThis = true;
             tagId = dirTag.TagId;
-            if (dirTag.Path == path)
-                isThis = true;
             break;
         }
         return tagId == 0 ? null : TagMapper.SelectById(tagId);

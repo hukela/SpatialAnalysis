@@ -6,7 +6,7 @@ namespace SpatialAnalysis.Utils
 /// <summary>
 /// 本地缓存工具
 /// </summary>
-internal class LocalCache<R, P>
+internal class LocalCache<P, R>
 {
     /// <summary>
     /// 新建缓存

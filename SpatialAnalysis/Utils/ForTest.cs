@@ -1,20 +1,25 @@
-﻿using SpatialAnalysis.Entity;
-using SpatialAnalysis.Service.AddRecordExtend;
-using System;
-using System.IO;
+﻿using System;
 
 namespace SpatialAnalysis.Utils
 {
-    /// <summary>
-    /// 测试类，用于外部去访问非公开的类
-    /// </summary>
-    public class ForTest
+/// <summary>
+/// 测试类，用于外部去访问非公开的类
+/// </summary>
+public class ForTest
+{
+    public static void Entrance()
     {
-        public static void Entrance()
-        {
-            AddRecord add = new AddRecord();
-            DirectoryInfo dir = new DirectoryInfo(@"");
-            //RecordBean bean = add.SeeDirectory(dir, 1);
-        }
+        LocalCache<int, int> localCache = new LocalCache<int, int>(4, test);
+        Console.WriteLine(localCache.Get(1));
+        Console.WriteLine(localCache.Get(2));
+        Console.WriteLine(localCache.Get(1));
+        localCache.Clear();
+        Console.WriteLine(localCache.Get(1));
     }
-}
+
+    private static int test(int i)
+    {
+        Console.WriteLine("执行：" + i);
+        return i + 1;
+    }
+} }

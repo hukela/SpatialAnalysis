@@ -25,7 +25,7 @@ internal static class SpaceUsage
         return result;
     }
     //本地缓存
-    private static readonly LocalCache<uint, string> clusterCache = new LocalCache<uint, string> (30, GetClusterSize);
+    private static readonly LocalCache<string, uint> clusterCache = new LocalCache<string, uint> (5, GetClusterSize);
     //获取每簇的字节数
     private static uint GetClusterSize(string rootPath)
     {

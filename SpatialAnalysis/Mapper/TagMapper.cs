@@ -3,6 +3,7 @@ using SpatialAnalysis.IO;
 using System;
 using System.Data;
 using System.Data.SQLite;
+using SpatialAnalysis.Utils;
 
 namespace SpatialAnalysis.Mapper
 {
@@ -41,6 +42,12 @@ internal static class TagMapper
         }
         return list;
     }
+
+    /// <summary>
+    /// 本地缓存
+    /// </summary>
+    private static readonly LocalCache<uint, TagBean> cache = new LocalCache<uint, TagBean>(5, SelectByIdForCache);
+
     /// <summary>
     /// 获取所有根标签
     /// </summary>
@@ -65,10 +72,19 @@ internal static class TagMapper
             return GetBeanListByTable(SQLiteClient.Read(cmd));
         }
     }
+
+    /// <summary>
+    /// 通过标签id获取数据实体(先查缓存)
+    /// </summary>
+    public static TagBean SelectById(uint tagId)
+    {
+        return cache.Get(tagId);
+    }
+    
     /// <summary>
     /// 通过标签id获取数据实体
     /// </summary>
-    public static TagBean SelectById(uint tagId)
+    private static TagBean SelectByIdForCache(uint tagId)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -77,6 +93,7 @@ internal static class TagMapper
             return GetBeanListByTable(SQLiteClient.Read(cmd))[0];
         }
     }
+
     /// <summary>
     /// 更新已有标签
     /// </summary>
@@ -91,7 +108,9 @@ internal static class TagMapper
             cmd.Parameters.Add("color", DbType.String).Value = bean.Color;
             SQLiteClient.Write(cmd);
         }
+        cache.Clear();
     }
+
     /// <summary>
     /// 根据id删除一个标签
     /// </summary>
@@ -103,5 +122,6 @@ internal static class TagMapper
             cmd.Parameters.Add("id", DbType.UInt32).Value = tagId;
             SQLiteClient.Write(cmd);
         }
+        cache.Clear();
     }
 } }
