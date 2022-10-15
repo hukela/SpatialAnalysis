@@ -26,15 +26,11 @@ internal static class IncidentMapper
             cmd.Parameters.Add("create_time", DbType.DateTime).Value = bean.CreateTime;
             SQLiteClient.Write(cmd);
         }
-        uint id;
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
             cmd.CommandText = "SELECT LAST_INSERT_ROWID();";
-            DataTable table = SQLiteClient.Read(cmd);
-            //查询id默认类型为ulong
-            id = Convert.ToUInt32(table.Rows[0][0]);
+            return SQLiteClient.Read<uint>(cmd)[0];
         }
-        return id;
     }
 
     //将表格结果改为bean

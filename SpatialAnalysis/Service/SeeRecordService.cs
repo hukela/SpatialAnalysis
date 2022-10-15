@@ -22,6 +22,7 @@ internal static class SeeRecordService
             IncidentBean incidentBean = incidentBeans[i];
             incidentInfos[i] = new IncidentInfo(incidentBean);
             RecordBean[] rootRecordBeans = RecordMapper.SelectRootRecords(incidentBean.Id);
+            ulong recordCount = RecordMapper.Count(incidentBean.Id);
             uint fileCount = 0;
             uint dirCount = 0;
             BigInteger sizeCount = BigInteger.Zero;
@@ -33,6 +34,7 @@ internal static class SeeRecordService
                 sizeCount += bean.Size;
                 spaceCount += bean.SpaceUsage;
             });
+            incidentInfos[i].RecordCount = recordCount;
             incidentInfos[i].FileCount = fileCount;
             incidentInfos[i].DirCount = dirCount;
             incidentInfos[i].Size = sizeCount;

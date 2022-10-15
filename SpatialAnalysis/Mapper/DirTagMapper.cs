@@ -140,14 +140,7 @@ internal static class DirTagMapper
         {
             cmd.CommandText = "SELECT [path] FROM [dir_tag] WHERE [tag_id] = @tag_id;";
             cmd.Parameters.Add("tag_id", DbType.UInt32).Value = tagId;
-            DataTable table = SQLiteClient.Read(cmd);
-            int count = table.Rows.Count;
-            string[] paths = new string[count];
-            for (int i = 0; i < count; i++)
-            {
-                paths[i] = table.Rows[i]["path"] as string;
-            }
-            return paths;
+            return SQLiteClient.Read<string>(cmd);
         }
     }
 } }

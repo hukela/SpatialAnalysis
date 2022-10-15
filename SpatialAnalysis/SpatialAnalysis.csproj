@@ -199,6 +199,7 @@
     <Compile Include="Service\ComparisonExtend\BuildNodeTree.cs" />
     <Compile Include="Service\ComparisonService.cs" />
     <Compile Include="Service\RecordDetailService.cs" />
+    <Compile Include="Service\SeeRecordExtend\DelRecord.cs" />
     <Compile Include="Service\SeeRecordService.cs" />
     <Compile Include="Service\StartupAndExit.cs" />
     <Compile Include="Service\TagService.cs" />

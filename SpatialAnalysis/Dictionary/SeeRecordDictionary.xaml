@@ -32,4 +32,11 @@
         <Setter Property="Margin" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     </Style>
+    <!-- 删除按钮 -->
+    <Style x:Key="del-btn" TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="0,4,10,0"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
 </ResourceDictionary>

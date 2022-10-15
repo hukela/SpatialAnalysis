@@ -15,6 +15,8 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="1"/>
             <RowDefinition/>
+            <RowDefinition Height="1"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <!-- 标题和分割线 -->
         <TextBlock Grid.Row="0" Text="查看记录" Style="{StaticResource title}"/>
@@ -41,7 +43,9 @@
             <TextBlock Grid.Row="0" Grid.Column="3" Text="创建时间" Style="{StaticResource table-head}"/>
             <!-- 表内容 -->
             <ListBox x:Name="incidentListBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
-                     ItemContainerStyle="{StaticResource table-body}" MouseDoubleClick="IncidentListBox_OnMouseDoubleClick">
+                     ItemContainerStyle="{StaticResource table-body}"
+                     MouseDoubleClick="IncidentListBox_OnMouseDoubleClick"
+                     SelectionChanged="IncidentListBox_OnSelectionChanged">
                 <ListBox.Resources>
                     <DataTemplate DataType="{x:Type local:IncidentInfo}">
                         <Grid>
@@ -60,5 +64,10 @@
                 </ListBox.Resources>
             </ListBox>
         </Grid>
+        <!-- 事件信息 -->
+        <Border Grid.Row="3" Style="{StaticResource title-line}"/>
+        <TextBlock Grid.Row="4" x:Name="recordCountTextBlock" Text="事件记录条数：0"
+                   Style="{StaticResource table-head}"/>
+        <Button Grid.Row="4" Content="删除记录" Style="{StaticResource del-btn}"/>
     </Grid>
 </Page>

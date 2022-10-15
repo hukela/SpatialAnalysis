@@ -32,4 +32,11 @@ public partial class SeeRecordPage : Page
         MainWindow main = Application.Current.MainWindow as MainWindow;
         main?.ToPage(page);
     }
+
+    private void IncidentListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!(incidentListBox.SelectedItem is IncidentInfo incident))
+            return;
+        recordCountTextBlock.Text = "事件记录条数：" + incident.RecordCount;
+    }
 } }

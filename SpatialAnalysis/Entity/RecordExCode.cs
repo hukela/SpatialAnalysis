@@ -4,7 +4,9 @@ using System.Text;
 
 namespace SpatialAnalysis.Entity
 {
-//获取文件异常类
+/// <summary>
+/// 获取文件异常类
+/// </summary>
 [Flags]
 internal enum RecordExCode
 {

@@ -1,6 +1,8 @@
 ﻿namespace SpatialAnalysis.Entity
 {
-//节点类别
+/// <summary>
+/// 节点类别
+/// </summary>
 public enum DirNodeType
 {
     Unchanged,
@@ -8,7 +10,9 @@ public enum DirNodeType
     Added,
     Deleted,
 }
-//对比页面的文件夹节点
+/// <summary>
+/// 对比页面的文件夹节点
+/// </summary>
 internal class DirNode
 {
     public uint OldIncidentId { get; set; }

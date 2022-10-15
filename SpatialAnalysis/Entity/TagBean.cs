@@ -2,6 +2,9 @@
 
 namespace SpatialAnalysis.Entity
 {
+/// <summary>
+/// 标签表数据实体
+/// </summary>
 internal class TagBean
 {
     public uint Id { get; set; }

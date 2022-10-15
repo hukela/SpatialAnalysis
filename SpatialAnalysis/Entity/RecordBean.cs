@@ -3,7 +3,9 @@ using System.Numerics;
 
 namespace SpatialAnalysis.Entity 
 {
-//记录表数据实体
+/// <summary>
+/// 记录表数据实体
+/// </summary>
 internal class RecordBean
 {
     public ulong Id { get; set; }

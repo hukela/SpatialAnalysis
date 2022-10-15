@@ -246,13 +246,12 @@ internal static class RecordMapper
     /// </summary>
     /// <param name="incidentId">对应的事件id</param>
     /// <returns>记录总数</returns>
-    public static long Count(uint incidentId)
+    public static ulong Count(uint incidentId)
     {
         using (SQLiteCommand  cmd = new SQLiteCommand ())
         {
             cmd.CommandText = "SELECT COUNT(1) FROM [record_" + incidentId + "];";
-            DataTable table = SQLiteClient.Read(cmd);
-            return (long)table.Rows[0][0];
+            return SQLiteClient.Read<ulong>(cmd)[0];
         }
     }
 

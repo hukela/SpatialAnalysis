@@ -59,7 +59,7 @@ internal class AddRecord
             programWindow.WriteAll("记录完成，建立索引...\n");
             Extend.BuildIndex(incidentId);
             //收尾工作
-            long count = RecordMapper.Count(incidentId);
+            ulong count = RecordMapper.Count(incidentId);
             IncidentMapper.UpdateStateById(incidentId, IncidentStateEnum.success);
             if (isFirst)
                 //删除以前记录失败的作废表格
