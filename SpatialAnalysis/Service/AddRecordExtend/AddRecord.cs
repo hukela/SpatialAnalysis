@@ -12,58 +12,62 @@ namespace SpatialAnalysis.Service.AddRecordExtend
 {
 internal class AddRecord
 {
-    //是否是第一次记录
+    public AddRecord(IncidentBean incidentBean, ProgramWindow programWindow)
+    {
+        this.incidentBean = incidentBean;
+        this.programWindow = programWindow;
+    }
+
+    // 初始化时传递的参数
+    private readonly IncidentBean incidentBean;
+    private readonly ProgramWindow programWindow;
+    // 是否是第一次记录
     private bool isFirst;
-    //事件id
+    // 事件id
     private uint incidentId;
-    //当前类的线程
+    // 当前类的线程
     public Thread thread;
+
     /// <summary>
     /// 添加记录方法
     /// </summary>
-    /// <param name="obj">两个参数 第一个是用于输出进度的ProgramWindow 第二个是要添加记录的目标事件IncidentBean</param>
-    public void AddOne(object obj)
+    /// <param name="programWindow">用于输出进度的ProgramWindow</param>
+    public void AddOne()
     {
         DateTime startTime = DateTime.Now;
         Thread.Sleep(1000);
-        object[] objs = (object[])obj;
-        ProgramWindow programWindow = (ProgramWindow)objs[0];
-        IncidentBean bean = (IncidentBean)objs[1];
         programWindow.WriteLine("初始化...");
         try
         {
-            //处理事件
-            bean.CreateTime = DateTime.Now;
-            bean.StateEnum = IncidentStateEnum.failure;
-            incidentId = IncidentMapper.InsertOne(bean);
-            isFirst = IncidentMapper.IsFirstRecord();
-            //第一次记录必须保证索引表为空
-            if (isFirst)
-                DirIndexMapper.CleanAll();
-            //新建记录表
-            Extend.BuildTable(incidentId, isFirst);
+            // 查找上一次记录的事件
+            IncidentBean lastIncident = IncidentMapper.SelectLastSuccessIncident(incidentId);
+            uint targetIncidentId = lastIncident?.Id ?? 0;
+            isFirst = targetIncidentId == 0; // 0表示没有上一次事件 无需对照
+            // 写入新事件
+            incidentBean.CreateTime = DateTime.Now;
+            incidentBean.StateEnum = IncidentStateEnum.failure;
+            incidentBean.RecordType = isFirst ? (sbyte)1 : (sbyte)0;
+            incidentId = IncidentMapper.InsertOne(incidentBean);
+            // 新建记录表
+            BuildTable();
             programWindow.WriteLine("开始记录硬盘使用空间...");
-            programWindow.WriteLine("(建议此时不要修改硬盘上的文件，以免影响最终的分析结果)");
-            programWindow.Freeze();
+            programWindow.WriteLine("(建议此时不要修改硬盘上的文件)");
             isRunning = true;
             Thread showProgress = new Thread(ShowProgress) { Name = "showProgress" };
-            showProgress.Start(programWindow);
+            showProgress.Start();
             DriveInfo[] drives = DriveInfo.GetDrives();
-            //遍历分区
+            // 遍历分区
             foreach (DriveInfo drive in drives)
             {
                 DirectoryInfo rootDir = new DirectoryInfo(drive.Name);
-                SeeDirectory(rootDir, 0);
+                SeeDirectory(rootDir, 0, targetIncidentId);
             }
             isRunning = false;
             programWindow.WriteAll("记录完成，建立索引...\n");
-            Extend.BuildIndex(incidentId);
-            //收尾工作
+            BuildIndex();
+            // 收尾工作
             ulong count = RecordMapper.Count(incidentId);
             IncidentMapper.UpdateStateById(incidentId, IncidentStateEnum.success);
-            if (isFirst)
-                //删除以前记录失败的作废表格
-                Extend.DeleteErrorTable(incidentId);
             TimeSpan consumption = DateTime.Now - startTime;
             Log.Info($"数据记录完成, 记录：{count}({beanCount}), 耗时：{consumption}");
             programWindow.WriteLine(string.Format("数据记录完成，耗时：{0}小时{1}分。",
@@ -77,45 +81,46 @@ internal class AddRecord
             programWindow.WriteLine("\n错误：");
             programWindow.WriteLine(e.Message);
             programWindow.RunOver();
-            //throw e;
         }
     }
-    //用于告知当前进度的
+
+    // 用于告知当前进度的
     private ulong beanCount;
     private string plies2Path = "";
     private volatile bool isRunning;
-    private void ShowProgress(object obj)
+    // 单独一个线程用于显示进度
+    private void ShowProgress()
     {
-        ProgramWindow window = (ProgramWindow)obj;
+        programWindow.Freeze();
         bool a = true;
         while (isRunning)
         {
-            window.WriteAll(plies2Path + "\n已记录：" + beanCount);
+            programWindow.WriteAll(plies2Path + "\n已记录：" + beanCount);
             if (a)
             {
                 a = false;
-                window.WriteLine(" *");
+                programWindow.WriteLine(" *");
             }
             else
             {
                 a = true;
-                window.Write("\n");
+                programWindow.Write("\n");
             }
-            window.Write("当前线程状态：" + thread.ThreadState);
-            //窗口的刷新时间
+            programWindow.Write("当前线程状态：" + thread.ThreadState);
+            // 窗口的刷新时间
             Thread.Sleep(300);
         }
     }
-    //使用回调的方式，遍历整个硬盘
-    private RecordBean SeeDirectory(DirectoryInfo baseDir, uint plies)
+    // 使用回调的方式，遍历整个硬盘
+    private RecordBean SeeDirectory(DirectoryInfo baseDir, uint plies, uint targetIncidentId)
     {
-        //告知当前进度
+        // 告知当前进度
         if (plies == 2)
             plies2Path = baseDir.FullName;
         RecordBean bean = BeanFactory.BuildDirBean(baseDir, plies);
-        //C盘有传送门，两个路径可以同时访问一个文件，所以这里放弃其中一个路径
+        // C盘有传送门，两个路径可以同时访问一个文件，所以这里放弃其中一个路径
         if (bean.Path == @"C:\Users\All Users") return bean;
-        //获取子文件和子文件夹列表
+        // 获取子文件和子文件夹列表
         DirectoryInfo[] dirs;
         FileInfo[] files;
         try
@@ -137,90 +142,91 @@ internal class AddRecord
                 baseDir.FullName, e.Message, RecordExCode.IOExceptionForGetFile));
             return bean;
         }
-        //用于记录子节点的bean
+        // 再遍历子节点前查询对照组以确定子节点的对照事件id
+        uint childrenTargetIncidentId = targetIncidentId;
+        RecordBean targetBean;
+        do
+        {
+            targetBean = isFirst || targetIncidentId == 0
+                ? null
+                : RecordMapper.SelectByPath(childrenTargetIncidentId, bean.Path);
+            if (targetBean == null)
+            {
+                childrenTargetIncidentId = 0;
+                break;
+            }
+            if (targetBean.TargetIncidentId == 0)
+                break;
+            childrenTargetIncidentId = targetBean.TargetIncidentId;
+        } while(true);
+        if (childrenTargetIncidentId != targetIncidentId)
+            Log.Info("添加记录 修改对照id 原：" + targetIncidentId +
+                     " 新：" + childrenTargetIncidentId + " 路径： " + bean.Path);
+        // 用于记录子节点的bean
         RecordBean[] childDirBeans = new RecordBean[dirs.Length];
-        //遍历并获取子文件夹
+        // 遍历并获取子记录节点
         for (int i = 0; i < dirs.Length; i++)
         {
-            RecordBean dirBean = SeeDirectory(dirs[i], plies + 1);
+            RecordBean dirBean = SeeDirectory(dirs[i], plies + 1, childrenTargetIncidentId);
             bean.Add(dirBean);
             childDirBeans[i] = dirBean;
         }
-        //遍历并获取子文件
+        // 遍历并获取子文件
         foreach (FileInfo file in files)
         {
             RecordBean fileBean = BeanFactory.BuildFileBean(file, plies);
             bean.Add(fileBean);
         }
         // 存储记录结果
-        if (isFirst)
+        if (targetIncidentId == 0)
+            // 对于第一次记录 直接存储 无需搭建映射
             SaveBeanForFirstRecord(bean, childDirBeans);
         else
-            SaveBeanForOtherRecord(bean, childDirBeans);
+        {
+            // 对于后续记录 只存储变化的记录
+            bean.IsChange = bean.IsChange || targetBean == null || bean.Equals(targetBean);
+            if (bean.IsChange)
+                SaveBeanForOtherRecord(bean, childDirBeans);
+            else
+                bean.TargetIncidentId = targetIncidentId;
+        }
+
         return bean;
     }
+
     // 第一次记录
     private void SaveBeanForFirstRecord(RecordBean bean, RecordBean[] childDirBeans)
     {
-        //记录并获取当前id
-        bean.Id = RecordMapper.InsertOne(bean, incidentId, true);
-        //记录索引
-        DirIndexMapper.AddOne(new DirIndexBean()
-        {
-            Path = bean.Path,
-            IncidentId = incidentId,
-            TargetId = bean.Id,
-        });
+        // 记录并获取当前id
+        bean.Id = RecordMapper.InsertOne(incidentId, bean, true);
         beanCount++;
-        //设置子一级的父id
+        // 设置子一级的父id
         foreach (RecordBean dirBean in childDirBeans)
-            RecordMapper.UpdateParentId(dirBean.Id, bean.Id, incidentId);
+            RecordMapper.UpdateParentId(incidentId, dirBean.Id, bean.Id);
     }
-    // 后续记录需要过滤掉未变化的重复项
+    // 后续记录
     private void SaveBeanForOtherRecord(RecordBean bean, RecordBean[] childDirBeans)
     {
-        RecordBean targetBean = Extend.GetLastBean(bean.Path);
-        if (targetBean == null)
-            bean.IsChange = true;
-        else
-            bean.IsChange = bean.IsChange || !bean.Equals(targetBean);
-        //如果该bean没有变化，则不再记录
-        if (bean.IsChange)
+        bean.Id = RecordMapper.InsertOne(incidentId, bean, false);
+        beanCount++;
+        foreach (RecordBean child in childDirBeans)
         {
-            bean.Id = RecordMapper.InsertOne(bean, incidentId, false);
-            beanCount++;
-            //刷新索引
-            DirIndexMapper.RefreshIndex(new DirIndexBean()
+            if (child.IsChange)
+                RecordMapper.UpdateParentId(incidentId, child.Id, bean.Id);
+            else
             {
-                Path = bean.Path,
-                IncidentId = incidentId,
-                TargetId = bean.Id,
-            });
-            foreach (RecordBean dirBean in childDirBeans)
-            {
-                if (dirBean.IsChange)
-                    RecordMapper.UpdateParentId(dirBean.Id, bean.Id, incidentId);
-                else
-                {
-                    //将下一层未改变的bean也记录下来
-                    dirBean.ParentId = bean.Id;
-                    RecordMapper.InsertOne(dirBean, incidentId, false);
-                    beanCount++;
-                }
+                child.ParentId = bean.Id;
+                // 将下一层未改变的bean也记录下来
+                RecordMapper.InsertOne(incidentId, child, false);
+                // 更新映射目标的映射来源事件id
+                RecordMapper.UpdateFromIncidentId(child.TargetIncidentId, bean.Path, incidentId);
+                beanCount++;
             }
         }
-        else
-        {
-            //为未改变节点添加索引
-            bean.IncidentId = targetBean.IncidentId;
-            bean.TargetId = targetBean.Id;
-        }
     }
-}
-internal static class Extend
-{
-    //建立表格
-    internal static void BuildTable(uint incidentId, bool isFirst)
+
+    // 建立表格
+    private void BuildTable()
     {
         string path = IoBase.localPath + @"\Data\record.sql";
         string sql = TextFile.ReadAll(path, Encoding.UTF8);
@@ -241,33 +247,12 @@ internal static class Extend
         }
         SQLiteClient.ExecuteSql(sql);
     }
-    //建立索引
-    internal static void BuildIndex(uint incidentId)
+    // 建立索引
+    private void BuildIndex()
     {
         string path = IoBase.localPath + @"\Data\index.sql";
         string sql = TextFile.ReadAll(path, Encoding.UTF8);
         sql = sql.Replace("{incidentId}", incidentId.ToString());
         SQLiteClient.ExecuteSql(sql);
-    }
-    //删除作废表格
-    internal static void DeleteErrorTable(uint incidentId)
-    {
-        if (incidentId == 1)
-            return;
-        for (uint i = 1; i < incidentId; i++)
-            RecordMapper.DeleteTable(i);
-    }
-    //通过路径获取最新的记录节点
-    internal static RecordBean GetLastBean(string path)
-    {
-        DirIndexBean dirIndex = DirIndexMapper.GetOneByPath(path);
-        if (dirIndex == null)
-            return null;
-        RecordBean bean = RecordMapper.SelectOneById(dirIndex.TargetId, dirIndex.IncidentId);
-        if (bean == null)
-            return null;
-        //告知该bean是属于哪一个事件的
-        bean.IncidentId = dirIndex.IncidentId;
-        return bean;
     }
 } }

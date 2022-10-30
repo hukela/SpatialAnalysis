@@ -81,10 +81,10 @@ internal static class ComparisonService
         //获取bean
         RecordBean oldBean = null;
         if (node.OldId != 0)
-            oldBean = RecordMapper.SelectOneById(node.OldId, node.OldIncidentId);
+            oldBean = RecordMapper.SelectById(node.OldIncidentId, node.OldId);
         RecordBean newBean = null;
         if (node.NewId != 0)
-            newBean = RecordMapper.SelectOneById(node.NewId, node.NewIncidentId);
+            newBean = RecordMapper.SelectById(node.NewIncidentId, node.NewId);
         //设置标签
         ComparisonInfo info = new ComparisonInfo()
         { TagName = string.Concat("标签：", node.Tag.Name ?? "没有标签") };

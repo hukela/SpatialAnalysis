@@ -173,7 +173,6 @@
     <Compile Include="IO\SpaceUsage.cs" />
     <Compile Include="IO\SQLiteClient.cs" />
     <Compile Include="IO\TextFile.cs" />
-    <Compile Include="Mapper\DirIndexMapper.cs" />
     <Compile Include="Mapper\DirTagMapper.cs" />
     <Compile Include="Mapper\IncidentMapper.cs" />
     <Compile Include="Mapper\RecordMapper.cs" />
@@ -332,7 +331,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Data\main - 备份.db" />
     <None Include="Data\main.db" />
   </ItemGroup>
   <ItemGroup>

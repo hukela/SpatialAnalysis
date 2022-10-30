@@ -20,10 +20,11 @@ CREATE TABLE [incident]
 -- 事件表
 (
   [id] integer primary key autoincrement NOT NULL, -- 事件id
-  [create_time] datetime NOT NULL, -- 创建时间
   [title] string NOT NULL, -- 事件标题
-  [explain] string default NULL, -- 事件描述
-  [state] sbyte NOT NULL -- 状态，0代表正常
+  [description] string default NULL, -- 事件描述
+  [state] sbyte NOT NULL, -- 状态，0代表正常
+  [record_type] sbyte NOT NULL, -- 记录类型，0后续，1首次
+  [create_time] datetime NOT NULL -- 创建时间
 );
 
 CREATE TABLE [tag]

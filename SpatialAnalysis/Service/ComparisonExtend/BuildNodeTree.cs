@@ -15,22 +15,21 @@ internal class BuildNodeTree
     public static void BuildChildrenNodes(DirNode node)
     {
         //获取对应节点下的文件夹列表
-        RecordBean[] oldBeans;
+        RecordBean[] oldBeans, newBeans;
         if (node.OldIncidentId == 0)
             oldBeans = Array.Empty<RecordBean>();
         else
-            oldBeans = RecordMapper.SelectByPid(node.OldId, node.OldIncidentId);
-        RecordBean[] newBeans;
+            oldBeans = RecordMapper.SelectChildren(node.OldId, node.OldIncidentId);
         if (node.NewIncidentId == 0)
             newBeans = Array.Empty<RecordBean>();
         else
-            newBeans = RecordMapper.SelectByPid(node.NewId, node.NewIncidentId);
+            newBeans = RecordMapper.SelectChildren(node.NewId, node.NewIncidentId);
         List<DirNode> dirNodes = new List<DirNode>();
         //遍历两个文件夹列表
         foreach (RecordBean oldBean in oldBeans)
         {
+            // 获取路径相同的newBean并将其从列表中移除
             RecordBean newBean = null;
-            //去除重复项
             for (int i = 0; i < newBeans.Length; i++)
             {
                 if (newBeans[i] == null)
@@ -49,11 +48,11 @@ internal class BuildNodeTree
                 // 放入一个空数组，告知页面该节点可以展开
                 Children = oldBean.DirCount > 0 ? new DirNode[1] : null,
             };
-            SetOldId(ref dirNode, oldBean, node.OldIncidentId);
+            SetOldId(dirNode, oldBean, node.OldIncidentId);
             //设置类型
             if (newBean != null)
             {
-                SetNewId(ref dirNode, newBean, node.NewIncidentId);
+                SetNewId(dirNode, newBean, node.NewIncidentId);
                 if (oldBean.Equals(newBean))
                     dirNode.Type = DirNodeType.Unchanged;
                 else
@@ -76,7 +75,7 @@ internal class BuildNodeTree
                 //新增的节点
                 Type = DirNodeType.Added,
             };
-            SetNewId(ref dirNode, newBean, node.NewIncidentId);
+            SetNewId(dirNode, newBean, node.NewIncidentId);
             dirNodes.Add(dirNode);
         }
         //添加标签
@@ -94,13 +93,16 @@ internal class BuildNodeTree
         }
         node.Children = dirNodes.ToArray();
     }
+
     //若有指针的话，则调整node的基础节点为指针所在的节点
-    private static void SetOldId(ref DirNode node, RecordBean bean, uint incidentId)
+    private static void SetOldId(DirNode node, RecordBean bean, uint incidentId)
     {
-        if (bean.IncidentId != 0)
+        if (bean.TargetIncidentId != 0)
         {
-            node.OldIncidentId = bean.IncidentId;
-            node.OldId = bean.TargetId;
+            GetTargetIncidentId(bean.TargetIncidentId, bean.Path,
+                out uint targetIncidentId, out ulong targetId);
+            node.OldId = targetId;
+            node.OldIncidentId = targetIncidentId;
         }
         else
         {
@@ -109,17 +111,33 @@ internal class BuildNodeTree
         }
     }
     //作用同上，调整新记录的指针
-    private static void SetNewId(ref DirNode node, RecordBean bean, uint incidentId)
+    private static void SetNewId(DirNode node, RecordBean bean, uint incidentId)
     {
-        if (bean.IncidentId != 0)
+        if (bean.TargetIncidentId != 0)
         {
-            node.NewIncidentId = bean.IncidentId;
-            node.NewId = bean.TargetId;
+            GetTargetIncidentId(bean.TargetIncidentId, bean.Path,
+                out uint targetIncidentId, out ulong targetId);
+            node.NewId = targetId;
+            node.NewIncidentId = targetIncidentId;
         }
         else
         {
             node.NewIncidentId = incidentId;
             node.NewId = bean.Id;
         }
+    }
+
+    // 获取目标指向的最终节点
+    private static void GetTargetIncidentId(uint targetIncidentId, string path,
+                                            out uint newTargetIncidentId, out ulong targetId)
+    {
+        uint tmpIncidentId = targetIncidentId;
+        do
+        {
+            newTargetIncidentId = tmpIncidentId;
+            RecordBean bean = RecordMapper.SelectByPath(targetIncidentId, path);
+            targetId = bean.Id;
+            tmpIncidentId = bean.TargetIncidentId;
+        } while (tmpIncidentId != 0);
     }
 } }

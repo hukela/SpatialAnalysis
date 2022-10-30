@@ -11,26 +11,27 @@ internal static class IncidentMapper
     /// <summary>
     /// 添加一行数据
     /// </summary>
-    /// <param name="bean">对应的bean</param>
-    /// <returns>该行的id</returns>
+    /// <returns>该数据的自增id</returns>
     public static uint InsertOne(IncidentBean bean)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
             cmd.CommandText = "INSERT INTO " +
-            "[incident] ([title],[description],[state],[create_time]) " +
-            "VALUES (@title,@explain,@state,@create_time);";
+            "[incident] ([title],[description],[state],[record_type],[create_time]) " +
+            "VALUES (@title,@explain,@state,@recordType,@create_time);";
             cmd.Parameters.Add("title", DbType.String).Value = bean.Title;
             cmd.Parameters.Add("explain", DbType.String).Value = bean.Description;
             cmd.Parameters.Add("state", DbType.SByte).Value = bean.State;
+            cmd.Parameters.Add("recordType", DbType.SByte).Value = bean.RecordType;
             cmd.Parameters.Add("create_time", DbType.DateTime).Value = bean.CreateTime;
             SQLiteClient.Write(cmd);
         }
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
             cmd.CommandText = "SELECT LAST_INSERT_ROWID();";
-            return SQLiteClient.Read<uint>(cmd)[0];
+            bean.Id = SQLiteClient.Read<uint>(cmd)[0];
         }
+        return bean.Id;
     }
 
     //将表格结果改为bean
@@ -46,6 +47,7 @@ internal static class IncidentMapper
                 Title = table.Rows[i]["title"] as string,
                 Description = table.Rows[i]["description"] as string,
                 State = Convert.ToSByte(table.Rows[i]["state"]),
+                RecordType = Convert.ToSByte(table.Rows[i]["record_type"]),
                 CreateTime = (DateTime)table.Rows[i]["create_time"],
             };
         }
@@ -106,15 +108,16 @@ internal static class IncidentMapper
     }
 
     /// <summary>
-    /// 查看是否是第一个有效记录
+    /// 查询对应事件id的上一个事件 若不存在则返回null
     /// </summary>
-    public static bool IsFirstRecord()
+    public static IncidentBean SelectLastSuccessIncident(uint id)
     {
-        using (SQLiteCommand cmd = new SQLiteCommand ())
+        using (SQLiteCommand cmd = new SQLiteCommand())
         {
-            cmd.CommandText = "SELECT [id] FROM [incident] WHERE [state] = 0";
+            cmd.CommandText = "SELECT * FROM [incident] WHERE [state] = 0 AND [id] < @id ORDER BY [id] DESC LIMIT 1;";
+            cmd.Parameters.Add("id", DbType.UInt32).Value = id;
             DataTable table = SQLiteClient.Read(cmd);
-            return table.Rows.Count == 0;
+            return table.Rows.Count == 0 ? null : GetBeanByTable(table)[0];
         }
     }
 

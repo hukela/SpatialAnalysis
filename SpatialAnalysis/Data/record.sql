@@ -6,9 +6,9 @@ CREATE TABLE [record_{incidentId}]
   [id] integer primary key autoincrement NOT NULL, -- 记录id,
   [parent_id] uint64 NOT NULL, -- 父级id
   {isNotFirst}
-  [incident_id] uint32 default 0 NOT NULL, -- 指向的事件id,
-  [target_id] uint64 default 0 NOT NULL, -- 指向的记录id,
+  [target_incident_id] uint32 default 0 NOT NULL, -- 指向的事件id,
   {/isNotFirst}
+  [from_incident_id] uint32 default 0 NOT NULL, -- 执行该事件的事件id,
   [path] string unique NOT NULL, -- 路径,
   [plies] uint32 NOT NULL, -- 层数：上面有多少个文件夹
   [size] String default '0' NOT NULL, -- 大小(字节)

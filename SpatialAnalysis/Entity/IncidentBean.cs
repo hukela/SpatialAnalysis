@@ -8,10 +8,11 @@ namespace SpatialAnalysis.Entity
 internal class IncidentBean
 {
     public uint Id { get; set; }
-    public DateTime CreateTime { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public sbyte State { get; set; }
+    public sbyte RecordType { get; set; }
+    public DateTime CreateTime { get; set; }
 
     public IncidentStateEnum StateEnum
     {

@@ -24,14 +24,12 @@ internal static class AddRecordService
     /// <param name="bean">事件bean</param>
     public static void AddIncident(IncidentBean bean)
     {
-        AddRecord addRecord = new AddRecord();
         Log.Info("开始添加记录");
         ProgramWindow window = new ProgramWindow();
-        object[] objs = { window, bean };
+        AddRecord addRecord = new AddRecord(bean, window);
         //建立异步线程来记录全盘文件
         addRecord.thread = new Thread(addRecord.AddOne) { Name = "addRecord" };
-        addRecord.thread.Start(objs);
+        addRecord.thread.Start();
         window.ShowDialog();
     }
-    
 } }

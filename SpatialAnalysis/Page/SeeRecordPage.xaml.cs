@@ -37,6 +37,6 @@ public partial class SeeRecordPage : Page
     {
         if (!(incidentListBox.SelectedItem is IncidentInfo incident))
             return;
-        recordCountTextBlock.Text = "事件记录条数：" + incident.RecordCount;
+        recordCountTextBlock.Text = "记录条数：" + incident.RecordCount;
     }
 } }

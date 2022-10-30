@@ -13,11 +13,11 @@ internal static class RecordMapper
     /// <summary>
     /// 添加一行数据
     /// </summary>
-    /// <param name="bean">对应的数据实体</param>
     /// <param name="incidentId">对应的事件id</param>
+    /// <param name="bean">对应的数据实体</param>
     /// <param name="isFirst">是否是第一次记录</param>
     /// <returns>该行的id</returns>
-    public static ulong InsertOne(RecordBean bean, uint incidentId, bool isFirst)
+    public static ulong InsertOne(uint incidentId, RecordBean bean, bool isFirst)
     {
         using (SQLiteCommand cmd = new SQLiteCommand ())
         {
@@ -25,38 +25,40 @@ internal static class RecordMapper
             string value = string.Empty;
             if (!isFirst)
             {
-                param = "[incident_id], [target_id], ";
-                value = "@incident_id, @target_id, ";
+                param = "[target_incident_id],";
+                value = "@targetIncidentId,";
             }
             cmd.CommandText = string.Concat(
                 "INSERT INTO [record_",
-                incidentId, "] (" +
-                "[parent_id], ",
+                incidentId,"] (" +
+                "[parent_id],",
                 param,
-                "[path], " +
-                "[plies], " +
-                "[size], " +
-                "[space_usage], " +
-                "[create_time], " +
-                "[modify_time], " +
-                "[visit_time], " +
-                "[owner], " +
-                "[exception_code], " +
-                "[file_count], " +
+                "[from_incident_id]," +
+                "[path]," +
+                "[plies]," +
+                "[size]," +
+                "[space_usage]," +
+                "[create_time]," +
+                "[modify_time]," +
+                "[visit_time]," +
+                "[owner]," +
+                "[exception_code]," +
+                "[file_count]," +
                 "[dir_count]) " +
                 "VALUES (" +
-                "@parent_id, ",
+                "@parent_id,",
                 value,
-                "@path, " +
-                "@plies, " +
-                "@size, " +
-                "@space_usage, " +
-                "@create_time, " +
-                "@modify_time, " +
-                "@visit_time, " +
-                "@owner, " +
-                "@exception_code, " +
-                "@file_count, " +
+                "@fromIncidentId" +
+                "@path," +
+                "@plies," +
+                "@size," +
+                "@space_usage," +
+                "@create_time," +
+                "@modify_time," +
+                "@visit_time," +
+                "@owner," +
+                "@exception_code," +
+                "@file_count," +
                 "@dir_count);");
             cmd.Parameters.Add("parent_id", DbType.UInt64).Value = bean.ParentId;
             cmd.Parameters.Add("path", DbType.String).Value = bean.Path;
@@ -71,20 +73,15 @@ internal static class RecordMapper
             cmd.Parameters.Add("file_count", DbType.UInt32).Value = bean.FileCount;
             cmd.Parameters.Add("dir_count", DbType.UInt32).Value = bean.DirCount;
             if (!isFirst)
-            {
-                cmd.Parameters.Add("incident_id", DbType.UInt32).Value = bean.IncidentId;
-                cmd.Parameters.Add("target_id", DbType.UInt64).Value = bean.TargetId;
-            }
+                cmd.Parameters.Add("targetIncidentId", DbType.UInt32).Value = bean.TargetIncidentId;
             SQLiteClient.Write(cmd);
         }
-        ulong id;
         using (SQLiteCommand  cmd = new SQLiteCommand ())
         {
             cmd.CommandText = "SELECT LAST_INSERT_ROWID();";
-            DataTable table = SQLiteClient.Read(cmd);
-            id = Convert.ToUInt64(table.Rows[0][0]);
+            bean.Id = SQLiteClient.Read<ulong>(cmd)[0];
         }
-        return id;
+        return bean.Id;
     }
 
     //将数据由表格转化为bean
@@ -95,23 +92,19 @@ internal static class RecordMapper
         for (int i = 0; i < count; i++)
         {
             DataRow row = table.Rows[i];
-            uint incidentId = 0;
-            ulong targetId = 0;
-            if (table.Columns.Contains("incident_id"))
-            {
-                incidentId = Convert.ToUInt32(row["incident_id"]);
-                targetId = Convert.ToUInt64(row["target_id"]);
-            }
+            uint targetIncidentId = 0;
+            if (table.Columns.Contains("target_incident_id"))
+                targetIncidentId = Convert.ToUInt32(row["target_incident_id"]);
             RecordBean bean = new RecordBean()
             {
                 Id = Convert.ToUInt64(row["id"]),
                 ParentId = Convert.ToUInt64(row["parent_id"]),
-                IncidentId = incidentId,
-                TargetId = targetId,
+                FromIncidentId = Convert.ToUInt32(row["from_incident_id"]),
+                TargetIncidentId = targetIncidentId,
                 Path = (string)row["path"],
                 Plies = Convert.ToUInt32(row["plies"]),
-                Size = BigInteger.Parse(row["size"] as string),
-                SpaceUsage = BigInteger.Parse(row["space_usage"] as string),
+                Size = BigInteger.Parse(row["size"] as string ?? "0"),
+                SpaceUsage = BigInteger.Parse(row["space_usage"] as string ?? "0"),
                 CreateTime = (DateTime)row["create_time"],
                 ModifyTime = (DateTime)row["modify_time"],
                 VisitTime = (DateTime)row["visit_time"],
@@ -128,12 +121,12 @@ internal static class RecordMapper
     /// <summary>
     /// 通过id设置父级id
     /// </summary>
-    /// <param name="id">要修改的行id</param>
     /// <param name="incidentId">对应的事件id</param>
+    /// <param name="id">要修改的行id</param>
     /// <param name="ParentId">父级id</param>
-    public static void UpdateParentId(ulong id, ulong ParentId, uint incidentId)
+    public static void UpdateParentId(uint incidentId, ulong id, ulong ParentId)
     {
-        using (SQLiteCommand  cmd = new SQLiteCommand ())
+        using (SQLiteCommand cmd = new SQLiteCommand ())
         {
             cmd.CommandText = "UPDATE [record_" + incidentId + "] SET [parent_id] = @parent_id WHERE [id] = @id;";
             cmd.Parameters.Add("id", DbType.UInt64).Value = id;
@@ -143,12 +136,46 @@ internal static class RecordMapper
     }
 
     /// <summary>
+    /// 更新记录的映射目标id
+    /// </summary>
+    /// <param name="incidentId">事件id</param>
+    /// <param name="path">路径</param>
+    /// <param name="targetIncidentId">映射目标事件id</param>
+    public static void UpdateTargetIncidentId(uint incidentId, string path, uint targetIncidentId)
+    {
+        using (SQLiteCommand cmd = new SQLiteCommand())
+        {
+            cmd.CommandText = "UPDATE [record_" + incidentId + "] SET [target_incident_id] = @targetIncidentId WHERE [path] = @path;";
+            cmd.Parameters.Add("path", DbType.String).Value = path;
+            cmd.Parameters.Add("targetIncidentId", DbType.UInt32).Value = targetIncidentId;
+            SQLiteClient.Write(cmd);
+        }
+    }
+
+    /// <summary>
+    /// 更新记录的映射来源id
+    /// </summary>
+    /// <param name="incidentId">事件id</param>
+    /// <param name="path">路径</param>
+    /// <param name="fromIncidentId">映射来源事件id</param>
+    public static void UpdateFromIncidentId(uint incidentId, string path, uint fromIncidentId)
+    {
+        using (SQLiteCommand cmd = new SQLiteCommand())
+        {
+            cmd.CommandText = "UPDATE [record_" + incidentId + "] SET [from_incident_id] = @fromIncidentId WHERE [path] = @path;";
+            cmd.Parameters.Add("path", DbType.String).Value = path;
+            cmd.Parameters.Add("fromIncidentId", DbType.UInt32).Value = fromIncidentId;
+            SQLiteClient.Write(cmd);
+        }
+    }
+
+    /// <summary>
     /// 通过id获取一个数据实体
     /// </summary>
-    /// <param name="id">id</param>
     /// <param name="incidentId">对应的事件id</param>
+    /// <param name="id">id</param>
     /// <returns>数据实体</returns>
-    public static RecordBean SelectOneById(ulong id, uint incidentId)
+    public static RecordBean SelectById(uint incidentId, ulong id)
     {
         DataTable table;
         using (SQLiteCommand  cmd = new SQLiteCommand ())
@@ -190,11 +217,11 @@ internal static class RecordMapper
     /// <param name="ParentId">文件夹id</param>
     /// <param name="incidentId">事件id</param>
     /// <returns></returns>
-    public static RecordBean[] SelectByPid(ulong ParentId, uint incidentId)
+    public static RecordBean[] SelectChildren(ulong ParentId, uint incidentId)
     {
         using (SQLiteCommand  cmd = new SQLiteCommand ())
         {
-            cmd.CommandText = string.Concat("SELECT * FROM [record_", incidentId, "] WHERE [parent_id] = @parent_id and [id] != 0");
+            cmd.CommandText = string.Concat("SELECT * FROM [record_", incidentId,"] WHERE [parent_id] = @parent_id and [id] != 0");
             cmd.Parameters.Add("parent_id", DbType.UInt64).Value = ParentId;
             return GetBeansByTable(SQLiteClient.Read(cmd));
         }
@@ -209,7 +236,7 @@ internal static class RecordMapper
     {
         using (SQLiteCommand  cmd = new SQLiteCommand ())
         {
-            cmd.CommandText = string.Concat("SELECT * FROM [record_", incidentId, "] WHERE [path] = @path");
+            cmd.CommandText = string.Concat("SELECT * FROM [record_", incidentId,"] WHERE [path] = @path");
             cmd.Parameters.Add("path", DbType.String).Value = path;
             DataTable table = SQLiteClient.Read(cmd);
             return table.Rows.Count == 0 ? null : GetBeansByTable(table)[0];
@@ -217,7 +244,7 @@ internal static class RecordMapper
     }
 
     /// <summary>
-    /// 批量通过path查询对应记录
+    /// 通过path查询对应记录 (批量)
     /// </summary>
     /// <param name="incidentId">事件id</param>
     /// <param name="paths">多个路径</param>
@@ -263,7 +290,7 @@ internal static class RecordMapper
     {
         using (SQLiteCommand  cmd = new SQLiteCommand ())
         {
-            cmd.CommandText = string.Concat("DROP TABLE IF EXISTS [record_", incidentId, "];");
+            cmd.CommandText = string.Concat("DROP TABLE IF EXISTS [record_", incidentId,"];");
             SQLiteClient.Write(cmd);
         }
     }

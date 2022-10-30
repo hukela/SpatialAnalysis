@@ -10,8 +10,8 @@ internal class RecordBean
 {
     public ulong Id { get; set; }
     public ulong ParentId { get; set; }
-    public uint IncidentId { get; set; }
-    public ulong TargetId { get; set; }
+    public uint FromIncidentId { get; set; }
+    public uint TargetIncidentId { get; set; }
     public string Path { get; set; }
     public uint Plies { get; set; }
     public BigInteger Size { get; set; }
