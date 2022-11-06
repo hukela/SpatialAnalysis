@@ -24,4 +24,4 @@ CREATE TABLE [record_{incidentId}]
 
 /*Data for the table [record] */
 insert into [record_{incidentId}] values
-(0,0,{isNotFirst}0,0,{/isNotFirst}'\\\\.\\',0,'0','0','1601-01-01 00:00:00','1601-01-01 00:00:00','1601-01-01 00:00:00',NULL,0,0,0);
+(0,0,{isNotFirst}0,{/isNotFirst}0,'\\\\.\\',0,'0','0','1601-01-01 00:00:00','1601-01-01 00:00:00','1601-01-01 00:00:00',NULL,0,0,0);

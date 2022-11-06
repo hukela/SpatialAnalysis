@@ -42,6 +42,7 @@ internal static class BeanFactory
         }
         return bean;
     }
+
     /// <summary>
     /// 获取文件夹相关信息
     /// </summary>
@@ -51,41 +52,28 @@ internal static class BeanFactory
     public static RecordBean BuildDirBean(DirectoryInfo dir, uint plies)
     {
         string owner;
-        RecordExCode errorCode;
+        RecordExCode errorCode = RecordExCode.Normal;
         try
         {
             DirectorySecurity security = dir.GetAccessControl();
             IdentityReference identity = security.GetOwner(typeof(NTAccount));
             owner = identity.ToString();
-            errorCode = RecordExCode.Normal;
         }
-        catch (IdentityNotMappedException e)
+        catch (IdentityNotMappedException)
         {
             owner = "IdentityNotMappedException";
-            errorCode = RecordExCode.IdentityNotMappedException;
-            Log.Warn(string.Format("获取文件夹所有者失败。{0} {1}, [error code: {2}]",
-                                    dir.FullName, e.Message, errorCode));
         }
-        catch (ArgumentException e)
+        catch (ArgumentException)
         {
             owner = "ArgumentException";
-            errorCode = RecordExCode.ArgumentException;
-            Log.Warn(string.Format("获取文件夹有者失败。{0} {1}, [error code: {2}]",
-                                    dir.FullName, e.Message.Replace("\r\n", ""), errorCode));
         }
-        catch (UnauthorizedAccessException e)
+        catch (UnauthorizedAccessException)
         {
             owner = "UnauthorizedAccessException";
-            errorCode = RecordExCode.ArgumentException;
-            Log.Warn(string.Format("获取文件夹所有者失败。{0} {1}, [error code: {2}]",
-                                    dir.FullName, e.Message, errorCode));
         }
-        catch (InvalidOperationException e)
+        catch (InvalidOperationException)
         {
             owner = "InvalidOperationException";
-            errorCode = RecordExCode.InvalidOperationException;
-            Log.Warn(string.Format("获取文件夹所有者失败。{0} {1}, [error code: {2}]",
-                                    dir.FullName, e.Message, errorCode));
         }
         catch (FileNotFoundException e)
         {

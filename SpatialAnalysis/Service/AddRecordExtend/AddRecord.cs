@@ -40,7 +40,7 @@ internal class AddRecord
         try
         {
             // 查找上一次记录的事件
-            IncidentBean lastIncident = IncidentMapper.SelectLastSuccessIncident(incidentId);
+            IncidentBean lastIncident = IncidentMapper.SelectLastSuccessIncident();
             uint targetIncidentId = lastIncident?.Id ?? 0;
             isFirst = targetIncidentId == 0; // 0表示没有上一次事件 无需对照
             // 写入新事件
@@ -114,6 +114,7 @@ internal class AddRecord
     // 使用回调的方式，遍历整个硬盘
     private RecordBean SeeDirectory(DirectoryInfo baseDir, uint plies, uint targetIncidentId)
     {
+        Log.Info("进入路径[" + baseDir.FullName + "]，对照事件：" + targetIncidentId);
         // 告知当前进度
         if (plies == 2)
             plies2Path = baseDir.FullName;
@@ -178,13 +179,14 @@ internal class AddRecord
             bean.Add(fileBean);
         }
         // 存储记录结果
-        if (targetIncidentId == 0)
+        if (isFirst)
             // 对于第一次记录 直接存储 无需搭建映射
             SaveBeanForFirstRecord(bean, childDirBeans);
         else
         {
             // 对于后续记录 只存储变化的记录
-            bean.IsChange = bean.IsChange || targetBean == null || bean.Equals(targetBean);
+            bean.IsChange = bean.IsChange || targetBean == null || !bean.Equals(targetBean);
+            Log.Info("保存路径[" + bean.Path + "]，是否改变：" + bean.IsChange);
             if (bean.IsChange)
                 SaveBeanForOtherRecord(bean, childDirBeans);
             else
@@ -217,9 +219,11 @@ internal class AddRecord
             {
                 child.ParentId = bean.Id;
                 // 将下一层未改变的bean也记录下来
+                Log.Info("记录未变化的路径[" + child.Path + "]，对照事件id：" + child.TargetIncidentId);
                 RecordMapper.InsertOne(incidentId, child, false);
                 // 更新映射目标的映射来源事件id
-                RecordMapper.UpdateFromIncidentId(child.TargetIncidentId, bean.Path, incidentId);
+                if (child.TargetIncidentId != 0)
+                    RecordMapper.UpdateFromIncidentId(child.TargetIncidentId, bean.Path, incidentId);
                 beanCount++;
             }
         }

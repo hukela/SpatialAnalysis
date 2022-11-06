@@ -48,7 +48,7 @@ internal static class RecordMapper
                 "VALUES (" +
                 "@parent_id,",
                 value,
-                "@fromIncidentId" +
+                "@from_incident_id," +
                 "@path," +
                 "@plies," +
                 "@size," +
@@ -61,6 +61,7 @@ internal static class RecordMapper
                 "@file_count," +
                 "@dir_count);");
             cmd.Parameters.Add("parent_id", DbType.UInt64).Value = bean.ParentId;
+            cmd.Parameters.Add("from_incident_id", DbType.UInt32).Value = bean.FromIncidentId;
             cmd.Parameters.Add("path", DbType.String).Value = bean.Path;
             cmd.Parameters.Add("plies", DbType.UInt32).Value = bean.Plies;
             cmd.Parameters.Add("size", DbType.String).Value = bean.Size.ToString();

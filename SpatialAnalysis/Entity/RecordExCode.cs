@@ -23,11 +23,6 @@ internal enum RecordExCode
     //获取子文件占用空间失败
     SpaceUsageException = 0x8,
     // === 获取文件或文件夹所有者异常 ===
-    // todo 去除文件所有者异常
-    IdentityNotMappedException = 0x10,
-    ArgumentException = 0x20,
-    UnauthorizedAccessException = 0x40,
-    InvalidOperationException = 0x80,
 }
 
 internal static class RecordExCodeMap

@@ -110,12 +110,11 @@ internal static class IncidentMapper
     /// <summary>
     /// 查询对应事件id的上一个事件 若不存在则返回null
     /// </summary>
-    public static IncidentBean SelectLastSuccessIncident(uint id)
+    public static IncidentBean SelectLastSuccessIncident()
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
         {
-            cmd.CommandText = "SELECT * FROM [incident] WHERE [state] = 0 AND [id] < @id ORDER BY [id] DESC LIMIT 1;";
-            cmd.Parameters.Add("id", DbType.UInt32).Value = id;
+            cmd.CommandText = "SELECT * FROM [incident] WHERE [state] = 0 ORDER BY [id] DESC LIMIT 1;";
             DataTable table = SQLiteClient.Read(cmd);
             return table.Rows.Count == 0 ? null : GetBeanByTable(table)[0];
         }

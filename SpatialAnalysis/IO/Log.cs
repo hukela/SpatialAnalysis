@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace SpatialAnalysis.IO.Log
 {
@@ -45,10 +46,14 @@ internal static class Log
     /// <param name="i">堆栈回溯</param>
     public static void Add(Exception e, int i = 0)
     {
-        string message = string.Concat(e.Message, " : ", e.GetType());
-        if(e.StackTrace != null)
-            message += "\n" + e.StackTrace;
-        AddLog(message, "error", i + 2);
+        StringBuilder builder = new StringBuilder();
+        do
+        {
+            builder.AppendLine(e.Message + " (" + e.GetType() + ")")
+                .AppendLine(e.StackTrace);
+            e = e.InnerException;
+        } while (e != null);
+        AddLog(builder.ToString(), "error", i + 2);
     }
     // i: 回溯堆栈的索引
     private static void AddLog(string message, string type, int i)

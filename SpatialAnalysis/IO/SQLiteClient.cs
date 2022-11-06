@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
+using System.Linq;
 
 namespace SpatialAnalysis.IO
 {
@@ -31,7 +32,10 @@ internal static class SQLiteClient
         {
             if (con == null)
                 return false;
-            return con.State != ConnectionState.Closed && con.State != ConnectionState.Broken;
+            lock (con)
+            {
+                return con.State != ConnectionState.Closed && con.State != ConnectionState.Broken;
+            }
         }
     }
 
@@ -40,8 +44,11 @@ internal static class SQLiteClient
     /// </summary>
     public static void OpenConnect()
     {
-        if (con.State == ConnectionState.Closed || con.State == ConnectionState.Broken)
-            con.Open();
+        lock (con)
+        {
+            if (con.State == ConnectionState.Closed || con.State == ConnectionState.Broken)
+                con.Open();
+        }
     }
 
     /// <summary>
@@ -49,8 +56,23 @@ internal static class SQLiteClient
     /// </summary>
     public static void CloseConnect()
     {
-        if (con.State != ConnectionState.Closed && con.State != ConnectionState.Broken)
-            con.Close();
+        lock (con)
+        {
+            if (con.State != ConnectionState.Closed && con.State != ConnectionState.Broken)
+                con.Close();
+        }
+    }
+
+    // 生成sql语句以方便查找错误
+    private static string buildSql(SQLiteCommand cmd)
+    {
+        return cmd.Parameters
+            .Cast<SQLiteParameter>()
+            .Aggregate(
+                cmd.CommandText,
+                (current, p) => p.DbType == DbType.String ?
+                        current.Replace('@' + p.ParameterName, "'" + p.Value + "'") :
+                        current.Replace('@' + p.ParameterName, p.Value.ToString()));
     }
 
     /// <summary>
@@ -60,7 +82,6 @@ internal static class SQLiteClient
     /// <returns>表格数据</returns>
     public static DataTable Read(SQLiteCommand cmd)
     {
-        //锁，因为一个链接只支持一个cmd运行
         lock(con)
         {
             if (con.State == ConnectionState.Broken)
@@ -68,7 +89,14 @@ internal static class SQLiteClient
             cmd.Connection = con;
             adapter.SelectCommand = cmd;
             DataTable table = new DataTable();
-            adapter.Fill(table);
+            try
+            {
+                adapter.Fill(table);
+            }
+            catch (SQLiteException e)
+            {
+                throw new SQLiteException("error in SQLiteClient.Read\n" + buildSql(cmd), e);
+            }
             return table;
         }
     }
@@ -80,16 +108,7 @@ internal static class SQLiteClient
     /// <typeparam name="T">仅支持基础类型</typeparam>
     public static T[] Read<T>(SQLiteCommand cmd)
     {
-        //锁，因为一个链接只支持一个cmd运行
-        DataTable table = new DataTable();
-        lock (con)
-        {
-            if (con.State == ConnectionState.Broken)
-                OpenConnect();
-            cmd.Connection = con;
-            adapter.SelectCommand = cmd;
-            adapter.Fill(table);
-        }
+        DataTable table = Read(cmd);
         // 判断是否有数据
         if (table.Rows.Count == 0)
             return default;
@@ -165,14 +184,21 @@ internal static class SQLiteClient
     /// </summary>
     /// <param name="cmd">sql语句</param>
     /// <returns>被改变的行数</returns>
-    public static int Write(SQLiteCommand cmd)
+    public static void Write(SQLiteCommand cmd)
     {
         lock(con)
         {
             if (con.State == ConnectionState.Broken)
                 OpenConnect();
             cmd.Connection = con;
-            return cmd.ExecuteNonQuery();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (SQLiteException e)
+            {
+                throw new SQLiteException("error in SQLiteClient.Write\n" + buildSql(cmd), e);
+            }
         }
     }
 
@@ -181,9 +207,17 @@ internal static class SQLiteClient
     /// </summary>
     public static void ExecuteSql(string sql)
     {
-        using (SQLiteCommand cmd = new SQLiteCommand(sql, con))
+        lock (con)
         {
-            cmd.ExecuteNonQuery();
+            using (SQLiteCommand cmd = new SQLiteCommand(sql, con))
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SQLiteException e)
+                {
+                    throw new SQLiteException("error in SQLiteClient.ExecuteSql\n" + buildSql(cmd), e);
+                }
         }
     }
 } }
