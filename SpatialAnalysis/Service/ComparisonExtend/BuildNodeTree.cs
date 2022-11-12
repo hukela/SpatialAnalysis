@@ -135,7 +135,7 @@ internal class BuildNodeTree
         do
         {
             newTargetIncidentId = tmpIncidentId;
-            RecordBean bean = RecordMapper.SelectByPath(targetIncidentId, path);
+            RecordBean bean = RecordMapper.SelectByPath(tmpIncidentId, path);
             targetId = bean.Id;
             tmpIncidentId = bean.TargetIncidentId;
         } while (tmpIncidentId != 0);

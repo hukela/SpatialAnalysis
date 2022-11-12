@@ -223,7 +223,7 @@ internal class AddRecord
                 RecordMapper.InsertOne(incidentId, child, false);
                 // 更新映射目标的映射来源事件id
                 if (child.TargetIncidentId != 0)
-                    RecordMapper.UpdateFromIncidentId(child.TargetIncidentId, bean.Path, incidentId);
+                    RecordMapper.UpdateFromIncidentId(child.TargetIncidentId, child.Path, incidentId);
                 beanCount++;
             }
         }
