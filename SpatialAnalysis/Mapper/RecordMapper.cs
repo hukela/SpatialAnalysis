@@ -206,7 +206,7 @@ internal static class RecordMapper
             cmd.CommandText = string.Concat(
                 "select * " +
                 "from [record_", incidentId,
-                "] where [parent_id] = 0;");
+                "] where [parent_id] = 0 and [id]  != 0;");
             table = SQLiteClient.Read(cmd);
         }
         return GetBeansByTable(table);
@@ -279,7 +279,8 @@ internal static class RecordMapper
         using (SQLiteCommand  cmd = new SQLiteCommand ())
         {
             cmd.CommandText = "SELECT COUNT(1) FROM [record_" + incidentId + "];";
-            return SQLiteClient.Read<ulong>(cmd)[0];
+            // 减去根记录(id = 0的记录)
+            return SQLiteClient.Read<ulong>(cmd)[0] - 1;
         }
     }
 

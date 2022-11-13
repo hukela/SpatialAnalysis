@@ -26,6 +26,8 @@ internal static class SeeRecordService
         {
             IncidentBean incidentBean = incidentBeans[i];
             incidentInfos[i] = new IncidentInfo(incidentBean);
+            if (incidentBean.StateEnum == IncidentStateEnum.deleted)
+                continue;
             RecordBean[] rootRecordBeans = RecordMapper.SelectRootRecords(incidentBean.Id);
             ulong recordCount = RecordMapper.Count(incidentBean.Id);
             uint fileCount = 0;
@@ -57,7 +59,7 @@ internal static class SeeRecordService
         IncidentBean[] incidents = IncidentMapper.SelectSuccessIncidents();
         IncidentBean bean = incidents.FirstOrDefault(i => i.Id == incidentId);
         bool needReorganize = bean != null && incidents.Length > 1; // 删除该数据时是否需要对数据结构进行重组镇整理
-        string boxTest = needReorganize ? "是否确定删除该记录下所有数据？(该操作不可逆)" : "是否确定删除该记录下所有数据？(该操作不可逆，且需要几分钟执行)";
+        string boxTest = needReorganize ? "是否确定删除该记录下所有数据？(该操作不可逆，且需要几分钟执行)" : "是否确定删除该记录下所有数据？(该操作不可逆)";
         if (MessageBox.Show(boxTest, "提示", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK)
             return;
         if (needReorganize)

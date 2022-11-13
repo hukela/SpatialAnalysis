@@ -124,6 +124,7 @@ internal static class RecordDetailService
     private static CountBean CountTagSize(uint incidentId, uint tagId)
     {
         string[] paths = DirTagMapper.selectPathByTagId(tagId);
+        if (paths == null) return new CountBean();
         RecordBean[] records = RecordMapper.SelectByPaths(incidentId, paths);
         CountBean count = new CountBean();
         foreach (RecordBean record in records)
@@ -147,6 +148,7 @@ internal static class RecordDetailService
         foreach (uint tagId in tagIds)
         {
             string[] tagPaths = DirTagMapper.selectPathByTagId(tagId);
+            if (tagPaths == null) continue;
             HashSet<string> paths = new HashSet<string>(tagPaths);
             allPaths.AddRange(tagPaths);
             tagPathMap.Add(paths, tagId);

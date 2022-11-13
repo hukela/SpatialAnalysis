@@ -1,4 +1,5 @@
 using System;
+using System.Data.SQLite;
 using System.Threading;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO.Log;
@@ -27,10 +28,11 @@ public class DelRecord
         try
         {
             recordCount = RecordMapper.Count(incidentId);
+            programWindow.WriteLine("警告：删除过程中请勿关闭程序，否则会导致数据结构错误！");
             programWindow.WriteLine("事件中共有" + recordCount + "条记录");
             programWindow.WriteLine("开始删除...");
-            programWindow.WriteLine("警告：删除过程中请勿关闭程序，否则会导致数据结构错误！");
             // 开启进度展示线程
+            isRunning = true;
             new Thread(ShowProgressThread).Start();
             // 对记录树进行遍历并整理带删除数据
             if (incidentId == IncidentMapper.SelectLastBean().Id)
@@ -66,7 +68,7 @@ public class DelRecord
         while (isRunning)
         {
             printProgress();
-            Thread.Sleep(300);
+            Thread.Sleep(100);
         }
     }
     // 打印进度
@@ -87,12 +89,14 @@ public class DelRecord
                                              : RecordMapper.SelectChildren(bean.Id, incidentId);
         // 查找映射到当前记录的来源记录 若找到 则将该节点下的所有字节点都归类到该映射来源的事件中
         bool beMapped = false;
-        if (fromIncidentId == 0 && bean != null && bean.FromIncidentId != 0)
+        if (fromIncidentId == 0 && bean != null && bean.FromIncidentId != 0
+            && IncidentMapper.SelectById(bean.FromIncidentId).StateEnum == IncidentStateEnum.success)
         {
             beMapped = true;
             fromIncidentId = bean.FromIncidentId;
         }
-        traverseDelegate(fromIncidentId, bean, beMapped);
+        if (bean != null)
+            traverseDelegate(fromIncidentId, bean, beMapped);
         if (children == null || children.Length == 0)
             return;
         foreach (RecordBean child in children)
@@ -113,6 +117,8 @@ public class DelRecord
     // 清理其他记录
     private void clearOther(uint fromIncidentId, RecordBean bean, bool beMapped)
     {
+        if (bean.TargetIncidentId != 0)
+            RecordMapper.UpdateFromIncidentId(bean.TargetIncidentId, bean.Path, bean.FromIncidentId);
         if (fromIncidentId == 0)
         {
             clearCount ++;
@@ -126,7 +132,7 @@ public class DelRecord
                 throw new Exception("数据结构错误，映射来源记录不存在，事件id：" + fromIncidentId + "，记录路径：" + bean.Path);
             bean.Id = fromBean.Id;
             bean.ParentId = fromBean.ParentId;
-            RecordMapper.UpdateTargetIncidentId(fromIncidentId, bean.Path, 0);
+            RecordMapper.UpdateTargetIncidentId(fromIncidentId, bean.Path, bean.TargetIncidentId);
         }
         else
             // 搬运记录

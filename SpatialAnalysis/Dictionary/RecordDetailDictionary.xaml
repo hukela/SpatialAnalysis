@@ -32,7 +32,7 @@
     <!-- 详细信息 内容弹框 -->
     <Style x:Key="detail-popup" TargetType="Popup">
         <Setter Property="Placement" Value="Center"/>
-        <Setter Property="HorizontalOffset" Value="325"/>
+        <Setter Property="HorizontalOffset" Value="465"/>
         <Setter Property="VerticalOffset" Value="110"/>
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="StaysOpen" Value="False"/>
