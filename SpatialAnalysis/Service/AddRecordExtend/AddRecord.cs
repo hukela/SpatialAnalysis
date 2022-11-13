@@ -32,7 +32,7 @@ internal class AddRecord
     /// 添加记录方法
     /// </summary>
     /// <param name="programWindow">用于输出进度的ProgramWindow</param>
-    public void AddOne()
+    public void StartAdd()
     {
         DateTime startTime = DateTime.Now;
         Thread.Sleep(1000);
@@ -111,6 +111,7 @@ internal class AddRecord
             Thread.Sleep(300);
         }
     }
+
     // 使用回调的方式，遍历整个硬盘
     private RecordBean SeeDirectory(DirectoryInfo baseDir, uint plies, uint targetIncidentId)
     {

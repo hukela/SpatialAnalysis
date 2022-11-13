@@ -38,5 +38,6 @@
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Margin" Value="0,4,10,0"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="IsEnabled" Value="False"/>
     </Style>
 </ResourceDictionary>

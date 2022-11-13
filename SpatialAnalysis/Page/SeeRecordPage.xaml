@@ -68,6 +68,7 @@
         <Border Grid.Row="3" Style="{StaticResource title-line}"/>
         <TextBlock Grid.Row="4" x:Name="recordCountTextBlock" Text="记录条数：0"
                    Style="{StaticResource table-head}"/>
-        <Button Grid.Row="4" Content="删除记录" Style="{StaticResource del-btn}"/>
+        <Button Grid.Row="4" x:Name="delBtn" Content="删除记录"
+                Click="DelBtn_OnClick" Style="{StaticResource del-btn}"/>
     </Grid>
 </Page>

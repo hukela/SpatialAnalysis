@@ -22,8 +22,9 @@ public partial class ProgramWindow : Window
     //被冻结的信息
     private string freezeMessage = "";
     /// <summary>
-    /// 清空内容
+    /// 情况内容
     /// </summary>
+    /// <param name="cleanFreeze">是否清空被冻结数据</param>
     public void Clean(bool cleanFreeze)
     {
         if (content.Dispatcher.CheckAccess())

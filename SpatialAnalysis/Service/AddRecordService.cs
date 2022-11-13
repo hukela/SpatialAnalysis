@@ -28,7 +28,7 @@ internal static class AddRecordService
         ProgramWindow window = new ProgramWindow();
         AddRecord addRecord = new AddRecord(bean, window);
         //建立异步线程来记录全盘文件
-        addRecord.thread = new Thread(addRecord.AddOne) { Name = "addRecord" };
+        addRecord.thread = new Thread(addRecord.StartAdd) { Name = "addRecord" };
         addRecord.thread.Start();
         window.ShowDialog();
     }

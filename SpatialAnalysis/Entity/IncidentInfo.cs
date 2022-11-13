@@ -11,10 +11,13 @@ internal class IncidentInfo
 {
     public IncidentInfo() { }
 
+    public IncidentStateEnum stateEnum;
+
     public IncidentInfo(IncidentBean bean)
     {
         Id = bean.Id;
         Title = bean.Title;
+        stateEnum = bean.StateEnum;
         switch (bean.StateEnum)
         {
             case IncidentStateEnum.success: State = "成功"; break;
