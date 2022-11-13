@@ -51,7 +51,8 @@ internal class AddRecord
             // 新建记录表
             BuildTable();
             programWindow.WriteLine("开始记录硬盘使用空间...");
-            programWindow.WriteLine("(建议此时不要修改硬盘上的文件)");
+            if (!isFirst)
+                programWindow.WriteLine("(会在上一次记录的基础上添加新记录，仅记录发生变化的文件夹)");
             isRunning = true;
             Thread showProgress = new Thread(ShowProgress) { Name = "showProgress" };
             showProgress.Start();

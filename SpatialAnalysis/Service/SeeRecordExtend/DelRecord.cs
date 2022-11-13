@@ -44,7 +44,7 @@ public class DelRecord
             programWindow.WriteLine("开始删除记录表");
             RecordMapper.DeleteTable(incidentId); // 删除整张表
             IncidentMapper.UpdateStateById(incidentId, IncidentStateEnum.deleted);
-            programWindow.WriteLine("删除完成");
+            programWindow.WriteLine("记录表删除完成");
             programWindow.RunOver();
         }
         catch (Exception e)
