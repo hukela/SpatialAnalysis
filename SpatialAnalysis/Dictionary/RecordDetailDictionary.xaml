@@ -16,11 +16,19 @@
         <Setter Property="Margin" Value="0,10"/>
         <Setter Property="Background" Value="#63B8FF"/>
     </Style>
+    <!-- 返回上一级的按键 -->
+    <Style x:Key="back-btn" TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Margin" Value="0,0,10,8"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Background" Value="Snow"/>
+    </Style>
     <!-- 详细信息 外框 -->
     <Style x:Key="detail-border" TargetType="Border">
         <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
-        <Setter Property="Margin" Value="0,0,10,8"/>
+        <Setter Property="Margin" Value="0,0,105,8"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="#63B8FF"/>
     </Style>

@@ -20,9 +20,11 @@
             <RowDefinition Height="20"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <!-- 标题和线段 -->
+        <!-- 标题 线段 返回上一级按键 -->
         <TextBlock Grid.Row="0" x:Name="incidentTitleTextBlock" Style="{StaticResource title}"/>
         <Border Grid.Row="1" Style="{StaticResource line-horizontal}"/>
+        <Button Grid.Row="0" x:Name="backBtn" Content="返回记录列表"
+                Click="BackBtn_OnClick" Style="{StaticResource back-btn}"/>
         <!-- 详细信息展示框 -->
         <Border Grid.Row="0" Style="{StaticResource detail-border}">
             <Canvas Width="75" Height="24" Margin="0,-2" MouseEnter="IncidentDetail_OnMouseEnter">

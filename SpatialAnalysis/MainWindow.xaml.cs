@@ -31,7 +31,7 @@ public partial class MainWindow : Window
     private readonly AddRecordPage addRecord = new AddRecordPage();
     private readonly ComparisonPage comparisonPage = new ComparisonPage();
     public readonly TagPage tagPage = new TagPage();
-    private readonly SeeRecordPage seeRecordPage = new SeeRecordPage();
+    public readonly SeeRecordPage seeRecordPage = new SeeRecordPage();
     //若数据库不可用，则关闭相关功能
     private void IsCanUse()
     {

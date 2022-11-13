@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,6 +34,13 @@ public partial class RecordDetailPage : Page
         incidentTitleTextBlock.Text = incident.Title;
         incidentDescriptionTextBlock.Text = incident.Description;
         UpdatePage(PageUpdateType.refresh, null);
+    }
+
+    // 返回事件列表按键
+    private void BackBtn_OnClick(object sender, RoutedEventArgs e)
+    {
+        MainWindow main = Application.Current.MainWindow as MainWindow;
+        main.ToPage(main.seeRecordPage);
     }
 
     private enum PageUpdateType
