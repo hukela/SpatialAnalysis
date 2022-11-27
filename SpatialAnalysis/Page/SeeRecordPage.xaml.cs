@@ -41,7 +41,7 @@ public partial class SeeRecordPage : Page
     {
         if (!(incidentListBox.SelectedItem is IncidentInfo incident))
             return;
-        recordCountTextBlock.Text = "记录条数：" + incident.RecordCount;
+        recordCountTextBlock.Text = "选中记录条数：" + incident.RecordCount;
         if (incident.stateEnum == IncidentStateEnum.deleted)
         {
             delBtn.IsEnabled = false;

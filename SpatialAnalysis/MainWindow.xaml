@@ -3,11 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Fluent="urn:fluent-ribbon"
-        xmlns:local="clr-namespace:SpatialAnalysis"
-        mc:Ignorable="d"
-        Loaded="Window_Loaded"
-        Title="MainWindow" Height="602" Width="910">
+        mc:Ignorable="d" Loaded="Window_Loaded" Title="MainWindow" Height="602" Width="910">
 
     <Window.Resources>
         <ResourceDictionary Source="Dictionary/MainDictionary.xaml"/>
@@ -25,10 +21,9 @@
         </Grid.ColumnDefinitions>
         <!-- 线 -->
         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Background="#63B8FF"/>
-        <Border Grid.Column="1" Grid.RowSpan="2" Background="#63B8FF" Margin="0,-1,0,0"/>
+        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="#63B8FF" Margin="0,-1,0,0"/>
         <!-- 按键列表 -->
         <WrapPanel Grid.Row="1" Grid.Column="0" Margin="0,-1,0,0">
-            <Button x:Name="toMainPage" Content="主页" Click="ToMainPage_Click"/>
             <Button x:Name="toAddRecord" Content="添加记录" Click="ToAddRecord_Click"/>
             <Button x:Name="toRecordPage" Content="查看记录" Click="ToRecordPage_Click"/>
             <Button x:Name="toComparisonPage" Content="对比模式" Click="ToComparisonPage_Click"/>

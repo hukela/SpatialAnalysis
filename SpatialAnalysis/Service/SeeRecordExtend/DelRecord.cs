@@ -35,7 +35,7 @@ public class DelRecord
             isRunning = true;
             new Thread(ShowProgressThread).Start();
             // 对记录树进行遍历并整理带删除数据
-            if (incidentId == IncidentMapper.SelectLastBean().Id)
+            if (incidentId == IncidentMapper.SelectLastSuccessIncident().Id)
                 TraverseTree(clearLast);
             else
                 TraverseTree(clearOther);

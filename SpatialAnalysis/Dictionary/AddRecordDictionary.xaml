@@ -33,6 +33,11 @@
         <Setter Property="Canvas.Left" Value="20"/>
         <Setter Property="FontSize" Value="16"/>
     </Style>
+    <Style x:Key="database-size" TargetType="TextBlock">
+        <Setter Property="Canvas.Top" Value="60"/>
+        <Setter Property="Canvas.Left" Value="20"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
     <Style x:Key="submit" TargetType="Button">
         <Setter Property="Canvas.Top" Value="20"/>
         <Setter Property="Canvas.Left" Value="520"/>

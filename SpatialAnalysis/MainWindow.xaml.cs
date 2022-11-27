@@ -2,6 +2,7 @@
 using SpatialAnalysis.MyPage;
 using System.Windows;
 using System.Windows.Controls;
+using SpatialAnalysis.IO.Log;
 
 namespace SpatialAnalysis
 {
@@ -14,41 +15,30 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         //设置初始值
-        pageFrame.Content = main;
-        lastButton = toMainPage;
-        toMainPage.IsEnabled = false;
+        lastButton = toAddRecord;
+        toAddRecord.IsEnabled = false;
     }
+
     //当窗口加载完成后执行
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        IsCanUse();
+        //若数据库不可用，则关闭应用
+        if (SQLiteClient.check())
+            pageFrame.Content = addRecord;
+        else
+        {
+            MessageBox.Show("sqlite数据库异常", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            Log.Error("sqlite数据库异常");
+            Application.Current.Shutdown();
+        }
     }
-    //显示主页页面
-    private Page main;
+
     //初始化页面
-    private readonly MainPage mainPage = new MainPage();
-    private UnavailablePage unavailablePage;
     private readonly AddRecordPage addRecord = new AddRecordPage();
     private readonly ComparisonPage comparisonPage = new ComparisonPage();
     public readonly TagPage tagPage = new TagPage();
     public readonly SeeRecordPage seeRecordPage = new SeeRecordPage();
-    //若数据库不可用，则关闭相关功能
-    private void IsCanUse()
-    {
-        bool isEnabled = SQLiteClient.IsConnected;
-        toAddRecord.IsEnabled = isEnabled;
-        toTagPage.IsEnabled = isEnabled;
-        toRecordPage.IsEnabled = isEnabled;
-        toComparisonPage.IsEnabled = isEnabled;
-        if(isEnabled)
-            main = mainPage;
-        else
-        {
-            if (unavailablePage == null)
-                unavailablePage = new UnavailablePage();
-            main = unavailablePage;
-        }
-    }
+
     //上一个跳转按键
     private Button lastButton;
     //关闭当前按键，并打开上一个按键
@@ -58,12 +48,8 @@ public partial class MainWindow : Window
         lastButton.IsEnabled = true;
         lastButton = b;
     }
+
     //跳转按键事件
-    private void ToMainPage_Click(object sender, RoutedEventArgs e)
-    {
-        pageFrame.Content = main;
-        CloseButton(toMainPage);
-    }
     private void ToAddRecord_Click(object sender, RoutedEventArgs e)
     {
         pageFrame.Content = addRecord;

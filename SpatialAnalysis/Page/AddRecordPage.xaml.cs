@@ -3,6 +3,7 @@ using SpatialAnalysis.Service;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using SpatialAnalysis.Mapper;
 
 namespace SpatialAnalysis.MyPage
 {
@@ -15,16 +16,18 @@ public partial class AddRecordPage : Page
     {
         InitializeComponent();
     }
+
     //加载页面
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        IncidentBean bean = AddRecordService.GetBean();
-        DataContext = bean;
+        IncidentBean bean = IncidentMapper.SelectLastSuccessIncident();
         if (bean.CreateTime == DateTime.MinValue)
             return;
         TimeSpan time = DateTime.Now - bean.CreateTime;
-        timeSpan.Text = "距离上一次记录：- 天".Replace(" - ", time.Days.ToString());
+        timeSpan.Text = "距离上一次记录：" + time.Days + "天";
+        databaseSize.Text = "当前数据库占用空间：" + AddRecordService.GetDataSize();
     }
+
     //添加事件
     private void Submit_Click(object sender, RoutedEventArgs e)
     {
@@ -35,13 +38,10 @@ public partial class AddRecordPage : Page
             MessageBox.Show("标题不得为空", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             return;
         }
-        else
+        if (bean.Title.Length > 25)
         {
-            if (bean.Title.Length > 25)
-            {
-                MessageBox.Show("标题不得超过25个字符", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                return;
-            }
+            MessageBox.Show("标题不得超过25个字符", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            return;
         }
         AddRecordService.AddIncident(bean);
     }

@@ -70,20 +70,6 @@ internal static class IncidentMapper
     }
 
     /// <summary>
-    /// 获取最近一条事件
-    /// </summary>
-    public static IncidentBean SelectLastBean()
-    {
-        using (SQLiteCommand cmd = new SQLiteCommand ())
-        {
-            cmd.CommandText = "SELECT * FROM [incident] " +
-                "WHERE [state] = 0 ORDER BY [create_time] DESC LIMIT 1;";
-            DataTable table = SQLiteClient.Read(cmd);
-            return table.Rows.Count == 0 ? null : GetBeanByTable(table)[0];
-        }
-    }
-
-    /// <summary>
     /// 查询所有记录事件
     /// </summary>
     public static IncidentBean[] SelectAllIncidents()

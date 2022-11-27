@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 
 namespace SpatialAnalysis.IO
@@ -10,40 +11,35 @@ namespace SpatialAnalysis.IO
 /// </summary>
 internal static class SQLiteClient
 {
+    // 数据库位置
+    public static string DATA_PATH = IoBase.localPath + @"\Data\main.db";
+
     /// <summary>
     /// 建立数据库链接
     /// </summary>
     static SQLiteClient()
     {
-        string conString = string.Concat("Data Source=", IoBase.localPath,
-            @"\Data\main.db;Max Pool Size=10;Journal Mode=Off");
-        con = new SQLiteConnection(conString);
+        if (!File.Exists(DATA_PATH))
+            return;
+        string conString = string.Concat("Data Source=", DATA_PATH, ";Max Pool Size=10;Journal Mode=Off");
+        con = new SQLiteConnection(conString, false);
     }
 
     private static readonly SQLiteConnection con;
     private static readonly SQLiteDataAdapter adapter = new SQLiteDataAdapter();
 
     /// <summary>
-    /// 查看是否连接
+    /// 检查数据库是否存在
     /// </summary>
-    public static bool IsConnected
-    {
-        get
-        {
-            if (con == null)
-                return false;
-            lock (con)
-            {
-                return con.State != ConnectionState.Closed && con.State != ConnectionState.Broken;
-            }
-        }
-    }
+    public static bool check() { return con != null; }
 
     /// <summary>
     /// 打开连接
     /// </summary>
     public static void OpenConnect()
     {
+        if (con == null)
+            return;
         lock (con)
         {
             if (con.State == ConnectionState.Closed || con.State == ConnectionState.Broken)
@@ -56,6 +52,8 @@ internal static class SQLiteClient
     /// </summary>
     public static void CloseConnect()
     {
+        if (con == null)
+            return;
         lock (con)
         {
             if (con.State != ConnectionState.Closed && con.State != ConnectionState.Broken)

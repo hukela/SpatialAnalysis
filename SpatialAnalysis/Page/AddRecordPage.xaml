@@ -29,7 +29,8 @@
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Description}" Style="{StaticResource right-row2}"/>
         <Canvas Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="2">
             <TextBlock x:Name="timeSpan" Text="距离上一次记录：- 天" Style="{StaticResource lastTime}"/>
-            <Button x:Name="submit" Content="开始记录" Click="Submit_Click" Style="{StaticResource submit}"/>
+            <Button Content="开始记录" Click="Submit_Click" Style="{StaticResource submit}"/>
+            <TextBlock x:Name="databaseSize" Grid.Column="0" Text="当前数据库占用空间：" Style="{StaticResource database-size}"/>
         </Canvas>
     </Grid>
 </Page>

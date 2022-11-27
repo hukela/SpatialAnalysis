@@ -1,7 +1,7 @@
 /* for SQLite */
 
 CREATE TABLE [dir_index]
--- 索引表
+-- 索引表 (已经废弃)
 (
   [path] string primary key NOT NULL, -- 路径
   [incident_id] uint32 NOT NULL, -- 事件id

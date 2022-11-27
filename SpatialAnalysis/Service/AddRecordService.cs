@@ -1,23 +1,29 @@
-﻿using SpatialAnalysis.Entity;
-using SpatialAnalysis.Mapper;
+﻿using System.IO;
+using SpatialAnalysis.Entity;
 using SpatialAnalysis.MyWindow;
 using SpatialAnalysis.Service.AddRecordExtend;
 using System.Threading;
+using SpatialAnalysis.IO;
 using SpatialAnalysis.IO.Log;
+using SpatialAnalysis.Utils;
 
 namespace SpatialAnalysis.Service
 {
 internal static class AddRecordService
 {
-    public static IncidentBean GetBean()
+    private static FileInfo dataInfo;
+
+    /// <summary>
+    /// 获取数据库文件大小
+    /// </summary>
+    public static string GetDataSize()
     {
-        IncidentBean bean = IncidentMapper.SelectLastBean();
-        if (bean == null)
-            bean = new IncidentBean();
-        bean.Title = string.Empty;
-        bean.Description = string.Empty;
-        return bean;
+        if (dataInfo == null)
+            dataInfo = new FileInfo(SQLiteClient.DATA_PATH);
+        long size = dataInfo.Length;
+        return ConversionUtil.StorageFormat(size, false);
     }
+
     /// <summary>
     /// 添加记录
     /// </summary>
