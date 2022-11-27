@@ -39,9 +39,9 @@
     </Style>
     <!-- 详细信息 内容弹框 -->
     <Style x:Key="detail-popup" TargetType="Popup">
-        <Setter Property="Placement" Value="Center"/>
-        <Setter Property="HorizontalOffset" Value="465"/>
-        <Setter Property="VerticalOffset" Value="110"/>
+        <Setter Property="Placement" Value="Bottom"/>
+        <Setter Property="HorizontalOffset" Value="100"/>
+        <Setter Property="VerticalOffset" Value="4"/>
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="StaysOpen" Value="False"/>
         <Setter Property="Width" Value="400"/>
@@ -55,7 +55,7 @@
     </Style>
     <!-- 统计图选项 -->
     <Style x:Key="pie-char-type" TargetType="RadioButton">
-        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="FontSize" Value="14"/>
     </Style>
