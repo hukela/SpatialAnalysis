@@ -8,7 +8,7 @@ namespace SpatialAnalysis.IO.Log
 {
 internal static class Log
 {
-    private static readonly string logPath = IoBase.localPath + @"\log";
+    private static readonly string logPath = IoBase.localPath + @"\Log";
     //在不读取全部内容的情况下在末尾添加内容(如果文件不存在，则新建一个) 默认UTF-8
     private static readonly StreamWriter writer = File.AppendText(logPath + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
 

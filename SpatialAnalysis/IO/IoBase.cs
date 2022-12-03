@@ -15,13 +15,9 @@ internal static class IoBase
             case "Debug":
                 path = path.Remove(path.Length - 10);
                 break;
-            case "Release":
-                path = path.Remove(path.Length - 12);
-                break;
             case "Test":
                 path = path.Remove(path.Length - 15) + @"\SpatialAnalysis";
                 break;
-            default: break;
         }
         localPath = path;
     }

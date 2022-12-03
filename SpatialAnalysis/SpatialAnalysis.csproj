@@ -356,7 +356,7 @@
     <Content Include="Data\record.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="log" />
+    <Folder Include="Log" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

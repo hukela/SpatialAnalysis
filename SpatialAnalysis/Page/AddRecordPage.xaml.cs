@@ -21,7 +21,7 @@ public partial class AddRecordPage : Page
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         IncidentBean bean = IncidentMapper.SelectLastSuccessIncident();
-        if (bean.CreateTime == DateTime.MinValue)
+        if (bean == null)
             return;
         TimeSpan time = DateTime.Now - bean.CreateTime;
         timeSpan.Text = "距离上一次记录：" + time.Days + "天";
