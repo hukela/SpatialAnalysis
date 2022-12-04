@@ -20,12 +20,12 @@ public partial class AddRecordPage : Page
     //加载页面
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
+        databaseSize.Text = "当前数据库占用空间：" + AddRecordService.GetDataSize();
         IncidentBean bean = IncidentMapper.SelectLastSuccessIncident();
         if (bean == null)
             return;
         TimeSpan time = DateTime.Now - bean.CreateTime;
         timeSpan.Text = "距离上一次记录：" + time.Days + "天";
-        databaseSize.Text = "当前数据库占用空间：" + AddRecordService.GetDataSize();
     }
 
     //添加事件
