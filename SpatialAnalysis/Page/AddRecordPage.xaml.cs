@@ -20,7 +20,10 @@ public partial class AddRecordPage : Page
     //加载页面
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
+        DataContext = new IncidentBean(); // 先实例化对象 用于存储用户输入数据
+        // 获取当前占用空间
         databaseSize.Text = "当前数据库占用空间：" + AddRecordService.GetDataSize();
+        // 计算距离上一次的记录时间
         IncidentBean bean = IncidentMapper.SelectLastSuccessIncident();
         if (bean == null)
             return;
