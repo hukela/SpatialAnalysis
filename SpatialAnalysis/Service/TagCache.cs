@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System.Linq;
+using System.Timers;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
 
@@ -69,25 +70,19 @@ internal static class TagCache
     {
         CheckTagCache();
         DirTagBean[] dirTags = tagCache;
-        int plies = path.Split('\\').Length;
+        string[] pathNodes = path.Split('\\');
         uint tagId = 0;
         isThis = false;
         foreach (DirTagBean dirTag in dirTags)
         {
-            if (path.IndexOf(dirTag.Path) == -1)
+            string[] tagPathNodes = dirTag.Path.Split('\\');
+            if (tagPathNodes.Length > pathNodes.Length)
                 continue;
-            int plies_i = dirTag.Path.Split('\\').Length;
-            if (plies < plies_i)
+            bool mate = !tagPathNodes.Where((t, i) => pathNodes[i] != t).Any();
+            if (!mate)
                 continue;
-            if (plies > plies_i)
-            {
-                tagId = dirTag.TagId;
-                break;
-            }
-            if (path != dirTag.Path)
-                continue;
-            isThis = true;
             tagId = dirTag.TagId;
+            isThis = pathNodes.Length == tagPathNodes.Length;
             break;
         }
         return tagId == 0 ? null : TagMapper.SelectById(tagId);
