@@ -144,7 +144,7 @@ internal class AddRecord
                 baseDir.FullName, e.Message, RecordExCode.IOExceptionForGetFile));
             return bean;
         }
-        // 再遍历子节点前查询对照组以确定子节点的对照事件id
+        // 在遍历子节点前查询对照组以确定子节点的对照事件id
         uint childrenTargetIncidentId = targetIncidentId;
         RecordBean targetBean;
         do
@@ -190,9 +190,14 @@ internal class AddRecord
             if (bean.IsChange)
                 SaveBeanForOtherRecord(bean, childDirBeans);
             else
+            {
                 bean.TargetIncidentId = targetIncidentId;
+                // 对于分区根节点 即便未发生变化 也需要添加一个记录
+                if (plies != 0) return bean;
+                RecordMapper.InsertOne(incidentId, bean, false);
+                RecordMapper.UpdateFromIncidentId(bean.TargetIncidentId, bean.Path, incidentId);
+            }
         }
-
         return bean;
     }
 
