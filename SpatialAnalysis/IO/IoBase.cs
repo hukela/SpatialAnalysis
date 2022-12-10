@@ -13,7 +13,7 @@ internal static class IoBase
         switch (runMode)
         {
             case "Debug":
-                path = path.Remove(path.Length - 12);
+                path = path.Remove(path.Length - 10);
                 break;
             case "Test":
                 path = path.Remove(path.Length - 15) + @"\SpatialAnalysis";
