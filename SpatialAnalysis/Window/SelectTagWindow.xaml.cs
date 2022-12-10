@@ -12,6 +12,7 @@ public partial class SelectTagWindow : Window
     public SelectTagWindow()
     {
         InitializeComponent();
+        WindowStartupLocation = WindowStartupLocation.CenterScreen;
     }
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {

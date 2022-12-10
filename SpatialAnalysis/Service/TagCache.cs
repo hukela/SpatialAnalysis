@@ -76,7 +76,7 @@ internal static class TagCache
         isThis = false;
         foreach (DirTagBean dirTag in dirTags)
         {
-            string[] tagPathNodes = dirTag.Path.Split('\\');
+            string[] tagPathNodes = dirTag.Path.Split(new[]{'\\'}, StringSplitOptions.RemoveEmptyEntries);
             if (tagPathNodes.Length > pathNodes.Length)
                 continue;
             bool mate = !tagPathNodes.Where((t, i) => pathNodes[i] != t).Any();

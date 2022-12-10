@@ -140,7 +140,7 @@ internal static class ComparisonService
     /// </summary>
     /// <param name="path">标注路径</param>
     /// <param name="isNew">是否是新建</param>
-    public static void AllOrEditTag(string path, bool isNew)
+    public static void AddOrEditTag(string path, bool isNew)
     {
         SelectTagWindow window = new SelectTagWindow();
         bool? dialogResult = window.ShowDialog();

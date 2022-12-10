@@ -11,6 +11,7 @@ public partial class ProgramWindow : Window
     public ProgramWindow()
     {
         InitializeComponent();
+        WindowStartupLocation = WindowStartupLocation.CenterScreen;
     }
     //窗体加载完成后执行
     private void Window_Loaded(object sender, RoutedEventArgs e)

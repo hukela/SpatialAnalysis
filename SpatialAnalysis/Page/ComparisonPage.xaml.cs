@@ -88,7 +88,7 @@ public partial class ComparisonPage : Page
             MessageBox.Show("未选中文件夹", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             return;
         }
-        ComparisonService.AllOrEditTag(dirNode.Path, !dirNode.IsRootTag);
+        ComparisonService.AddOrEditTag(dirNode.Path, !dirNode.IsRootTag);
         //刷新页面数据 由于树控件仅支持更新子节点 无法更新当前节点 所以对上一级节点进行刷新。
         ItemsControl itemsControl = ItemsControl.ItemsControlFromItemContainer(selectedItem);
         if (itemsControl is TreeViewItem)
