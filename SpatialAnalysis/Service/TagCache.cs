@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Timers;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
@@ -70,7 +71,7 @@ internal static class TagCache
     {
         CheckTagCache();
         DirTagBean[] dirTags = tagCache;
-        string[] pathNodes = path.Split('\\');
+        string[] pathNodes = path.Split(new[]{'\\'}, StringSplitOptions.RemoveEmptyEntries);
         uint tagId = 0;
         isThis = false;
         foreach (DirTagBean dirTag in dirTags)

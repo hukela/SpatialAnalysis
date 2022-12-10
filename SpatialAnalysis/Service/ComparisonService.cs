@@ -59,21 +59,6 @@ internal static class ComparisonService
     }
 
     /// <summary>
-    /// 刷新对应节点中的数据
-    /// </summary>
-    public static void RefreshNode(DirNode dirNode)
-    {
-        //刷新标签
-        TagBean tagBean = TagCache.GetTagByPath(dirNode.Path, out bool isThis);
-        if (tagBean == null)
-            dirNode.Tag = new TagBean() { Color = "#FFFFFF" };
-        dirNode.IsRootTag = isThis;
-        dirNode.Tag = tagBean;
-        //刷新子节点
-        BuildNodeTree.BuildChildrenNodes(dirNode);
-    }
-
-    /// <summary>
     /// 通过节点获取文件夹的比较信息
     /// </summary>
     public static ComparisonInfo GetInfoByNode(DirNode node)

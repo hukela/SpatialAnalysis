@@ -53,14 +53,14 @@ public partial class ComparisonPage : Page
     //展开节点事件
     private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
     {
-        TreeViewItem selectedItem = sender as TreeViewItem;
-        DirNode dirNode = selectedItem.DataContext as DirNode;
+        TreeViewItem item = (TreeViewItem)sender;
+        DirNode dirNode = (DirNode) item.DataContext ;
         //事件为空 表示内部调用 强制刷新子节点
         if (e == null)
             dirNode.Children = new DirNode[1];
         bool needUpdate = ComparisonService.BuildNodeChildren(dirNode);
         if (needUpdate)
-            selectedItem.ItemsSource = dirNode.Children;
+            item.ItemsSource = dirNode.Children;
     }
     //用于记录被选中控件的方法
     private void DirTree_Selected(object sender, RoutedEventArgs e)
@@ -74,8 +74,8 @@ public partial class ComparisonPage : Page
         compareTable.Visibility = Visibility.Visible;
         ComparisonInfo info = ComparisonService.GetInfoByNode(dirTree.SelectedItem as DirNode);
         // 放入事件信息
-        IncidentBean oldBean = oldIncident.SelectedItem as IncidentBean;
-        IncidentBean newBean = newIncident.SelectedItem as IncidentBean;
+        IncidentBean oldBean = (IncidentBean)oldIncident.SelectedItem;
+        IncidentBean newBean = (IncidentBean)newIncident.SelectedItem;
         info.OldTime = oldBean.CreateTimeFormat;
         info.NewTime = newBean.CreateTimeFormat;
         comparisonGrid.DataContext = info;
@@ -89,8 +89,12 @@ public partial class ComparisonPage : Page
             return;
         }
         ComparisonService.AllOrEditTag(dirNode.Path, !dirNode.IsRootTag);
-        //刷新页面数据
-        ComparisonService.RefreshNode(dirNode);
-        TreeViewItem_Expanded(ItemsControl.ItemsControlFromItemContainer(selectedItem), null);
+        //刷新页面数据 由于树控件仅支持更新子节点 无法更新当前节点 所以对上一级节点进行刷新。
+        ItemsControl itemsControl = ItemsControl.ItemsControlFromItemContainer(selectedItem);
+        if (itemsControl is TreeViewItem)
+            TreeViewItem_Expanded(itemsControl, null);
+        else
+            // 若没有上一节点 则刷新整个树控件
+            RefreshTree_OnClick(null, null);
     }
 } }
