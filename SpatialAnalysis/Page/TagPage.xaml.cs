@@ -312,7 +312,7 @@ public partial class TagPage : Page
             else
                 DirTagMapper.UpdateById(editingDirTagId, editingDirTextBox.Text);
         }
-        TagCache.DeleteTagCache();
+        DirTagCache.DeleteTagCache();
         // 刷新时保持当前选中对象
         int index = pathList.SelectedIndex;
         pathList.ItemsSource = TagService.GetPathItemSource(selectedTagId);

@@ -82,7 +82,7 @@ internal class BuildNodeTree
         TagBean nullTag = new TagBean() { Color = "#FFFFFF" };
         foreach (DirNode dirNode in dirNodes)
         {
-            TagBean tagBean = TagCache.GetTagByPath(dirNode.Path, out bool isThis);
+            TagBean tagBean = DirTagCache.GetTagByPath(dirNode.Path, out bool isThis);
             if (tagBean == null)
             {
                 dirNode.Tag = nullTag;

@@ -1,12 +1,11 @@
 using System;
-using System.Data.SQLite;
 using System.Threading;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.IO.Log;
 using SpatialAnalysis.Mapper;
 using SpatialAnalysis.MyWindow;
 
-namespace SpatialAnalysis.Service.SeeRecordExtend
+namespace SpatialAnalysis.Service.AddRecordExtend
 {
 public class DelRecord
 {

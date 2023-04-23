@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>SpatialAnalysis</RootNamespace>
     <AssemblyName>SpatialAnalysis</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -191,15 +191,16 @@
     </Compile>
     <Compile Include="Service\AddRecordExtend\AddRecord.cs" />
     <Compile Include="Service\AddRecordExtend\BeanFactory.cs" />
+    <Compile Include="Service\AddRecordExtend\DelRecord.cs" />
     <Compile Include="Service\AddRecordService.cs" />
     <Compile Include="Service\ComparisonExtend\BuildNodeTree.cs" />
     <Compile Include="Service\ComparisonService.cs" />
     <Compile Include="Service\RecordDetailService.cs" />
-    <Compile Include="Service\SeeRecordExtend\DelRecord.cs" />
+    <Compile Include="Service\SeeRecordExtend\SeeTagSize.cs" />
     <Compile Include="Service\SeeRecordService.cs" />
     <Compile Include="Service\StartupAndExit.cs" />
     <Compile Include="Service\TagService.cs" />
-    <Compile Include="Service\TagCache.cs" />
+    <Compile Include="Service\DirTagCache.cs" />
     <Compile Include="Utils\ConversionUtil.cs" />
     <Compile Include="Utils\DateTimeUtil.cs" />
     <Compile Include="Utils\ForTest.cs" />

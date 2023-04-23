@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,9 +44,9 @@ public partial class RecordDetailPage : Page
 
     private enum PageUpdateType
     {
-        refresh,
-        toChildrenTag,
-        toParentTag,
+        refresh, // 刷新
+        toChildrenTag, // 进入到子一级
+        toParentTag, // 进入到父一级
     }
 
     /// <summary>

@@ -9,7 +9,7 @@ namespace SpatialAnalysis.Service
 /// <summary>
 /// 提供查询路径标签的服务
 /// </summary>
-internal static class TagCache
+internal static class DirTagCache
 {
     private static DirTagBean[] tagCache; // 标签缓存对象
     private static readonly Timer clearTimer = new Timer(); // 清理缓存的定时器
@@ -20,7 +20,15 @@ internal static class TagCache
     private static void InitTagCache()
     {
         DirTagBean[] beans = DirTagMapper.SelectAll();
-        //根据标文件夹层数排序
+        SortByPathLength(beans);
+        tagCache = beans;
+    }
+
+    /// <summary>
+    /// 根据标文件夹层数排序
+    /// </summary>
+    private static void SortByPathLength(DirTagBean[] beans)
+    {
         int count = beans.Length;
         for (int r = 0; r < count; r++)
         {
@@ -32,7 +40,6 @@ internal static class TagCache
                     (beans[i], beans[i + 1]) = (beans[i + 1], beans[i]);
             }
         }
-        tagCache = beans;
     }
 
     /// <summary>
@@ -61,6 +68,26 @@ internal static class TagCache
     /// 删除标签缓存
     /// </summary>
     public static void DeleteTagCache() { tagCache = null; }
+
+    /// <summary>
+    /// 通过id获取标签bean
+    /// </summary>
+    public static DirTagBean GetTagById(uint id)
+    {
+        CheckTagCache();
+        return tagCache.FirstOrDefault(t => t.Id == id);
+    }
+
+    /// <summary>
+    /// 通过标签id获取标签路径
+    /// </summary>
+    public static string[] GetTagPathById(uint id)
+    {
+        CheckTagCache();
+        // 查找出标签id相等的
+        DirTagBean[] dirTags = tagCache.Where(t => t.TagId == id).ToArray();
+        return dirTags.Select(t => t.Path).ToArray();
+    }
 
     /// <summary>
     /// 通过路径获取标签bean

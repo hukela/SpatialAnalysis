@@ -158,6 +158,6 @@ internal static class ComparisonService
         else
             DirTagMapper.UpdateByPath(path, tagBean.Id);
         //刷新标签缓存
-        TagCache.DeleteTagCache();
+        DirTagCache.DeleteTagCache();
     }
 } }

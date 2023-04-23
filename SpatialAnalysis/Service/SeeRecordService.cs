@@ -7,7 +7,7 @@ using LiveChartsCore.Kernel;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
 using SpatialAnalysis.MyWindow;
-using SpatialAnalysis.Service.SeeRecordExtend;
+using SpatialAnalysis.Service.AddRecordExtend;
 
 namespace SpatialAnalysis.Service
 {

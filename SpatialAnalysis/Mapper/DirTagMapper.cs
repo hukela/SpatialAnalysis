@@ -39,10 +39,10 @@ internal static class DirTagMapper
         }
         return beans;
     }
+
     /// <summary>
     /// 通过id设定标签标注的路径
     /// </summary>
-    /// <param name="bean">对应的数据实体</param>
     public static void UpdateById(uint id, string path)
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
@@ -53,10 +53,10 @@ internal static class DirTagMapper
             SQLiteClient.Write(cmd);
         }
     }
+
     /// <summary>
     /// 通过path修改标注的标签
     /// </summary>
-    /// <param name="bean">对应的数据实体</param>
     public static void UpdateByPath(string path, uint tagId)
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
@@ -67,10 +67,10 @@ internal static class DirTagMapper
             SQLiteClient.Write(cmd);
         }
     }
+
     /// <summary>
     /// 删除一行数据
     /// </summary>
-    /// <param name="id">对应的数据id</param>
     public static void DeleteOneById(uint id)
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
@@ -80,10 +80,11 @@ internal static class DirTagMapper
             SQLiteClient.Write(cmd);
         }
     }
+
     /// <summary>
     /// 删除一行数据
     /// </summary>
-    /// <param name="id">对应的数据path</param>
+    /// <param name="path">对应的数据path</param>
     public static void DeleteOneByPath(string path)
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
@@ -93,6 +94,7 @@ internal static class DirTagMapper
             SQLiteClient.Write(cmd);
         }
     }
+
     /// <summary>
     /// 删除该标签的所有数据
     /// </summary>
@@ -106,10 +108,10 @@ internal static class DirTagMapper
             SQLiteClient.Write(cmd);
         }
     }
+
     /// <summary>
     /// 获取所有的数据
     /// </summary>
-    /// <returns></returns>
     public static DirTagBean[] SelectAll()
     {
         using (SQLiteCommand cmd = new SQLiteCommand())
@@ -118,6 +120,7 @@ internal static class DirTagMapper
             return GetBeanByTable(SQLiteClient.Read(cmd));
         }
     }
+
     /// <summary>
     /// 获取对应标签id的标注路径
     /// </summary>
@@ -128,19 +131,6 @@ internal static class DirTagMapper
             cmd.CommandText = "SELECT * FROM [dir_tag] WHERE [tag_id] = @tag_id;";
             cmd.Parameters.Add("tag_id", DbType.UInt32).Value = tagId;
             return GetBeanByTable(SQLiteClient.Read(cmd));
-        }
-    }
-
-    /// <summary>
-    /// 获取对应标签id的标注路径
-    /// </summary>
-    public static string[] selectPathByTagId(uint tagId)
-    {
-        using (SQLiteCommand cmd = new SQLiteCommand())
-        {
-            cmd.CommandText = "SELECT [path] FROM [dir_tag] WHERE [tag_id] = @tag_id;";
-            cmd.Parameters.Add("tag_id", DbType.UInt32).Value = tagId;
-            return SQLiteClient.Read<string>(cmd);
         }
     }
 } }

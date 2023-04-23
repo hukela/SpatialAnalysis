@@ -9,6 +9,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using SpatialAnalysis.Entity;
 using SpatialAnalysis.Mapper;
+using SpatialAnalysis.Service.SeeRecordExtend;
 using SpatialAnalysis.Utils;
 
 namespace SpatialAnalysis.Service
@@ -18,15 +19,11 @@ namespace SpatialAnalysis.Service
 /// </summary>
 internal static class RecordDetailService
 {
-    private class CountBean
-    {
-        public uint fileCount, dirCount;
-        public BigInteger size, spaceUsage;
-    }
-
     /// <summary>
     /// 建立页面所需的数据
     /// </summary>
+    /// <param name="info">要查看的事件对象</param>
+    /// <param name="isSpaceUsage">统计图是否展示占用空间</param>
     public static IncidentDetail BuildIncidentDetail(IncidentInfo info, bool isSpaceUsage)
     {
         // 参数准备
@@ -37,7 +34,7 @@ internal static class RecordDetailService
             tagIds[i] = tags[i].Id;
         BigInteger totalSize = isSpaceUsage ? info.SpaceUsage : info.Size;
         BigInteger otherSize = totalSize;
-        // 查询各标签的文件数、文件夹数、大小
+        // 查询各标签的文件数 文件夹数 大小
         Dictionary<uint, CountBean> countMap = CountTagSize(info.Id, tagIds);
         // 生成饼图数据和页面信息
         ISeries<BigInteger>[] pieChart = new ISeries<BigInteger>[length + 1];
@@ -72,6 +69,9 @@ internal static class RecordDetailService
     /// <summary>
     /// 建立页面所需的数据
     /// </summary>
+    /// <param name="tag">要查看事件下对应标签的</param>
+    /// <param name="incidentId">要查看的事件</param>
+    /// <param name="isSpaceUsage">统计图是否展示占用空间</param>
     public static IncidentDetail BuildIncidentDetail(TagBean tag, uint incidentId, bool isSpaceUsage)
     {
         // 准备参数
@@ -109,7 +109,7 @@ internal static class RecordDetailService
         {
             Tag = tag,
             ChildrenTags = noChildren ? null : tags,
-            paths = DirTagMapper.selectPathByTagId(tag.Id),
+            paths = DirTagMapper.SelectPathByTagId(tag.Id),
             FileCount = total.fileCount,
             DirCount = total.dirCount,
             Size = total.size,
@@ -123,7 +123,7 @@ internal static class RecordDetailService
     /// </summary>
     private static CountBean CountTagSize(uint incidentId, uint tagId)
     {
-        string[] paths = DirTagMapper.selectPathByTagId(tagId);
+        string[] paths = DirTagMapper.SelectPathByTagId(tagId);
         if (paths == null) return new CountBean();
         RecordBean[] records = RecordMapper.SelectByPaths(incidentId, paths);
         CountBean count = new CountBean();
@@ -140,14 +140,15 @@ internal static class RecordDetailService
     /// <summary>
     /// 统计对应标签下的所有文件文件夹大小和占用空间(批量)
     /// </summary>
+    /// <returns>key 标签id value 统计结果</returns>
     private static Dictionary<uint, CountBean> CountTagSize(uint incidentId, uint[] tagIds)
     {
         Dictionary<HashSet<string>, uint> tagPathMap = new Dictionary<HashSet<string>, uint>();
         List<string> allPaths = new List<string>();
-        // 查询标签所有路径
+        // 统计所有需要查询的路径
         foreach (uint tagId in tagIds)
         {
-            string[] tagPaths = DirTagMapper.selectPathByTagId(tagId);
+            string[] tagPaths = DirTagCache.GetTagPathById(tagId);
             if (tagPaths == null) continue;
             HashSet<string> paths = new HashSet<string>(tagPaths);
             allPaths.AddRange(tagPaths);
